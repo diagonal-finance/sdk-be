@@ -1,0 +1,11 @@
+dist
+build
+coverage
+cache
+src/artifacts
+**/*.generated.*
+docs
+tests
+rollup.browser.config.ts
+rollup.node.config.ts
+jest.config.ts
