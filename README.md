@@ -103,7 +103,7 @@ yarn add @diagonal-finance/sdk-be
 import {
     Diagonal, InvalidSignatureHeaderError,
     InvalidPayloadError, InvalidEndpointSecretError,
-    InvalidSignatureError
+    InvalidSignatureError, IEvent
 } from "@diagonal-finance/sdk-be";
 
 ...
@@ -119,17 +119,25 @@ app.post("/webhookEndpoint", (req, res) => {
     let signatureHeader = req.headers['diagonal-signature'];
 
     const diagonal = new Diagonal();
-    let event;
+    let event: IEvent;
     try {
         event = diagonal.constructEvent(payload, signatureHeader, endpointSecret);
+        // handle diagonal event...
     } catch (InvalidSignatureHeaderError) {
-        // invalid signature header error
-    } catch (InvalidPayloadError) {
-        // invalid payload error
-    } catch (InvalidEndpointSecretError) {
-        // invalid endpoint secret error
-    } catch (InvalidSignatureError) {
-        // invalid signature error
+
+     if(e instanceof InvalidPayloadError) {
+        // handle invalid payload error
+     } else if (e instanceof InvalidEndpointSecretError) {
+         // handle invalid endpoint secret error
+    } else if (e instanceof InvalidSignatureHeaderError) {
+        // handle invalid signature header
+     } else if (e instanceof InvalidSignature) {
+        // handle invalid signature error
+     } else {
+        // handle another type of error
+     }
+        res.status(500);
+        res.json({error: e})
     }
 
 });
