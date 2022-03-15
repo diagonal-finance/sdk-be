@@ -117,9 +117,11 @@ app.post("/webhookEndpoint", (req, res) => {
     const diagonal = new Diagonal();
     let event: IEvent;
     try {
-        event = diagonal.constructEvent(payload, signatureHeader, endpointSecret);
+        event = diagonal.constructEvent(payload, signatureHeader as string, endpointSecret);
+
+        console.log("event", event);
         // handle diagonal event...
-    } catch (InvalidSignatureHeaderError) {
+    } catch (e) {
 
      if(e instanceof InvalidPayloadError) {
         // handle invalid payload error
@@ -127,7 +129,7 @@ app.post("/webhookEndpoint", (req, res) => {
          // handle invalid endpoint secret error
     } else if (e instanceof InvalidSignatureHeaderError) {
         // handle invalid signature header
-     } else if (e instanceof InvalidSignature) {
+     } else if (e instanceof InvalidSignatureError) {
         // handle invalid signature error
      } else {
         // handle another type of error
