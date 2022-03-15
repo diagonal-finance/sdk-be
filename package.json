@@ -1,6 +1,6 @@
 {
     "name": "@diagonal-finance/sdk-be",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Diagonal finance Backend SDK",
     "repository": "https://github.com/diagonal-finance/sdk-be",
     "homepage": "https://github.com/diagonal-finance/sdk-be",
@@ -8,10 +8,10 @@
         "name": "Diagonal Finance"
     },
     "license": "MIT",
-    "main": "dist/diagonal.min.js",
+    "main": "dist/index.min.js",
     "exports": {
-        "import": "./dist/diagonal.min.mjs",
-        "require": "./dist/diagonal.min.js"
+        "import": "./dist/index.min.mjs",
+        "require": "./dist/index.min.js"
     },
     "types": "dist/types/src/index.d.ts",
     "files": [
