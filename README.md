@@ -110,10 +110,6 @@ import {
 
 app.post("/webhookEndpoint", (req, res) => {
 
-    const body = req.body;
-    const headers = req.headers;
-    const diagonalSignatureHeader = headers['diagonal-signature'];
-
     let endpointSecret = "78...b1"; // random 64 character secret
     let payload = req.body;
     let signatureHeader = req.headers['diagonal-signature'];
