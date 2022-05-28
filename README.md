@@ -121,6 +121,9 @@ app.post("/webhookEndpoint", (req, res) => {
 
         console.log("event", event);
         // handle diagonal event...
+
+        res.status(200);
+        res.json({success: true})
     } catch (e) {
 
      if(e instanceof InvalidPayloadError) {

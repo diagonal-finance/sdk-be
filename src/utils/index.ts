@@ -1,4 +1,4 @@
-import { SubscriptionEventType } from "../types";
+import { WebhookEventType } from "../types";
 
 import { supportedChainIds } from "./consts";
 
@@ -26,7 +26,7 @@ export const isValidEventType = (eventType: string): boolean => {
     if (eventType === "") return false;
 
     if (
-        !Object.values(SubscriptionEventType)
+        !Object.values(WebhookEventType)
             .map((entity) => entity.toString())
             .includes(eventType)
     )

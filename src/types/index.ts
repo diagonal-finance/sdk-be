@@ -1,20 +1,22 @@
-export enum SubscriptionEventType {
-    SUBSCRIBE = "SUBSCRIBE",
-    UNSUBSCRIBE = "UNSUBSCRIBE",
+export enum WebhookEventType {
+    SUBSCRIPTION_ACKNOWLEDGED = "SUBSCRIPTION_ACKNOWLEDGED",
+    SUBSCRIPTION_FINALIZED = "SUBSCRIPTION_FINALIZED",
+    SUBSCRIPTION_REORGED = "SUBSCRIPTION_REORGED",
+    UNSUBSCRIBED = "UNSUBSCRIBED"
 }
 
-export interface ISubscriptionData {
-    service: string;
-    subscriber: string;
-    superToken: string;
-    packageId: number;
-    flowRate: number;
-    feeRate: number;
-    eventType: SubscriptionEventType;
-    chainId: number;
+export interface IWebhookData {
+    event: WebhookEventType
+    externalCustomerId: string
+    customerAddress: string
+    serviceAddress: string
+    superTokenAddress: string
+    flowRate: string
+    packageId: number
+    chainId: number
 }
 
-export type IEvent = ISubscriptionData;
+export type IEvent = IWebhookData;
 
 export interface ISignatureHeader {
     timestamp: string;
