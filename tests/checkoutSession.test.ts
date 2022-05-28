@@ -57,6 +57,27 @@ describe("CheckoutSession tests", () => {
             // expect(fetchMock).toBeCalledWith()
 
         })
+
+        it("ApiKeyNotProvidedError should be thrown if API key is not provided", async () => {
+
+        })
+
+        it("UnauthorizedError should be thrown is the request is unauthorized", async () => {
+
+          
+
+        })
+
+        it("CheckoutSessionApiError should be thrown is API error is thrown", async () => {
+
+          
+
+        })
+
+        it("CheckoutSessionInvalidInputError should be thrown if there is an invalid input field", async () => {
+
+          
+        })
     })
 
 });
