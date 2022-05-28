@@ -1,4 +1,3 @@
-import { test } from "mocha";
 import {
     Diagonal,
     InvalidEndpointSecretError,
@@ -11,13 +10,13 @@ import { testConfig } from "./utils";
 import { createHmac } from "crypto";
 import { InvalidSignatureError } from "../src/error";
 
-// Diagonal class tests
-describe("Diagonal tests", () => {
+// Webhook class tests
+describe("Webhook tests", () => {
     describe("Invalid payload tests", () => {
         it("Should fail when the payload is of invalid type", () => {
             const diagonal = new Diagonal();
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     "",
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -31,7 +30,7 @@ describe("Diagonal tests", () => {
             const payload = { ...testConfig.subscriptionPayload, serviceAddress: "" };
 
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -49,7 +48,7 @@ describe("Diagonal tests", () => {
             };
 
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -68,7 +67,7 @@ describe("Diagonal tests", () => {
                 superTokenAddress: "",
             };
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -83,7 +82,7 @@ describe("Diagonal tests", () => {
             const diagonal = new Diagonal();
             const payload = { ...testConfig.subscriptionPayload, packageId: 0 };
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -100,7 +99,7 @@ describe("Diagonal tests", () => {
                 flowRate: 1,
             };
             const eventF1 = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload1,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -109,7 +108,7 @@ describe("Diagonal tests", () => {
             expect(eventF1).toThrow(InvalidPayloadError);
 
             const eventF2 = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload2,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -131,7 +130,7 @@ describe("Diagonal tests", () => {
             };
 
             const eventF1 = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload1,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -141,7 +140,7 @@ describe("Diagonal tests", () => {
             expect(eventF1).toThrow(InvalidPayloadError);
 
             const eventF2 = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload2,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -160,7 +159,7 @@ describe("Diagonal tests", () => {
             };
 
             const eventF1 = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload1,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -170,7 +169,7 @@ describe("Diagonal tests", () => {
             expect(eventF1).toThrow(InvalidPayloadError);
 
             const eventF2 = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     payload2,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -186,7 +185,7 @@ describe("Diagonal tests", () => {
             const diagonal = new Diagonal();
             for (const invalidSigHeader of testConfig.invalidSignatureHeaders) {
                 const eventF = () =>
-                    diagonal.constructEvent(
+                    diagonal.webhook.constructEvent(
                         testConfig.subscriptionPayload,
                         invalidSigHeader,
                         testConfig.endpointSecret
@@ -201,7 +200,7 @@ describe("Diagonal tests", () => {
         it("Should fail when the endpointSecret is empty", async () => {
             const diagonal = new Diagonal();
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     testConfig.subscriptionPayload,
                     testConfig.signatureHeader,
                     ""
@@ -213,7 +212,7 @@ describe("Diagonal tests", () => {
         it("Should fail when the endpointSecret is invalid", async () => {
             const diagonal = new Diagonal();
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     testConfig.subscriptionPayload,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret.slice(
@@ -247,7 +246,7 @@ describe("Diagonal tests", () => {
             let signatureHeader = `t=${newTimestamp},v0=${signedPayload}`;
 
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     testConfig.subscriptionPayload,
                     signatureHeader,
                     testConfig.endpointSecret
@@ -281,7 +280,7 @@ describe("Diagonal tests", () => {
             let signatureHeader = `t=${timestamp},v0=${signedPayload}`;
 
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     testConfig.subscriptionPayload,
                     signatureHeader,
                     testConfig.endpointSecret
@@ -301,7 +300,7 @@ describe("Diagonal tests", () => {
             };
 
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     subscriptionPayload,
                     testConfig.signatureHeader,
                     testConfig.endpointSecret
@@ -319,7 +318,7 @@ describe("Diagonal tests", () => {
                 "788284448d0ffabed8b47e6ed1848de4b7522257f6b516a7cc75e6da15905cb2";
 
             const eventF = () =>
-                diagonal.constructEvent(
+                diagonal.webhook.constructEvent(
                     testConfig.subscriptionPayload,
                     testConfig.signatureHeader,
                     endpointSecret1
@@ -334,7 +333,7 @@ describe("Diagonal tests", () => {
         it("Event should be verified successfully", async () => {
             const diagonal = new Diagonal();
 
-            const event = diagonal.constructEvent(
+            const event = diagonal.webhook.constructEvent(
                 testConfig.subscriptionPayload,
                 testConfig.signatureHeader,
                 testConfig.endpointSecret

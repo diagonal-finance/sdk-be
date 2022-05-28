@@ -22,3 +22,25 @@ export interface ISignatureHeader {
     timestamp: string;
     signature: string;
 }
+
+
+export interface ICheckoutSessionInput {
+    externalCustomerId: string;
+    serviceAddress: string;
+    packageRegistryId: number;
+    chainId: number;
+    cancelUrl: string;
+    successUrl: string;
+    expiresAt?: Date;
+}
+
+
+export interface ICheckoutSessionResponse {
+    uuid: string;
+    cancelUrl: string;
+    successUrl: string;
+}
+
+export interface Config {
+    diagonalBackendUrl: string;
+}
