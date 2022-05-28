@@ -4,12 +4,12 @@ export const testConfig = {
         serviceAddress: "0x245312DBb10B1eada0d4E597bDe17134845Bd787",
         superTokenAddress: "0x42bb40bF79730451B11f6De1CbA222F17b87Afd7",
         packageId: 1,
-        flowRate: 5787037037037,
+        flowRate: "5787037037037",
         chainId: 80001,
         event: "SUBSCRIPTION_ACKNOWLEDGED",
     },
     signatureHeader:
-        "t=1647115932683,v0=fe59e0d9a2c42a5c48bd2543c942928d804d3af7b076597a69660e633802dfac",
+        "t=1647115932683,v0=d56e97db9180a549a5628f760fa0dea1abf362a95f08ffd948be7bfa4be0f5d3",
     invalidSignatureHeaders: [
         "",
         "t=1647115932683",

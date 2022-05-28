@@ -94,10 +94,10 @@ describe("Diagonal tests", () => {
 
         it("Should fail when the payload does not contain valid flowRate field", async () => {
             const diagonal = new Diagonal();
-            let payload1 = { ...testConfig.subscriptionPayload, flowRate: -1 };
+            let payload1 = { ...testConfig.subscriptionPayload, flowRate: "-1" };
             let payload2 = {
                 ...testConfig.subscriptionPayload,
-                flowRate: "15",
+                flowRate: 1,
             };
             const eventF1 = () =>
                 diagonal.constructEvent(
