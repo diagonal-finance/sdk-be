@@ -106,26 +106,25 @@ import {
     InvalidSignatureError, IEvent
 } from "@diagonal-finance/sdk-be";
 
+import express from 'express'
+
+const diagonal = new Diagonal();
+
+const app = express();
+const endpointSecret = '78...b1';
 ...
 
-app.post("/webhookEndpoint", (req, res) => {
+// Parse body into JSON
+app.post("/webhook", express.raw({type: 'application/json'}), (req, res) => {
 
-    let endpointSecret = "78...b1"; // random 64 character secret
     let payload = req.body;
     let signatureHeader = req.headers['diagonal-signature'];
 
-    const diagonal = new Diagonal();
     let event: IEvent;
+
     try {
         event = diagonal.constructEvent(payload, signatureHeader as string, endpointSecret);
-
-        console.log("event", event);
-        // handle diagonal event...
-
-        res.status(200);
-        res.json({success: true})
     } catch (e) {
-
      if(e instanceof InvalidPayloadError) {
         // handle invalid payload error
      } else if (e instanceof InvalidEndpointSecretError) {
@@ -137,13 +136,44 @@ app.post("/webhookEndpoint", (req, res) => {
      } else {
         // handle another type of error
      }
-        res.status(500);
-        res.json({error: e})
+        return res.sendStatus(400);
     }
+
+    // Handle the event
+    switch (event.type) {
+      case 'SUBSCRIPTION_ACKNOWLEDGED':
+        console.log(`Account ${event.customerAddress} subscription was acknowledged!`);
+        // Then define and call a method to handle the acknowledged event
+        // handleAcknowledged(data);
+        break;
+      case 'SUBSCRIPTION_FINALIZED':
+        console.log(`Account ${event.customerAddress} subscription was finalized!`);
+        // Then define and call a method to handle the successful attachment of a PaymentMethod.
+        // handleFinalized(event);
+        break;
+      case 'SUBSCRIPTION_REORGED':
+        console.log(`Account ${event.customerAddress} subscription was re-orged!`);
+        // Then define and call a method to handle the successful attachment of a PaymentMethod.
+        // handleReorg(event);
+        break;
+      case 'UNSUBSCRIBED':
+       console.log(`Account ${event.customerAddress} unsubscribed`);
+        // Then define and call a method to handle the successful attachment of a PaymentMethod.
+        // handleUnsubscribe(event);
+        break;
+      default:
+        // Unexpected event type
+        console.log(`Unhandled event type ${event.type}.`);
+    }
+
+    // Return a 200 response to acknowledge receipt of the event
+    res.sendStatus(200);
 
 });
 
 ...
+
+app.listen(3000, () => console.log('Running on port 3000'));
 
 ```
 
