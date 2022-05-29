@@ -68,7 +68,7 @@ export default class Diagonal implements IDiagonal {
         if (!isValidAddress(payload["superTokenAddress"]))
             throw new InvalidPayloadError(
                 "Invalid payload `superTokenAddress` field."
-        );
+            );
         if (!(payload["packageId"] > 0))
             throw new InvalidPayloadError("Invalid payload `packageId` field.");
         if (!isValidFlowRate(payload["flowRate"]))
