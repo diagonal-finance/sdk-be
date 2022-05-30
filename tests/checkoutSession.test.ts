@@ -1,12 +1,11 @@
 import {
-    CheckoutSession,
     Diagonal,
     ICheckoutSessionInput,
     ICheckoutSessionResponse,
 } from "../src";
 import fetch from 'cross-fetch'
-import { testConfig } from "./utils";
 import { ApiKeyNotProvidedError, CheckoutSessionApiError, InvalidCheckoutSessionInputError, UnauthorizedError } from "../src/error";
+import { config } from "../src/config";
 
 jest.mock('cross-fetch', () => {
     //Mock the default export
@@ -19,25 +18,8 @@ jest.mock('cross-fetch', () => {
 // Checkout session class tests
 describe("CheckoutSession tests", () => {
 
-
-
     const fetchMock = jest.mocked(fetch, true)
     
-    describe("initialization", () => {
-        it("ApiKeyNotProvidedError should be thrown if API key is not provided", async () => {
-
-            const createNewEntityFn = () => {
-                 new CheckoutSession('');
-            }
-
-            expect(createNewEntityFn).toThrow(ApiKeyNotProvidedError);
-            expect(createNewEntityFn).toThrow('API key not provided');
-
-
-        })
-
-    })
-
 
     describe("create tests", () => {
 
@@ -78,6 +60,7 @@ describe("CheckoutSession tests", () => {
             expect(checkoutSessionResponse.cancelUrl).toEqual(checkoutSessionInput.cancelUrl)
             expect(checkoutSessionResponse.successUrl).toEqual(checkoutSessionInput.successUrl)
             expect(fetchMock).toBeCalledTimes(1)
+            // expect(fetchMock).toBeCalledWith()
 
         })
 
@@ -284,6 +267,29 @@ describe("CheckoutSession tests", () => {
             await expect(createCheckoutSessionFn2).rejects.toThrow(InvalidCheckoutSessionInputError);
             await expect(createCheckoutSessionFn2).rejects.toThrow("Invalid checkout session input `expiresAt` field.");
         });
+
+        it("ApiKeyNotProvidedError should be thrown if API key is not provided", async () => {
+            config.apiKey = '';
+            let diagonal = new Diagonal();
+
+            let checkoutSessionInput: ICheckoutSessionInput = {
+                serviceAddress: '0x2d3873af2d3f1a24caf1d684c1bcb9b4a945d63f',
+                packageRegistryId: 1,
+                chainId: 80001,
+                externalCustomerId: '12345',
+                cancelUrl: 'https://service.com/cancel',
+                successUrl: 'https://service.com/success',
+            };
+
+            const createCheckoutSessionFn = async () => 
+                    diagonal.checkoutSession.create(checkoutSessionInput)
+
+            await expect(createCheckoutSessionFn).rejects.toThrow(ApiKeyNotProvidedError);
+            await expect(createCheckoutSessionFn).rejects.toThrow('API key not provided');
+
+
+        })
+
 
     })
 

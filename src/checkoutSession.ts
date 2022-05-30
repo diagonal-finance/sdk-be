@@ -6,26 +6,24 @@ import { CREATE_CHECKOUT_SESSION_MUTATION } from './graphql/mutations';
 import { ICheckoutSession } from "./interfaces/ICheckoutSession";
 import { ICheckoutSessionInput, ICheckoutSessionResponse } from "./types";
 import { isValidAddress, isValidChainId, isValidExpiresAt, isValidUrl } from './utils';
-
 /**
  * Class for interacting with Diagonal checkout sessions
  */
 export default class CheckoutSession implements ICheckoutSession {
 
-    constructor(private apiKey: string) {
-        if(!this.apiKey || this.apiKey === '') throw new ApiKeyNotProvidedError('API key not provided');
-    }
 
     public async create(checkoutSessionInput: ICheckoutSessionInput) : Promise <ICheckoutSessionResponse> {
 
+        if(!config.apiKey || config.apiKey === '') throw new ApiKeyNotProvidedError('API key not provided');
+
         this.verifyCheckoutSessionInput(checkoutSessionInput);
 
-            const response = await fetch(config.diagonalBackendUrl, {
+            const response = await fetch(config.apiUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
-                    "x-api-key":  this.apiKey
+                    "x-api-key":  config.apiKey
                 },
                 body: JSON.stringify({
                     query: CREATE_CHECKOUT_SESSION_MUTATION,
