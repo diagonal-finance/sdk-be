@@ -18,7 +18,7 @@ class ApiKeyNotProvidedError extends DiagonalError {}
 
 class CheckoutSessionApiError extends DiagonalError {}
 
-class CheckoutSessionInvalidInputError extends DiagonalError {}
+class InvalidCheckoutSessionInputError extends DiagonalError {}
 
 class CheckoutSessionCreateError extends DiagonalError {}
 
@@ -30,6 +30,6 @@ export {
     UnauthorizedError,
     ApiKeyNotProvidedError,
     CheckoutSessionApiError,
-    CheckoutSessionInvalidInputError,
+    InvalidCheckoutSessionInputError,
     CheckoutSessionCreateError
 };

@@ -1,13 +1,13 @@
-import Diagonal from "./diagonal";
 import CheckoutSession from "./checkoutSession";
-import Webhook from "./webhook";
+import Diagonal from "./diagonal";
 import {
     InvalidEndpointSecretError,
     InvalidPayloadError,
     InvalidSignatureError,
     InvalidSignatureHeaderError,
 } from "./error";
-import { IEvent, ICheckoutSessionInput, ICheckoutSessionResponse } from "./types";
+import { ICheckoutSessionInput, ICheckoutSessionResponse, IEvent } from "./types";
+import Webhook from "./webhook";
 
 export {
     Diagonal,

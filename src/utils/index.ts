@@ -1,3 +1,6 @@
+
+import { URL } from "url";
+
 import { WebhookEventType } from "../types";
 
 import { supportedChainIds } from "./consts";
@@ -71,3 +74,35 @@ export const signatureHeaderElementsValid = (
         return false;
     }
 };
+
+export const isValidUrl = (url: string): boolean => {
+    try {
+        new URL(url);
+        return true;
+      } catch (err) {
+        return false;
+      }
+  
+}
+
+export const isValidExpiresAt = (expiresAt: Date): boolean => {
+
+
+    const currentDate = new Date()
+    const dayInMs = 24 * 60 * 60 * 1000
+    const currentDateTime = currentDate.getTime()
+
+      try {
+        const expiresAtDateTime = expiresAt.getTime()
+
+        if (
+          expiresAtDateTime < currentDateTime ||
+          expiresAtDateTime - currentDateTime > dayInMs
+        ) {
+          throw new Error()
+        }
+        return true
+        } catch (e) {
+        return false;
+      }
+}
