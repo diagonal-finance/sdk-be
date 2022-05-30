@@ -98,6 +98,8 @@ yarn add @diagonal-finance/sdk-be
 ## 📜 Usage
 
 ### ESModule:
+ 
+#### Webhook:
 
 ```typescript
 import {
@@ -144,6 +146,29 @@ app.post("/webhookEndpoint", (req, res) => {
 });
 
 ...
+
+```
+
+#### Checkout session
+
+```typescript
+
+    import { Diagonal, ICheckoutSessionResponse, ICheckoutSessionInput } from "@diagonal-finance/sdk-be";
+
+    const apiKey = 'abc...';
+    const diagonal = new Diagonal(apiKey);
+
+    const checkoutSessionInput: ICheckoutSessionInput = {
+        externalCustomerId: '',
+        serviceAddress: '0x123..456',
+        packageRegistryId: 1,
+        chainId: 80001,
+        cancelUrl: 'https://diagonal.finance/cancel',
+        successUrl: 'https://diagonal.finance/success'
+    }
+
+    const checkoutSession: ICheckoutSessionResponse = await diagonal.checkoutSession.create(checkoutSessionInput) as ICheckoutSessionResponse;
+    console.log(`Checkout session created, UUID: ${checkoutSession.uuid}`);
 
 ```
 
