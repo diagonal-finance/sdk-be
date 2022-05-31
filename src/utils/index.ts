@@ -14,11 +14,11 @@ export const isValidAddress = (address: string): boolean => {
     return true;
 };
 
-export const isValidFlowRate = (flowRate: number): boolean => {
+export const isValidFlowRate = (flowRate: string): boolean => {
     if (typeof flowRate !== "string") return false;
     if (flowRate === "") return false;
     try {
-        if(parseInt(flowRate) < 0) return false;
+        if (flowRate[0] === "-") return false;
         return true;
     } catch (e) {
         return false;
