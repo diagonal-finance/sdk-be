@@ -1,8 +1,8 @@
-import { IEvent, ISubscriptionData } from "../types";
+import { IEvent, IWebhookData } from "../types";
 
 export interface IDiagonal {
     constructEvent(
-        payload: ISubscriptionData | any,
+        payload: IWebhookData | any,
         signatureHeader: string,
         endpointSecret: string
     ): IEvent;

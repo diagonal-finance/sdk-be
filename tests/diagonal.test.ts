@@ -26,9 +26,9 @@ describe("Diagonal tests", () => {
             expect(eventF).toThrow(InvalidPayloadError);
         });
 
-        it("Should fail when the payload does not contain valid service field", async () => {
+        it("Should fail when the payload does not contain valid serviceAddress field", async () => {
             const diagonal = new Diagonal();
-            const payload = { ...testConfig.subscriptionPayload, service: "" };
+            const payload = { ...testConfig.subscriptionPayload, serviceAddress: "" };
 
             const eventF = () =>
                 diagonal.constructEvent(
@@ -37,15 +37,15 @@ describe("Diagonal tests", () => {
                     testConfig.endpointSecret
                 );
 
-            expect(eventF).toThrow("Invalid payload `service` adddress field.");
+            expect(eventF).toThrow("Invalid payload `serviceAddress` field.");
             expect(eventF).toThrow(InvalidPayloadError);
         });
 
-        it("Should fail when the payload does not contain valid subscriber field", async () => {
+        it("Should fail when the payload does not contain valid customerAddress field", async () => {
             const diagonal = new Diagonal();
             const payload = {
                 ...testConfig.subscriptionPayload,
-                subscriber: "",
+                customerAddress: "",
             };
 
             const eventF = () =>
@@ -56,16 +56,16 @@ describe("Diagonal tests", () => {
                 );
 
             expect(eventF).toThrow(
-                "Invalid payload `subscriber` adddress field."
+                "Invalid payload `customerAddress` field."
             );
             expect(eventF).toThrow(InvalidPayloadError);
         });
 
-        it("Should fail when the payload does not contain valid superToken field", async () => {
+        it("Should fail when the payload does not contain valid superTokenAddress field", async () => {
             const diagonal = new Diagonal();
             const payload = {
                 ...testConfig.subscriptionPayload,
-                superToken: "",
+                superTokenAddress: "",
             };
             const eventF = () =>
                 diagonal.constructEvent(
@@ -74,7 +74,7 @@ describe("Diagonal tests", () => {
                     testConfig.endpointSecret
                 );
             expect(eventF).toThrow(
-                "Invalid payload `superToken` adddress field."
+                "Invalid payload `superTokenAddress` field."
             );
             expect(eventF).toThrow(InvalidPayloadError);
         });
@@ -94,10 +94,10 @@ describe("Diagonal tests", () => {
 
         it("Should fail when the payload does not contain valid flowRate field", async () => {
             const diagonal = new Diagonal();
-            let payload1 = { ...testConfig.subscriptionPayload, flowRate: -1 };
+            let payload1 = { ...testConfig.subscriptionPayload, flowRate: "-1" };
             let payload2 = {
                 ...testConfig.subscriptionPayload,
-                flowRate: "15",
+                flowRate: 1,
             };
             const eventF1 = () =>
                 diagonal.constructEvent(
@@ -119,42 +119,15 @@ describe("Diagonal tests", () => {
             expect(eventF2).toThrow(InvalidPayloadError);
         });
 
-        it("Should fail when the payload does not contain valid feeRate field", async () => {
-            const diagonal = new Diagonal();
-            const payload1 = { ...testConfig.subscriptionPayload, feeRate: -1 };
-            const payload2 = {
-                ...testConfig.subscriptionPayload,
-                feeRate: "15",
-            };
-            const eventF1 = () =>
-                diagonal.constructEvent(
-                    payload1,
-                    testConfig.signatureHeader,
-                    testConfig.endpointSecret
-                );
-            expect(eventF1).toThrow("Invalid payload `feeRate` field.");
-            expect(eventF1).toThrow(InvalidPayloadError);
-
-            const eventF2 = () =>
-                diagonal.constructEvent(
-                    payload2,
-                    testConfig.signatureHeader,
-                    testConfig.endpointSecret
-                );
-
-            expect(eventF2).toThrow("Invalid payload `feeRate` field.");
-            expect(eventF2).toThrow(InvalidPayloadError);
-        });
-
-        it("Should fail when the payload does not contain valid eventType field", async () => {
+        it("Should fail when the payload does not contain valid event field", async () => {
             const diagonal = new Diagonal();
             const payload1 = {
                 ...testConfig.subscriptionPayload,
-                eventType: "abc",
+                event: "abc",
             };
             const payload2 = {
                 ...testConfig.subscriptionPayload,
-                eventType: "",
+                event: "",
             };
 
             const eventF1 = () =>
@@ -164,7 +137,7 @@ describe("Diagonal tests", () => {
                     testConfig.endpointSecret
                 );
 
-            expect(eventF1).toThrow("Invalid payload `eventType` field.");
+            expect(eventF1).toThrow("Invalid payload `event` field.");
             expect(eventF1).toThrow(InvalidPayloadError);
 
             const eventF2 = () =>
@@ -174,7 +147,7 @@ describe("Diagonal tests", () => {
                     testConfig.endpointSecret
                 );
 
-            expect(eventF2).toThrow("Invalid payload `eventType` field.");
+            expect(eventF2).toThrow("Invalid payload `event` field.");
             expect(eventF2).toThrow(InvalidPayloadError);
         });
 
@@ -367,14 +340,14 @@ describe("Diagonal tests", () => {
                 testConfig.endpointSecret
             );
 
-            expect(event.subscriber).toEqual(
-                testConfig.subscriptionPayload.subscriber
+            expect(event.customerAddress).toEqual(
+                testConfig.subscriptionPayload.customerAddress
             );
-            expect(event.service).toEqual(
-                testConfig.subscriptionPayload.service
+            expect(event.serviceAddress).toEqual(
+                testConfig.subscriptionPayload.serviceAddress
             );
-            expect(event.superToken).toEqual(
-                testConfig.subscriptionPayload.superToken
+            expect(event.superTokenAddress).toEqual(
+                testConfig.subscriptionPayload.superTokenAddress
             );
             expect(event.packageId).toEqual(
                 testConfig.subscriptionPayload.packageId
@@ -382,14 +355,11 @@ describe("Diagonal tests", () => {
             expect(event.flowRate).toEqual(
                 testConfig.subscriptionPayload.flowRate
             );
-            expect(event.feeRate).toEqual(
-                testConfig.subscriptionPayload.feeRate
-            );
             expect(event.chainId).toEqual(
                 testConfig.subscriptionPayload.chainId
             );
-            expect(event.eventType).toEqual(
-                testConfig.subscriptionPayload.eventType
+            expect(event.event).toEqual(
+                testConfig.subscriptionPayload.event
             );
         });
     });

@@ -7,7 +7,7 @@ import {
     InvalidSignatureHeaderError,
 } from "./error";
 import { IDiagonal } from "./interfaces";
-import { IEvent, ISignatureHeader, ISubscriptionData } from "./types";
+import { IEvent, ISignatureHeader, IWebhookData } from "./types";
 import {
     isValidAddress,
     isValidChainId,
@@ -30,7 +30,7 @@ export default class Diagonal implements IDiagonal {
      * @returns An IEvent object
      */
     public constructEvent(
-        payload: ISubscriptionData | any,
+        payload: IWebhookData | any,
         signatureHeader: string,
         endpointSecret: string
     ): IEvent {
@@ -53,30 +53,28 @@ export default class Diagonal implements IDiagonal {
         return payload as IEvent;
     }
 
-    private verifyPayload(payload: ISubscriptionData | any): void {
+    private verifyPayload(payload: IWebhookData | any): void {
         if (typeof payload !== "object")
             throw new InvalidPayloadError("Invalid payload type");
 
-        if (!isValidAddress(payload["service"]))
+        if (!isValidAddress(payload["serviceAddress"]))
             throw new InvalidPayloadError(
-                "Invalid payload `service` adddress field."
+                "Invalid payload `serviceAddress` field."
             );
-        if (!isValidAddress(payload["subscriber"]))
+        if (!isValidAddress(payload["customerAddress"]))
             throw new InvalidPayloadError(
-                "Invalid payload `subscriber` adddress field."
+                "Invalid payload `customerAddress` field."
             );
-        if (!isValidAddress(payload["superToken"]))
+        if (!isValidAddress(payload["superTokenAddress"]))
             throw new InvalidPayloadError(
-                "Invalid payload `superToken` adddress field."
+                "Invalid payload `superTokenAddress` field."
             );
         if (!(payload["packageId"] > 0))
             throw new InvalidPayloadError("Invalid payload `packageId` field.");
         if (!isValidFlowRate(payload["flowRate"]))
             throw new InvalidPayloadError("Invalid payload `flowRate` field.");
-        if (!isValidFlowRate(payload["feeRate"]))
-            throw new InvalidPayloadError("Invalid payload `feeRate` field.");
-        if (!isValidEventType(payload["eventType"]))
-            throw new InvalidPayloadError("Invalid payload `eventType` field.");
+        if (!isValidEventType(payload["event"]))
+            throw new InvalidPayloadError("Invalid payload `event` field.");
         if (!isValidChainId(payload["chainId"]))
             throw new InvalidPayloadError("Invalid payload `chainId` field.");
     }

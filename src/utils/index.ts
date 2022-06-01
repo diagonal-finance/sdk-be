@@ -1,4 +1,4 @@
-import { SubscriptionEventType } from "../types";
+import { WebhookEventType } from "../types";
 
 import { supportedChainIds } from "./consts";
 
@@ -14,11 +14,17 @@ export const isValidAddress = (address: string): boolean => {
     return true;
 };
 
-export const isValidFlowRate = (flowRate: number): boolean => {
-    if (typeof flowRate !== "number") return false;
-    if (flowRate < 0) return false;
-    return true;
+export const isValidFlowRate = (flowRate: string): boolean => {
+    if (typeof flowRate !== "string") return false;
+    if (flowRate === "") return false;
+    try {
+        if(flowRate[0] === "-") return false;
+        return true;
+    } catch (e) {
+        return false;
+    }
 };
+
 
 export const isValidEventType = (eventType: string): boolean => {
     if (typeof eventType !== "string") return false;
@@ -26,7 +32,7 @@ export const isValidEventType = (eventType: string): boolean => {
     if (eventType === "") return false;
 
     if (
-        !Object.values(SubscriptionEventType)
+        !Object.values(WebhookEventType)
             .map((entity) => entity.toString())
             .includes(eventType)
     )
