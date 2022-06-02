@@ -15,7 +15,7 @@ export default class Diagonal {
     constructor (apiKey?: string, apiUrl?: string) {
         this.webhook = new Webhook();
         this.checkoutSession = new CheckoutSession();
-        
+
         if(apiKey) {
             config.apiKey = apiKey;
         }
