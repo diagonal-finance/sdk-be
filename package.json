@@ -1,6 +1,6 @@
 {
     "name": "@diagonal-finance/sdk-be",
-    "version": "1.1.9",
+    "version": "1.2.0",
     "description": "Diagonal finance Backend SDK",
     "repository": "https://github.com/diagonal-finance/sdk-be",
     "homepage": "https://github.com/diagonal-finance/sdk-be",
@@ -78,7 +78,7 @@
         "rollup-plugin-terser": "^7.0.2",
         "ts-node": "^10.8.0",
         "tslib": "^2.4.0",
-        "typedoc": "^0.22.15",
+        "typedoc": "^0.22.17",
         "typescript": "^4.7.2"
     },
     "dependencies": {
