@@ -98,7 +98,7 @@ yarn add @diagonal-finance/sdk-be
 ## 📜 Usage
 
 ### ESModule:
- 
+
 #### Webhook:
 
 ```typescript
@@ -182,24 +182,38 @@ app.listen(3000, () => console.log('Running on port 3000'));
 #### Checkout session
 
 ```typescript
+import {
+    Diagonal,
+    ICheckoutSessionResponse,
+    ICheckoutSessionInput,
+} from "@diagonal-finance/sdk-be";
 
-    import { Diagonal, ICheckoutSessionResponse, ICheckoutSessionInput } from "@diagonal-finance/sdk-be";
+const express = require("express");
+const app = express();
 
-    const apiKey = 'abc...';
-    const diagonal = new Diagonal(apiKey);
+const apiKey = "abc...";
+const diagonal = new Diagonal(apiKey);
+const YOUR_DOMAIN = "http://localhost:3000";
 
+app.post("/create-checkout-session", async (req, res) => {
     const checkoutSessionInput: ICheckoutSessionInput = {
-        externalCustomerId: '',
-        serviceAddress: '0x123..456',
+        externalCustomerId: "john.smith@gmail.com", // a UUID for your customer e.g. email/customerUUID/random number
+        serviceAddress: "0x123..456",
         packageRegistryId: 1,
-        chainId: 80001,
-        cancelUrl: 'https://diagonal.finance/cancel',
-        successUrl: 'https://diagonal.finance/success'
-    }
+        chainId: 80001, // Mumbai
+        cancelUrl: `${YOUR_DOMAIN}/cancel`,
+        successUrl: `${YOUR_DOMAIN}/success`,
+    };
 
-    const checkoutSession: ICheckoutSessionResponse = await diagonal.checkoutSession.create(checkoutSessionInput) as ICheckoutSessionResponse;
+    const checkoutSession: ICheckoutSessionResponse =
+        (await diagonal.checkoutSession.create(
+            checkoutSessionInput
+        )) as ICheckoutSessionResponse;
+
     console.log(`Checkout session created, UUID: ${checkoutSession.uuid}`);
 
+    res.redirect(303, checkoutSession.url);
+});
 ```
 
 ## 🛠 Development
