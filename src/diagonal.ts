@@ -8,26 +8,23 @@ import Webhook from "./webhook";
  * Diagonal is the main class for interacting with the Diagonal backend SDK.
  */
 export default class Diagonal {
-
     public webhook: IWebhook;
     public checkoutSession: ICheckoutSession;
 
-    constructor (apiKey?: string, apiUrl?: string) {
+    constructor(apiKey?: string, apiUrl?: string) {
         this.webhook = new Webhook();
         this.checkoutSession = new CheckoutSession();
 
-        if(apiKey) {
+        if (apiKey) {
             config.apiKey = apiKey;
         }
 
-        if(apiUrl) {
+        if (apiUrl) {
             config.apiUrl = apiUrl;
         }
-
     }
 
     public setApiKey = (apiKey: string) => {
         config.apiKey = apiKey;
-    }
-
+    };
 }

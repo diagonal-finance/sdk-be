@@ -27,7 +27,10 @@ describe("Webhook tests", () => {
 
         it("Should fail when the payload does not contain valid serviceAddress field", async () => {
             const diagonal = new Diagonal();
-            const payload = { ...testConfig.subscriptionPayload, serviceAddress: "" };
+            const payload = {
+                ...testConfig.subscriptionPayload,
+                serviceAddress: "",
+            };
 
             const eventF = () =>
                 diagonal.webhook.constructEvent(
@@ -54,9 +57,7 @@ describe("Webhook tests", () => {
                     testConfig.endpointSecret
                 );
 
-            expect(eventF).toThrow(
-                "Invalid payload `customerAddress` field."
-            );
+            expect(eventF).toThrow("Invalid payload `customerAddress` field.");
             expect(eventF).toThrow(InvalidPayloadError);
         });
 
@@ -93,7 +94,10 @@ describe("Webhook tests", () => {
 
         it("Should fail when the payload does not contain valid flowRate field", async () => {
             const diagonal = new Diagonal();
-            let payload1 = { ...testConfig.subscriptionPayload, flowRate: "-1" };
+            let payload1 = {
+                ...testConfig.subscriptionPayload,
+                flowRate: "-1",
+            };
             let payload2 = {
                 ...testConfig.subscriptionPayload,
                 flowRate: 1,
@@ -357,9 +361,7 @@ describe("Webhook tests", () => {
             expect(event.chainId).toEqual(
                 testConfig.subscriptionPayload.chainId
             );
-            expect(event.event).toEqual(
-                testConfig.subscriptionPayload.event
-            );
+            expect(event.event).toEqual(testConfig.subscriptionPayload.event);
         });
     });
 });

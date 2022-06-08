@@ -31,5 +31,5 @@ export {
     ApiKeyNotProvidedError,
     CheckoutSessionApiError,
     InvalidCheckoutSessionInputError,
-    CheckoutSessionCreateError
+    CheckoutSessionCreateError,
 };
