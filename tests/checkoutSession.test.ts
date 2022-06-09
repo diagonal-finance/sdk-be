@@ -67,7 +67,9 @@ describe("CheckoutSession tests", () => {
                 checkoutSessionInput.successUrl
             );
 
-            expect(checkoutSessionResponse.url).toEqual(config.checkoutUrl);
+            expect(checkoutSessionResponse.checkoutUrl).toEqual(
+                config.checkoutUrl
+            );
 
             expect(fetchMock).toBeCalledTimes(1);
             // expect(fetchMock).toBeCalledWith()

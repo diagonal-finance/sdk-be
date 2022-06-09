@@ -212,7 +212,7 @@ app.post("/create-checkout-session", async (req, res) => {
 
     console.log(`Checkout session created, UUID: ${checkoutSession.uuid}`);
 
-    res.redirect(303, checkoutSession.url);
+    res.redirect(303, checkoutSession.checkoutUrl);
 });
 ```
 

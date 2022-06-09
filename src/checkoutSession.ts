@@ -66,7 +66,7 @@ export default class CheckoutSession implements ICheckoutSession {
 
         const payload = {
             ...checkoutSessionResponse.data.checkoutSessionCreate,
-            url: config.checkoutUrl,
+            checkoutUrl: config.checkoutUrl,
         };
 
         return payload;

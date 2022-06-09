@@ -37,7 +37,7 @@ export interface ICheckoutSessionResponse {
     uuid: string;
     cancelUrl: string;
     successUrl: string;
-    url: string; // redirect url
+    checkoutUrl: string;
 }
 
 export interface Config {
