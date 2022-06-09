@@ -6,7 +6,11 @@ import {
     InvalidSignatureError,
     InvalidSignatureHeaderError,
 } from "./error";
-import { ICheckoutSessionInput, ICheckoutSessionResponse, IEvent } from "./types";
+import {
+    ICheckoutSessionInput,
+    ICheckoutSessionResponse,
+    IEvent,
+} from "./types";
 import Webhook from "./webhook";
 
 export {

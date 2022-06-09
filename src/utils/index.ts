@@ -1,4 +1,3 @@
-
 import { URL } from "url";
 
 import { WebhookEventType } from "../types";
@@ -21,13 +20,12 @@ export const isValidFlowRate = (flowRate: string): boolean => {
     if (typeof flowRate !== "string") return false;
     if (flowRate === "") return false;
     try {
-        if(flowRate[0] === "-") return false;
+        if (flowRate[0] === "-") return false;
         return true;
     } catch (e) {
         return false;
     }
 };
-
 
 export const isValidEventType = (eventType: string): boolean => {
     if (typeof eventType !== "string") return false;
@@ -80,30 +78,27 @@ export const isValidUrl = (url: string): boolean => {
     try {
         new URL(url);
         return true;
-      } catch (err) {
+    } catch (err) {
         return false;
-      }
-  
-}
+    }
+};
 
 export const isValidExpiresAt = (expiresAt: Date): boolean => {
+    const currentDate = new Date();
+    const dayInMs = 24 * 60 * 60 * 1000;
+    const currentDateTime = currentDate.getTime();
 
-
-    const currentDate = new Date()
-    const dayInMs = 24 * 60 * 60 * 1000
-    const currentDateTime = currentDate.getTime()
-
-      try {
-        const expiresAtDateTime = expiresAt.getTime()
+    try {
+        const expiresAtDateTime = expiresAt.getTime();
 
         if (
-          expiresAtDateTime < currentDateTime ||
-          expiresAtDateTime - currentDateTime > dayInMs
+            expiresAtDateTime < currentDateTime ||
+            expiresAtDateTime - currentDateTime > dayInMs
         ) {
-          throw new Error()
+            throw new Error();
         }
-        return true
-        } catch (e) {
+        return true;
+    } catch (e) {
         return false;
-      }
-}
+    }
+};

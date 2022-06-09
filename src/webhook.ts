@@ -67,8 +67,8 @@ export default class Webhook implements IWebhook {
         if (!isValidAddress(payload["superTokenAddress"]))
             throw new InvalidPayloadError(
                 "Invalid payload `superTokenAddress` field."
-        );
-        if (payload["packageId"]  <= 0)
+            );
+        if (payload["packageId"] <= 0)
             throw new InvalidPayloadError("Invalid payload `packageId` field.");
         if (!isValidFlowRate(payload["flowRate"]))
             throw new InvalidPayloadError("Invalid payload `flowRate` field.");

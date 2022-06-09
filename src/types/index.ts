@@ -23,7 +23,6 @@ export interface ISignatureHeader {
     signature: string;
 }
 
-
 export interface ICheckoutSessionInput {
     externalCustomerId: string;
     serviceAddress: string;
@@ -34,11 +33,11 @@ export interface ICheckoutSessionInput {
     expiresAt?: Date;
 }
 
-
 export interface ICheckoutSessionResponse {
     uuid: string;
     cancelUrl: string;
     successUrl: string;
+    url: string; // redirect url
 }
 
 export interface Config {
