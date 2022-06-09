@@ -1,7 +1,7 @@
 export class Config {
     private _apiKey!: string;
     private _apiUrl = "https://api.diagonal.finance/graphql";
-    private _checkoutUrl = "https://checkout.diagonal.finance/";
+    private _checkoutUrl = "https://checkout.diagonal.finance";
 
     get apiKey(): string {
         return this._apiKey;
