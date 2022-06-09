@@ -11,7 +11,7 @@ export default class Diagonal {
     public webhook: IWebhook;
     public checkoutSession: ICheckoutSession;
 
-    constructor(apiKey?: string, apiUrl?: string) {
+    constructor(apiKey?: string, apiUrl?: string, checkoutUrl?: string) {
         this.webhook = new Webhook();
         this.checkoutSession = new CheckoutSession();
 
@@ -21,6 +21,10 @@ export default class Diagonal {
 
         if (apiUrl) {
             config.apiUrl = apiUrl;
+        }
+
+        if (checkoutUrl) {
+            config.checkoutUrl = checkoutUrl;
         }
     }
 

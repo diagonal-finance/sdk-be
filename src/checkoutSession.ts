@@ -64,7 +64,12 @@ export default class CheckoutSession implements ICheckoutSession {
             }
         }
 
-        return checkoutSessionResponse.data.checkoutSessionCreate;
+        const payload = {
+            ...checkoutSessionResponse.data.checkoutSessionCreate,
+            url: config.checkoutUrl,
+        };
+
+        return payload;
     }
 
     private verifyCheckoutSessionInput(
