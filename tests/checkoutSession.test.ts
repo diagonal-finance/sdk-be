@@ -66,6 +66,11 @@ describe("CheckoutSession tests", () => {
             expect(checkoutSessionResponse.successUrl).toEqual(
                 checkoutSessionInput.successUrl
             );
+
+            expect(checkoutSessionResponse.checkoutUrl).toEqual(
+                `${config.checkoutBaseUrl}/${checkoutSessionResponse.uuid}`
+            );
+
             expect(fetchMock).toBeCalledTimes(1);
             // expect(fetchMock).toBeCalledWith()
         });

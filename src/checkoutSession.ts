@@ -42,13 +42,13 @@ export default class CheckoutSession implements ICheckoutSession {
             }),
         });
 
-        const checkoutSessionResponse = await response.json();
+        const checkoutSessionResponseRaw = await response.json();
 
         if (
-            checkoutSessionResponse.errors &&
-            checkoutSessionResponse.errors.length > 0
+            checkoutSessionResponseRaw.errors &&
+            checkoutSessionResponseRaw.errors.length > 0
         ) {
-            const error = checkoutSessionResponse.errors[0];
+            const error = checkoutSessionResponseRaw.errors[0];
             if (error.extensions.code === "UNAUTHORIZED") {
                 throw new UnauthorizedError(
                     "Unathorized request to create checkout session."
@@ -64,7 +64,13 @@ export default class CheckoutSession implements ICheckoutSession {
             }
         }
 
-        return checkoutSessionResponse.data.checkoutSessionCreate;
+        const checkoutSessionResponse: ICheckoutSessionResponse =
+            checkoutSessionResponseRaw.data.checkoutSessionCreate;
+
+        return {
+            ...checkoutSessionResponse,
+            checkoutUrl: `${config.checkoutBaseUrl}/${checkoutSessionResponse.uuid}`,
+        };
     }
 
     private verifyCheckoutSessionInput(

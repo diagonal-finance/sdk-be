@@ -12,6 +12,9 @@ describe("Diagonal tests", () => {
         const diagonal = new Diagonal();
         expect(config.apiKey).toBeUndefined();
         expect(config.apiUrl).toBe("https://api.diagonal.finance/graphql");
+        expect(config.checkoutBaseUrl).toBe(
+            "https://checkout.diagonal.finance"
+        );
         expect(diagonal.checkoutSession).toBeInstanceOf(CheckoutSession);
         expect(diagonal.webhook).toBeInstanceOf(Webhook);
     });
@@ -21,6 +24,9 @@ describe("Diagonal tests", () => {
         const diagonal = new Diagonal(apiKey);
         expect(config.apiKey).toBe(apiKey);
         expect(config.apiUrl).toBe("https://api.diagonal.finance/graphql");
+        expect(config.checkoutBaseUrl).toBe(
+            "https://checkout.diagonal.finance"
+        );
         expect(diagonal.checkoutSession).toBeInstanceOf(CheckoutSession);
         expect(diagonal.webhook).toBeInstanceOf(Webhook);
     });
