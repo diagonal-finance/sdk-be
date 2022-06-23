@@ -70,12 +70,10 @@ export default class CheckoutSession implements ICheckoutSession {
 
         config.checkoutUrl = `${config.checkoutUrl}/${checkoutSessionResponse.uuid}`;
 
-        const payload = {
+        return {
             ...checkoutSessionResponse,
             checkoutUrl: config.checkoutUrl,
         };
-
-        return payload;
     }
 
     private verifyCheckoutSessionInput(
