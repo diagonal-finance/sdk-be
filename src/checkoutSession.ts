@@ -42,7 +42,6 @@ export default class CheckoutSession implements ICheckoutSession {
             }),
         });
 
-        // TODO: Type response
         const checkoutSessionResponseRaw = await response.json();
 
         if (
@@ -68,11 +67,9 @@ export default class CheckoutSession implements ICheckoutSession {
         const checkoutSessionResponse: ICheckoutSessionResponse =
             checkoutSessionResponseRaw.data.checkoutSessionCreate;
 
-        config.checkoutUrl = `${config.checkoutUrl}/${checkoutSessionResponse.uuid}`;
-
         return {
             ...checkoutSessionResponse,
-            checkoutUrl: config.checkoutUrl,
+            checkoutUrl: `${config.checkoutBaseUrl}/${checkoutSessionResponse.uuid}`,
         };
     }
 

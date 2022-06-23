@@ -68,7 +68,7 @@ describe("CheckoutSession tests", () => {
             );
 
             expect(checkoutSessionResponse.checkoutUrl).toEqual(
-                config.checkoutUrl
+                `${config.checkoutBaseUrl}/${checkoutSessionResponse.uuid}`
             );
 
             expect(fetchMock).toBeCalledTimes(1);
