@@ -1,6 +1,5 @@
 import { createHmac } from "crypto";
 
-
 import {
     InvalidEndpointSecretError,
     InvalidPayloadError,
@@ -11,7 +10,7 @@ import { construct } from "../event";
 
 import { testConfig } from "./utils";
 
-describe("Webhook event tests", () => {
+describe("Webhook event", () => {
     function constructEventFn(
         payload?: unknown,
         signature?: string,
@@ -25,14 +24,14 @@ describe("Webhook event tests", () => {
             );
     }
 
-    describe("Invalid payload tests", () => {
-        it("Should fail when the payload is of invalid type", () => {
+    describe("When validating the payload", () => {
+        it("Should fail when is of invalid type", () => {
             expect(constructEventFn("")).toThrow(
                 new InvalidPayloadError("Invalid payload type")
             );
         });
 
-        it("Should fail when the payload does not contain valid serviceAddress field", async () => {
+        it("Should fail if does not contain a valid serviceAddress field", async () => {
             const payload = {
                 ...testConfig.subscriptionPayload,
                 serviceAddress: "",
@@ -41,7 +40,7 @@ describe("Webhook event tests", () => {
             expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
         });
 
-        it("Should fail when the payload does not contain valid customerAddress field", async () => {
+        it("Should fail if does not contain a valid customerAddress field", async () => {
             const payload = {
                 ...testConfig.subscriptionPayload,
                 customerAddress: "",
@@ -49,7 +48,7 @@ describe("Webhook event tests", () => {
             expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
         });
 
-        it("Should fail when the payload does not contain valid superTokenAddress field", async () => {
+        it("Should fail if does not contain a valid superTokenAddress field", async () => {
             const payload = {
                 ...testConfig.subscriptionPayload,
                 token: "",
@@ -57,12 +56,12 @@ describe("Webhook event tests", () => {
             expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
         });
 
-        it("Should fail when the payload does not contain valid packageId field", async () => {
+        it("Should fail if does not contain a valid packageId field", async () => {
             const payload = { ...testConfig.subscriptionPayload, packageId: 0 };
             expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
         });
 
-        it("Should fail when the payload does not contain valid event field", async () => {
+        it("Should fail if does not contain a valid event field", async () => {
             const payload1 = {
                 ...testConfig.subscriptionPayload,
                 event: "abc",
@@ -75,7 +74,7 @@ describe("Webhook event tests", () => {
             expect(constructEventFn(payload2)).toThrow(InvalidPayloadError);
         });
 
-        it("Should fail when the payload does not contain valid chainId field", async () => {
+        it("Should fail if does not contain a valid chainId field", async () => {
             const payload1 = { ...testConfig.subscriptionPayload, chainId: 0 };
             const payload2 = {
                 ...testConfig.subscriptionPayload,
@@ -86,9 +85,20 @@ describe("Webhook event tests", () => {
         });
     });
 
-    describe("Invalid signatureHeader tests", () => {
-        it("Should fail when the signatureHeader is invalid", async () => {
-            for (const invalidSigHeader of testConfig.invalidSignatureHeaders) {
+    describe("When validating the signature header", () => {
+        it.each([
+            "",
+            "t=1647115932683",
+            "v0=c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
+            "1647115932683",
+            "c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
+            "t1647115932683,v0=c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
+            "t=1647115932683,v0c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
+            "1647115932683,c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
+            "t=16471159326,v0=c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962cced",
+        ])(
+            "Should fail when if signatureHeader provided is '%s'",
+            async (invalidSigHeader) => {
                 expect(
                     constructEventFn(
                         testConfig.subscriptionPayload,
@@ -98,11 +108,11 @@ describe("Webhook event tests", () => {
                     new InvalidSignatureHeaderError("Invalid signature header.")
                 );
             }
-        });
+        );
     });
 
-    describe("Invalid endpointSecret tests", () => {
-        it("Should fail when the endpointSecret is empty", async () => {
+    describe("When verifying the endpoint secret", () => {
+        it("Should fail if empty", async () => {
             expect(
                 constructEventFn(
                     testConfig.subscriptionPayload,
@@ -114,7 +124,7 @@ describe("Webhook event tests", () => {
             );
         });
 
-        it("Should fail when the endpointSecret is invalid", async () => {
+        it("Should fail if invalid", async () => {
             expect(
                 constructEventFn(
                     testConfig.subscriptionPayload,
@@ -130,8 +140,8 @@ describe("Webhook event tests", () => {
         });
     });
 
-    describe("Invalid signature verification tests", () => {
-        it("Should fail when the signature header timestamp is invalid", async () => {
+    describe("When verifying the signature header", () => {
+        it("Should fail if timestamp is invalid", async () => {
             const newTimestamp = Date.now();
             const oldTimestamp = "1647115932683";
 
@@ -156,7 +166,7 @@ describe("Webhook event tests", () => {
             ).toThrow(new InvalidSignatureError("Invalid signature."));
         });
 
-        it("Should fail when the signature header payload is invalid", async () => {
+        it("Should fail if header payload is invalid", async () => {
             const timestamp = "1647115932683";
 
             // subscriber address with the last character changed
@@ -185,7 +195,7 @@ describe("Webhook event tests", () => {
             ).toThrow(new InvalidSignatureError("Invalid signature."));
         });
 
-        it("Should fail when the signature body is invalid", async () => {
+        it("Should fail if body is invalid", async () => {
             // address with the last character changed
             const subscriptionPayload = {
                 ...testConfig.subscriptionPayload,
@@ -197,7 +207,7 @@ describe("Webhook event tests", () => {
             );
         });
 
-        it("Should fail when the endpointSecret is invalid", async () => {
+        it("Should fail if endpointSecret is invalid", async () => {
             // endpointSecret with the last character changed
             const endpointSecret1 =
                 "788284448d0ffabed8b47e6ed1848de4b7522257f6b516a7cc75e6da15905cb2";
@@ -212,8 +222,8 @@ describe("Webhook event tests", () => {
         });
     });
 
-    describe("Successful verification tests", () => {
-        it("Event should be verified successfully", async () => {
+    describe("When constructing a valid webhook event", () => {
+        it("Should be done successfully", async () => {
             const event = construct(
                 testConfig.subscriptionPayload,
                 testConfig.signatureHeader,
@@ -226,9 +236,7 @@ describe("Webhook event tests", () => {
             expect(event.serviceAddress).toEqual(
                 testConfig.subscriptionPayload.serviceAddress
             );
-            expect(event.token).toEqual(
-                testConfig.subscriptionPayload.token
-            );
+            expect(event.token).toEqual(testConfig.subscriptionPayload.token);
             expect(event.packageId).toEqual(
                 testConfig.subscriptionPayload.packageId
             );

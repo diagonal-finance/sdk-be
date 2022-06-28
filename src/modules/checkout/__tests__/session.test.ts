@@ -10,13 +10,13 @@ import { InvalidCheckoutSessionInputError } from "../errors";
 jest.mock("../../../diagonal");
 
 // Checkout session class tests
-describe("CheckoutSession tests", () => {
-    describe("create tests", () => {
+describe("CheckoutSession", () => {
+    describe("While creating", () => {
         afterEach(() => {
             jest.resetAllMocks();
         });
 
-        it("Checkout session should be created successfully", async () => {
+        it("Should be created successfully", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -35,7 +35,7 @@ describe("CheckoutSession tests", () => {
                 return Promise.resolve({
                     checkoutSessionCreate: {
                         id,
-                        url: checkoutUrl
+                        url: checkoutUrl,
                     },
                 });
             });
@@ -50,7 +50,7 @@ describe("CheckoutSession tests", () => {
             // expect(fetchMock).toBeCalledWith()
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid packageRegistryId is supplied to the checkoutSessionInput", async () => {
+        it("InvalidCheckoutSessionInputError should be thrown if invalid packageRegistryId is supplied", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -70,7 +70,7 @@ describe("CheckoutSession tests", () => {
             );
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid chainId is supplied to the checkoutSessionInput", async () => {
+        it("InvalidCheckoutSessionInputError should be thrown if invalid chainId is supplied", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -90,7 +90,7 @@ describe("CheckoutSession tests", () => {
             );
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid cancelUrl is supplied to the checkoutSessionInput", async () => {
+        it("InvalidCheckoutSessionInputError should be thrown if invalid cancelUrl is supplied", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -110,7 +110,7 @@ describe("CheckoutSession tests", () => {
             );
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid successUrl is supplied to the checkoutSessionInput", async () => {
+        it("InvalidCheckoutSessionInputError should be thrown if invalid successUrl is supplied", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -130,7 +130,7 @@ describe("CheckoutSession tests", () => {
             );
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid expiresAt date is supplied to the checkoutSessionInput", async () => {
+        it("InvalidCheckoutSessionInputError should be thrown if invalid expiresAt date is supplied", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -146,8 +146,8 @@ describe("CheckoutSession tests", () => {
                 expiresAt: expiresAt,
             };
 
-
-            const createCheckoutSessionFn1 = async () => diagonal.checkoutSession.create(checkoutSessionInput);
+            const createCheckoutSessionFn1 = async () =>
+                diagonal.checkoutSession.create(checkoutSessionInput);
 
             await expect(createCheckoutSessionFn1).rejects.toBeInstanceOf(
                 InvalidCheckoutSessionInputError
