@@ -7,9 +7,8 @@ import {
     InternalServiceError,
     InvalidInputError,
     UnauthorizedError,
-} from "../error";
-
-import { getSdk, SdkFunctionWrapper } from "./generated";
+} from "./errors";
+import { getSdk, SdkFunctionWrapper } from "./schema.generated";
 
 export type GraphQLClient = ReturnType<typeof getSdk>;
 

@@ -1,4 +1,3 @@
-
 import { ChainId } from "../../../config/chains";
 import { Token } from "../../../config/tokens";
 
@@ -11,12 +10,12 @@ export enum EventType {
 
 export interface IWebhookEvent {
     type: EventType;
-    
+
     customerId: string;
-    
+
     customerAddress: string;
     serviceAddress: string;
-    
+
     token: Token;
     packageId: number;
     chainId: ChainId;

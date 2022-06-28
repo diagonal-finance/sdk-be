@@ -1,11 +1,11 @@
 hooks:
-  afterOneFileWrite:
-    - prettier --write
+    afterOneFileWrite:
+        - prettier --write
 generates:
-  src/graphql/generated.ts:
-    schema: src/graphql/schema.graphql
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-graphql-request
-    documents: src/graphql/operations/*.ts
+    src/graphql/schema.generated.ts:
+        schema: src/graphql/schema.graphql
+        plugins:
+            - typescript
+            - typescript-operations
+            - typescript-graphql-request
+        documents: src/graphql/operations/*.ts

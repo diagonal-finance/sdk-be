@@ -3,28 +3,28 @@ scalar PositiveInt
 scalar URL
 
 input CheckoutSessionCreateInput {
-  cancelUrl: String!
-  successUrl: String!
+    cancelUrl: String!
+    successUrl: String!
 
-  chainIds: [ChainId!]
-  
-  customerId: String!
-  packageId: PositiveInt!
-  
-  expiresAt: DateTime
+    chainIds: [ChainId!]
+
+    customerId: String!
+    packageId: PositiveInt!
+
+    expiresAt: DateTime
 }
 
 type CheckoutSession {
-  id: String!
-  url: URL!
+    id: String!
+    url: URL!
 }
 
 type CheckoutSessionInvalidateSuccess {
-  id: String!
+    id: String!
 }
 
 input CheckoutSessionInvalidateInput {
-  id: String!
+    id: String!
 }
 
 union CheckoutSessionCreateResult = CheckoutSession
@@ -35,10 +35,14 @@ union CheckoutSessionInvalidateResult = CheckoutSessionInvalidateSuccess
 scalar DateTime
 
 type Mutation {
-  checkoutSessionCreate(input: CheckoutSessionCreateInput!): CheckoutSessionCreateResult!
-  checkoutSessionInvalidate(input: CheckoutSessionInvalidateInput!): CheckoutSessionInvalidateResult!
+    checkoutSessionCreate(
+        input: CheckoutSessionCreateInput!
+    ): CheckoutSessionCreateResult!
+    checkoutSessionInvalidate(
+        input: CheckoutSessionInvalidateInput!
+    ): CheckoutSessionInvalidateResult!
 }
 
 type Query {
-  checkoutSession(id: String!): CheckoutSession!
+    checkoutSession(id: String!): CheckoutSession!
 }

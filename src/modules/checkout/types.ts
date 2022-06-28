@@ -1,6 +1,5 @@
 import { ChainId } from "src/config/chains";
 
-
 export interface ICheckoutSessionInput {
     customerId: string;
     packageId: number;

@@ -1,4 +1,7 @@
-import { ICheckoutSessionInput, ICheckoutSessionResponse } from "../modules/checkout/types";
+import {
+    ICheckoutSessionInput,
+    ICheckoutSessionResponse,
+} from "../modules/checkout/types";
 
 export interface ICheckoutSession {
     create(

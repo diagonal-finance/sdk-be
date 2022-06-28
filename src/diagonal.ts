@@ -1,7 +1,4 @@
-import {
-    getGraphQLClient,
-    GraphQLClient,
-} from "./graphql/client";
+import { getGraphQLClient, GraphQLClient } from "./graphql/client";
 import { IDiagonal } from "./interfaces";
 import { ICheckoutSession } from "./interfaces/ICheckoutSession";
 import CheckoutSession from "./modules/checkout/session";

@@ -72,7 +72,9 @@ export function verifySignature(
     }
 }
 
-export const isSignatureHeaderFormatValid = (signatureHeader: string): boolean => {
+export const isSignatureHeaderFormatValid = (
+    signatureHeader: string
+): boolean => {
     if (typeof signatureHeader !== "string") return false;
     const signatureHeaderElements = signatureHeader.split(",");
 

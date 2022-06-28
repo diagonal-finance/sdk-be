@@ -102,74 +102,67 @@ yarn add @diagonal-finance/sdk-be
 #### Webhook:
 
 ```typescript
-import {
-    Diagonal, InvalidSignatureHeaderError,
-    InvalidPayloadError, InvalidEndpointSecretError,
-    InvalidSignatureError, IEvent
-} from "@diagonal-finance/sdk-be";
+import { IWebhookEvent, WebhookEventHelper, DiagonalError, WebhookEventType } from "@diagonal-finance/sdk-be";
 
 import express from 'express'
 
-const diagonal = new Diagonal();
-
 const app = express();
 const endpointSecret = '78...b1';
-...
 
 // Parse body into JSON
 app.post("/webhook", express.raw({type: 'application/json'}), (req, res) => {
 
-    let payload = req.body;
-    let signatureHeader = req.headers['diagonal-signature'];
+  let payload = req.body;
+  let signatureHeader = req.headers['diagonal-signature'] as string;
 
-    let event: IEvent;
+  let event: IWebhookEvent;
 
-    try {
-        event = diagonal.constructEvent(payload, signatureHeader as string, endpointSecret);
-    } catch (e) {
-     if(e instanceof InvalidPayloadError) {
+  try {
+      event = WebhookEventHelper.construct(payload, signatureHeader, endpointSecret);
+  } catch (e) {
+    if(e instanceof DiagonalError.InvalidPayloadError) {
         // handle invalid payload error
-     } else if (e instanceof InvalidEndpointSecretError) {
-         // handle invalid endpoint secret error
-    } else if (e instanceof InvalidSignatureHeaderError) {
+    } else if (e instanceof DiagonalError.InvalidEndpointSecretError) {
+        // handle invalid endpoint secret error
+    } else if (e instanceof DiagonalError.InvalidSignatureHeaderError) {
         // handle invalid signature header
-     } else if (e instanceof InvalidSignatureError) {
+    } else if (e instanceof DiagonalError.InvalidSignatureError) {
         // handle invalid signature error
-     } else {
+    } else {
         // handle another type of error
-     }
-        return res.sendStatus(400);
     }
+    return res.sendStatus(400);
+  }
 
-    // Handle the event
-    switch (event.type) {
-      case 'SUBSCRIPTION_ACKNOWLEDGED':
-        console.log(`Account ${event.customerAddress} subscription was acknowledged!`);
-        // Then define and call a method to handle the acknowledged event
-        // handleAcknowledged(data);
-        break;
-      case 'SUBSCRIPTION_FINALIZED':
-        console.log(`Account ${event.customerAddress} subscription was finalized!`);
-        // Then define and call a method to handle the successful attachment of a PaymentMethod.
-        // handleFinalized(event);
-        break;
-      case 'SUBSCRIPTION_REORGED':
-        console.log(`Account ${event.customerAddress} subscription was re-orged!`);
-        // Then define and call a method to handle the successful attachment of a PaymentMethod.
-        // handleReorg(event);
-        break;
-      case 'UNSUBSCRIBED':
-       console.log(`Account ${event.customerAddress} unsubscribed`);
-        // Then define and call a method to handle the successful attachment of a PaymentMethod.
-        // handleUnsubscribe(event);
-        break;
-      default:
-        // Unexpected event type
-        console.log(`Unhandled event type ${event.type}.`);
-    }
+  // Handle the event
+  switch (event.type) {
+    case WebhookEventType.SUBSCRIPTION_ACKNOWLEDGED:
+      console.log(`Account ${event.customerAddress} subscription was acknowledged!`);
+      // Then define and call a method to handle the acknowledged event
+      // handleAcknowledged(data);
+      break;
+    case WebhookEventType.SUBSCRIPTION_FINALIZED:
+      console.log(`Account ${event.customerAddress} subscription was finalized!`);
+      // Then define and call a method to handle the successful attachment of a PaymentMethod.
+      // handleFinalized(event);
+      break;
+    case WebhookEventType.SUBSCRIPTION_REORGED:
+      console.log(`Account ${event.customerAddress} subscription was re-orged!`);
+      // Then define and call a method to handle the successful attachment of a PaymentMethod.
+      // handleReorg(event);
+      break;
+    case WebhookEventType.UNSUBSCRIBED:
+     console.log(`Account ${event.customerAddress} unsubscribed`);
+      // Then define and call a method to handle the successful attachment of a PaymentMethod.
+      // handleUnsubscribe(event);
+      break;
+    default:
+      // Unexpected event type
+      console.log(`Unhandled event type ${event.type}.`);
+  }
 
-    // Return a 200 response to acknowledge receipt of the event
-    res.sendStatus(200);
+  // Return a 200 response to acknowledge receipt of the event
+  res.sendStatus(200);
 
 });
 
@@ -193,24 +186,22 @@ const app = express();
 
 const apiKey = "abc...";
 const diagonal = new Diagonal(apiKey);
-const YOUR_DOMAIN = "http://localhost:3000";
+const YOUR_DOMAIN = "http://example.com";
 
 app.post("/create-checkout-session", async (req, res) => {
     const checkoutSessionInput: ICheckoutSessionInput = {
-        externalCustomerId: "john.smith@gmail.com", // a UUID for your customer e.g. email/customerUUID/random number
-        serviceAddress: "0x123..456",
-        packageRegistryId: 1,
-        chainId: 80001, // Mumbai
+        customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
+        packageId: 1,
+        chainIds: [ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
         cancelUrl: `${YOUR_DOMAIN}/cancel`,
         successUrl: `${YOUR_DOMAIN}/success`,
     };
 
-    const checkoutSession: ICheckoutSessionResponse =
-        (await diagonal.checkoutSession.create(
-            checkoutSessionInput
-        )) as ICheckoutSessionResponse;
+    const checkoutSession = await diagonal.checkoutSession.create(
+        checkoutSessionInput
+    );
 
-    console.log(`Checkout session created, UUID: ${checkoutSession.uuid}`);
+    console.info(`Checkout session created, UUID: ${checkoutSession.uuid}`);
 
     res.redirect(303, checkoutSession.checkoutUrl);
 });
@@ -228,9 +219,9 @@ cd sdk-be && yarn
 ### 📜 Usage
 
 ```bash
-yarn lint # Syntax check with ESLint (yarn lint:fix to fix errors).
-yarn prettier # Syntax check with Prettier (yarn prettier:fix to fix errors).
-yarn test # Run tests (with common coverage).
-yarn build # Create a JS build.
-yarn publish # Publish a package on npm.
+npm run lint # Syntax check with ESLint (yarn lint:fix to fix errors).
+npm run prettier # Syntax check with Prettier (yarn prettier:fix to fix errors).
+npm run test # Run tests (with common coverage).
+npm run build # Create a JS build.
+npm run publish # Publish a package on npm.
 ```

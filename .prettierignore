@@ -1,5 +1,8 @@
 dist
 build
+.github
+.husky
+node_modules
 coverage
 cache
 src/typechain
