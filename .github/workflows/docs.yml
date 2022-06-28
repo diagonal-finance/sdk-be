@@ -11,13 +11,13 @@ jobs:
 
         steps:
             - uses: actions/checkout@v3
-
-            - name: Use Node.js 16.15.0
+            - name: Use Node.js 16.15.1
               uses: actions/setup-node@v3
               with:
-                  node-version: 16.15.0
+                  node-version: 16.15.1
 
-            - run: npm install
+            - run: npm ci
+            - run: npm run generate:schema
             - run: npm run test
 
             - name: Github Pages

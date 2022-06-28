@@ -9,16 +9,18 @@ on:
 jobs:
     test:
         runs-on: ubuntu-latest
-
+        strategy:
+            matrix:
+                node: [ 16, 18 ]
         steps:
             - uses: actions/checkout@v3
-
-            - name: Use Node.js 16.15.0
+            - name: Setup node
               uses: actions/setup-node@v3
               with:
-                  node-version: 16.15.0
+                node-version: ${{ matrix.node }}
 
-            - run: npm install
+            - run: npm ci
+            - run: npm run generate:schema
             - run: npm run test
 
             - name: Coveralls
