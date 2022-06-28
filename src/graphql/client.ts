@@ -44,7 +44,7 @@ const wrapper: SdkFunctionWrapper = async (action) => {
         }
     }
     throw new InternalServiceError(
-        "Unhandled error while performing the API request"
+        `Internal service error while executing operation`
     );
 };
 
