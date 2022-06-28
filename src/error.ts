@@ -1,35 +1,21 @@
-class DiagonalError extends Error {
-    constructor(message: string) {
-        super(message);
+class DiagonalError implements Error {
+    name = "DiagonalError";
+
+    constructor(public message: string) {
+        this.message = message;
     }
 }
 
-class InvalidSignatureHeaderError extends DiagonalError {}
-
-class InvalidPayloadError extends DiagonalError {}
-
-class InvalidEndpointSecretError extends DiagonalError {}
-
-class InvalidSignatureError extends DiagonalError {}
-
 class UnauthorizedError extends DiagonalError {}
-
-class ApiKeyNotProvidedError extends DiagonalError {}
-
-class CheckoutSessionApiError extends DiagonalError {}
-
-class InvalidCheckoutSessionInputError extends DiagonalError {}
-
-class CheckoutSessionCreateError extends DiagonalError {}
+class InvalidInputError extends DiagonalError {}
+class InternalServiceError extends DiagonalError {}
 
 export {
-    InvalidSignatureHeaderError,
-    InvalidPayloadError,
-    InvalidEndpointSecretError,
-    InvalidSignatureError,
+    DiagonalError,
     UnauthorizedError,
-    ApiKeyNotProvidedError,
-    CheckoutSessionApiError,
-    InvalidCheckoutSessionInputError,
-    CheckoutSessionCreateError,
+    InvalidInputError,
+    InternalServiceError,
 };
+
+export * from "./modules/webhook/event/errors";
+export * from "./modules/checkout/errors";

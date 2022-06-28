@@ -1,30 +1,21 @@
-import CheckoutSession from "./checkoutSession";
-import { config } from "./config";
+import {
+    getGraphQLClient,
+    GraphQLClient,
+} from "./graphql/client";
+import { IDiagonal } from "./interfaces";
 import { ICheckoutSession } from "./interfaces/ICheckoutSession";
-import { IWebhook } from "./interfaces/IWebhook";
-import Webhook from "./webhook";
+import CheckoutSession from "./modules/checkout/session";
 
 /**
  * Diagonal is the main class for interacting with the Diagonal backend SDK.
  */
-export default class Diagonal {
-    public webhook: IWebhook;
+export default class Diagonal implements IDiagonal {
     public checkoutSession: ICheckoutSession;
 
-    constructor(apiKey?: string, apiUrl?: string) {
-        this.webhook = new Webhook();
-        this.checkoutSession = new CheckoutSession();
+    private graphQLClient: GraphQLClient;
 
-        if (apiKey) {
-            config.apiKey = apiKey;
-        }
-
-        if (apiUrl) {
-            config.apiUrl = apiUrl;
-        }
+    constructor(apiKey: string, apiUrl?: string) {
+        this.graphQLClient = getGraphQLClient(apiKey, apiUrl);
+        this.checkoutSession = new CheckoutSession(this.graphQLClient);
     }
-
-    public setApiKey = (apiKey: string) => {
-        config.apiKey = apiKey;
-    };
 }
