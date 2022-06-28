@@ -213,7 +213,7 @@ Clone this repository and install the dependencies:
 
 ```bash
 git clone https://github.com/diagonal-finance/sdk-be.git
-cd sdk-be && yarn
+cd sdk-be && npm i
 ```
 
 ### 📜 Usage
