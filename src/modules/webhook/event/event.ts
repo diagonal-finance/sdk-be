@@ -42,10 +42,13 @@ function parseSignatureHeader(signatureHeader: string): ISignatureHeader {
     if (!isSignatureHeaderFormatValid(signatureHeader))
         throw new InvalidSignatureHeaderError("Invalid signature header.");
 
-    const signatureHeaderElements = signatureHeader.split(",");
+    const signatureHeaderElements = signatureHeader.split(",") as [
+        string,
+        string
+    ];
 
-    const timestamp = signatureHeaderElements[0]!.split("=")[1]!;
-    const signature = signatureHeaderElements[1]!.split("=")[1]!;
+    const timestamp = signatureHeaderElements[0].split("=")[1]!;
+    const signature = signatureHeaderElements[1].split("=")[1]!;
 
     const parsedSignatureHeader: ISignatureHeader = {
         timestamp,
