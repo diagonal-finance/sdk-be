@@ -1,0 +1,44 @@
+scalar ChainId
+scalar PositiveInt
+scalar URL
+
+input CheckoutSessionCreateInput {
+  cancelUrl: String!
+  successUrl: String!
+
+  chainIds: [ChainId!]
+  
+  customerId: String!
+  packageId: PositiveInt!
+  
+  expiresAt: DateTime
+}
+
+type CheckoutSession {
+  id: String!
+  url: URL!
+}
+
+type CheckoutSessionInvalidateSuccess {
+  id: String!
+}
+
+input CheckoutSessionInvalidateInput {
+  id: String!
+}
+
+union CheckoutSessionCreateResult = CheckoutSession
+
+union CheckoutSessionInvalidateResult = CheckoutSessionInvalidateSuccess
+
+# The javascript `Date` as string. Type represents date and time as the ISO Date string.
+scalar DateTime
+
+type Mutation {
+  checkoutSessionCreate(input: CheckoutSessionCreateInput!): CheckoutSessionCreateResult!
+  checkoutSessionInvalidate(input: CheckoutSessionInvalidateInput!): CheckoutSessionInvalidateResult!
+}
+
+type Query {
+  checkoutSession(id: String!): CheckoutSession!
+}
