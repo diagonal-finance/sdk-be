@@ -13,7 +13,7 @@ import { getSdk, SdkFunctionWrapper } from "./generated";
 
 export type GraphQLClient = ReturnType<typeof getSdk>;
 
-const apiUrl = "http://localhost:4000/graphql";
+const apiUrl = "https://api.diagonal.finance/graphql";
 
 function handleClientError(error: ClientError) {
     const response = error.response;
