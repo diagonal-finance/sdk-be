@@ -64,11 +64,11 @@ describe("Webhook event", () => {
         it("Should fail if does not contain a valid event field", async () => {
             const payload1 = {
                 ...testConfig.subscriptionPayload,
-                event: "abc",
+                type: "abc",
             };
             const payload2 = {
                 ...testConfig.subscriptionPayload,
-                event: "",
+                type: "",
             };
             expect(constructEventFn(payload1)).toThrow(InvalidPayloadError);
             expect(constructEventFn(payload2)).toThrow(InvalidPayloadError);
@@ -243,7 +243,7 @@ describe("Webhook event", () => {
             expect(event.chainId).toEqual(
                 testConfig.subscriptionPayload.chainId
             );
-            expect(event.event).toEqual(testConfig.subscriptionPayload.event);
+            expect(event.type).toEqual(testConfig.subscriptionPayload.type);
         });
     });
 });

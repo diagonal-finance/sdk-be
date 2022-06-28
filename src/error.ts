@@ -1,3 +1,4 @@
+
 class DiagonalError implements Error {
     name = "DiagonalError";
 

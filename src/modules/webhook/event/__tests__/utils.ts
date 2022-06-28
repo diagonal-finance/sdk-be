@@ -1,6 +1,6 @@
 import { ChainId } from "../../../../config/chains";
 import { Token } from "../../../../config/tokens";
-import { Event, IWebhookEvent } from "../types";
+import { EventType, IWebhookEvent } from "../types";
 
 export const testConfig: {
     subscriptionPayload: IWebhookEvent;
@@ -14,10 +14,10 @@ export const testConfig: {
         token: Token.DAI,
         packageId: 1,
         chainId: ChainId.Mumbai,
-        event: Event.SUBSCRIPTION_ACKNOWLEDGED,
+        type: EventType.SUBSCRIPTION_ACKNOWLEDGED,
     },
     signatureHeader:
-        "t=1647115932683,v0=bd7ed90021cec7803f9074de5fbef32416bc5565ac291f8ebcecc9a9fc0bfd61",
+        "t=1647115932683,v0=4711a875cbe48c6dc8c7f10e4012264840f51060efac693b0fead9e18d807d19",
     endpointSecret:
         "788284448d0ffabed8b47e6ed1848de4b7522257f6b516a7cc75e6da15905cb1",
 };

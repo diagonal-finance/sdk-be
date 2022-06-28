@@ -2,7 +2,7 @@
 import { ChainId } from "../../../config/chains";
 import { Token } from "../../../config/tokens";
 
-export enum Event {
+export enum EventType {
     SUBSCRIPTION_ACKNOWLEDGED = "SUBSCRIPTION_ACKNOWLEDGED",
     SUBSCRIPTION_FINALIZED = "SUBSCRIPTION_FINALIZED",
     SUBSCRIPTION_REORGED = "SUBSCRIPTION_REORGED",
@@ -10,7 +10,7 @@ export enum Event {
 }
 
 export interface IWebhookEvent {
-    event: Event;
+    type: EventType;
     
     customerId: string;
     

@@ -1,16 +1,17 @@
 import Diagonal from "./diagonal";
-import * as Errors from './error'
+import * as DiagonalError from './error'
 import {
     ICheckoutSessionInput,
     ICheckoutSessionResponse,
 } from "./modules/checkout/types";
 import * as WebhookEvent from "./modules/webhook/event/event";
-import { IWebhookEvent } from "./modules/webhook/event/types";
+import { IWebhookEvent, EventType as WebhookEventType } from "./modules/webhook/event/types";
 
 export {
     Diagonal,
     WebhookEvent,
-    Errors,
+    WebhookEventType,
+    DiagonalError,
     ICheckoutSessionInput,
     ICheckoutSessionResponse,
     IWebhookEvent

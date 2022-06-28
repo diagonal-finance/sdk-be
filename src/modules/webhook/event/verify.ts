@@ -14,12 +14,12 @@ import {
     InvalidPayloadError,
     InvalidSignatureError,
 } from "./errors";
-import { Event, ISignatureHeader, IWebhookEvent } from "./types";
+import { EventType, ISignatureHeader, IWebhookEvent } from "./types";
 
-const EventEnum = z.nativeEnum(Event);
+const EventTypeEnum = z.nativeEnum(EventType);
 
 const WebhookEvent: z.ZodType<IWebhookEvent> = z.object({
-    event: EventEnum,
+    type: EventTypeEnum,
     customerId: z.string(),
 
     customerAddress: EthereumAddressZod,
