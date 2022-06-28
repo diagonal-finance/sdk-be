@@ -1,8 +1,11 @@
-
 import { InvalidSignatureHeaderError } from "./errors";
 import { ISignatureHeader, IWebhookEvent } from "./types";
-import { signatureHeaderElementsValid } from "./utils";
-import { verifyEndpointSecret, verifyPayload, verifySignature } from "./verify";
+import {
+    isSignatureHeaderFormatValid,
+    verifyEndpointSecret,
+    verifyPayload,
+    verifySignature,
+} from "./verify";
 
 /**
  * Create and return IEvent object, while validating the input payload and
@@ -36,10 +39,10 @@ export function construct(
 }
 
 function parseSignatureHeader(signatureHeader: string): ISignatureHeader {
-    const signatureHeaderElements = signatureHeader.split(",");
-
-    if (!signatureHeaderElementsValid(signatureHeaderElements))
+    if (!isSignatureHeaderFormatValid(signatureHeader))
         throw new InvalidSignatureHeaderError("Invalid signature header.");
+
+    const signatureHeaderElements = signatureHeader.split(",");
 
     const timestamp = signatureHeaderElements[0]!.split("=")[1]!;
     const signature = signatureHeaderElements[1]!.split("=")[1]!;

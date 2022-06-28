@@ -2,7 +2,12 @@ import { createHmac } from "crypto";
 
 import { z } from "zod";
 
-import { ChainZod, EthereumAddressZod, PackageIdZod, TokenZod } from "../../../utils/validators";
+import {
+    ChainZod,
+    EthereumAddressZod,
+    PackageIdZod,
+    TokenZod,
+} from "../../../utils/validators";
 
 import {
     InvalidEndpointSecretError,
@@ -66,3 +71,22 @@ export function verifySignature(
         throw new InvalidSignatureError("Invalid signature.");
     }
 }
+
+export const isSignatureHeaderFormatValid = (signatureHeader: string): boolean => {
+    if (typeof signatureHeader !== "string") return false;
+    const signatureHeaderElements = signatureHeader.split(",");
+
+    if (signatureHeaderElements.length !== 2) return false;
+    if (typeof signatureHeaderElements[0] !== "string") return false;
+    if (typeof signatureHeaderElements[1] !== "string") return false;
+
+    const timestampFields = signatureHeaderElements[0].split("=");
+    const signatureFields = signatureHeaderElements[1].split("=");
+    if (timestampFields[0] !== "t") return false;
+    if (signatureFields[0] !== "v0") return false;
+
+    if (timestampFields[1]?.length !== 13) return false;
+    if (signatureFields[1]?.length !== 64) return false;
+
+    return true;
+};
