@@ -29,11 +29,13 @@ describe("CheckoutSession tests", () => {
             };
 
             const id = "123";
+            const checkoutUrl = "checkout.diagonal.finance/" + id;
 
             graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
                 return Promise.resolve({
                     checkoutSessionCreate: {
                         id,
+                        url: checkoutUrl
                     },
                 });
             });
@@ -42,6 +44,7 @@ describe("CheckoutSession tests", () => {
                 await diagonal.checkoutSession.create(checkoutSessionInput);
 
             expect(checkoutSessionResponse.id).toEqual(id);
+            expect(checkoutSessionResponse.url).toEqual(checkoutUrl);
 
             expect(graphQLClient.CheckoutSessionCreate).toBeCalledTimes(1);
             // expect(fetchMock).toBeCalledWith()
