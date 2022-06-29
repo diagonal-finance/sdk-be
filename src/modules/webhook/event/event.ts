@@ -16,7 +16,7 @@ import {
  * @returns An IEvent object
  */
 export function construct(
-    payload: any,
+    payload: unknown,
     signatureHeader: string,
     endpointSecret: string
 ): IWebhookEvent {
@@ -35,7 +35,7 @@ export function construct(
         endpointSecret
     );
 
-    return payload;
+    return payload as IWebhookEvent;
 }
 
 function parseSignatureHeader(signatureHeader: string): ISignatureHeader {

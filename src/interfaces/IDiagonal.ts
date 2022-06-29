@@ -1,5 +1,5 @@
-import { ICheckoutSession } from "./ICheckoutSession";
+import { ICheckout } from "./ICheckout";
 
 export interface IDiagonal {
-    get checkoutSession(): ICheckoutSession;
+    get checkout(): ICheckout;
 }

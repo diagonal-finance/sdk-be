@@ -4,9 +4,9 @@ import {
 } from "graphql-request";
 
 import {
+    AuthenticationError,
     InternalServiceError,
     InvalidInputError,
-    UnauthorizedError,
 } from "./errors";
 import { getSdk, SdkFunctionWrapper } from "./schema.generated";
 
@@ -21,7 +21,7 @@ function handleClientError(error: ClientError) {
             (responseError) => responseError.extensions.code === "UNAUTHORIZED"
         );
         if (isAuthError) {
-            throw new UnauthorizedError("Authorization error");
+            throw new AuthenticationError("Unable to authenticate with API key provided");
         }
         const isBadInputError = response.errors.find(
             (responseError) =>
@@ -50,6 +50,9 @@ export const getGraphQLClient = (
     apiKey: string,
     url?: string
 ): GraphQLClient => {
+    if (typeof apiKey !== "string") {
+        throw new AuthenticationError("API key not provided");
+    }
     return getSdk(
         new GraphQLClientRequest(url ?? apiUrl, {
             headers: {

@@ -3,8 +3,8 @@ import * as DiagonalError from "./errors";
 import {
     ICheckoutSessionInput,
     ICheckoutSessionResponse,
-} from "./modules/checkout/types";
-import * as WebhookEventHelper from "./modules/webhook/event/event";
+} from "./modules/checkout/session/types";
+import * as WebhookEvent from "./modules/webhook/event/event";
 import {
     IWebhookEvent,
     EventType as WebhookEventType,
@@ -12,7 +12,7 @@ import {
 
 export {
     Diagonal,
-    WebhookEventHelper,
+    WebhookEvent,
     WebhookEventType,
     DiagonalError,
     ICheckoutSessionInput,

@@ -2,15 +2,15 @@ import {
     Diagonal,
     ICheckoutSessionInput,
     ICheckoutSessionResponse,
-} from "../../..";
-import { ChainId } from "../../../config/chains";
-import { graphQLClient } from "../../../graphql/__mocks__/client";
+} from "../../../..";
+import { ChainId } from "../../../../config/chains";
+import { graphQLClient } from "../../../../graphql/__mocks__/client";
 import { InvalidCheckoutSessionInputError } from "../errors";
 
-jest.mock("../../../diagonal");
+jest.mock("../../../../diagonal");
 
 // Checkout session class tests
-describe("CheckoutSession", () => {
+describe("CheckoutSessions", () => {
     describe("While creating", () => {
         afterEach(() => {
             jest.resetAllMocks();
@@ -41,7 +41,7 @@ describe("CheckoutSession", () => {
             });
 
             const checkoutSessionResponse: ICheckoutSessionResponse =
-                await diagonal.checkoutSession.create(checkoutSessionInput);
+                await diagonal.checkout.sessions.create(checkoutSessionInput);
 
             expect(checkoutSessionResponse.id).toEqual(id);
             expect(checkoutSessionResponse.url).toEqual(checkoutUrl);
@@ -63,9 +63,9 @@ describe("CheckoutSession", () => {
             };
 
             const createCheckoutSessionFn = async () =>
-                diagonal.checkoutSession.create(checkoutSessionInput);
+                diagonal.checkout.sessions.create(checkoutSessionInput);
 
-            expect(createCheckoutSessionFn).rejects.toBeInstanceOf(
+            expect(createCheckoutSessionFn).rejects.toThrow(
                 InvalidCheckoutSessionInputError
             );
         });
@@ -83,9 +83,9 @@ describe("CheckoutSession", () => {
             };
 
             const createCheckoutSessionFn = async () =>
-                diagonal.checkoutSession.create(checkoutSessionInput);
+                diagonal.checkout.sessions.create(checkoutSessionInput);
 
-            await expect(createCheckoutSessionFn).rejects.toBeInstanceOf(
+            await expect(createCheckoutSessionFn).rejects.toThrow(
                 InvalidCheckoutSessionInputError
             );
         });
@@ -103,9 +103,9 @@ describe("CheckoutSession", () => {
             };
 
             const createCheckoutSessionFn = async () =>
-                diagonal.checkoutSession.create(checkoutSessionInput);
+                diagonal.checkout.sessions.create(checkoutSessionInput);
 
-            await expect(createCheckoutSessionFn).rejects.toBeInstanceOf(
+            await expect(createCheckoutSessionFn).rejects.toThrow(
                 InvalidCheckoutSessionInputError
             );
         });
@@ -123,9 +123,9 @@ describe("CheckoutSession", () => {
             };
 
             const createCheckoutSessionFn = async () =>
-                diagonal.checkoutSession.create(checkoutSessionInput);
+                diagonal.checkout.sessions.create(checkoutSessionInput);
 
-            await expect(createCheckoutSessionFn).rejects.toBeInstanceOf(
+            await expect(createCheckoutSessionFn).rejects.toThrow(
                 InvalidCheckoutSessionInputError
             );
         });
@@ -147,9 +147,9 @@ describe("CheckoutSession", () => {
             };
 
             const createCheckoutSessionFn1 = async () =>
-                diagonal.checkoutSession.create(checkoutSessionInput);
+                diagonal.checkout.sessions.create(checkoutSessionInput);
 
-            await expect(createCheckoutSessionFn1).rejects.toBeInstanceOf(
+            await expect(createCheckoutSessionFn1).rejects.toThrow(
                 InvalidCheckoutSessionInputError
             );
 
@@ -160,9 +160,9 @@ describe("CheckoutSession", () => {
             };
 
             const createCheckoutSessionFn2 = async () =>
-                diagonal.checkoutSession.create(checkoutSessionInput2);
+                diagonal.checkout.sessions.create(checkoutSessionInput2);
 
-            await expect(createCheckoutSessionFn2).rejects.toBeInstanceOf(
+            await expect(createCheckoutSessionFn2).rejects.toThrow(
                 InvalidCheckoutSessionInputError
             );
         });

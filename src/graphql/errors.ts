@@ -1,7 +1,22 @@
 import { DiagonalError } from "../error";
 
-class UnauthorizedError extends DiagonalError {}
-class InvalidInputError extends DiagonalError {}
-class InternalServiceError extends DiagonalError {}
+class AuthenticationError extends DiagonalError {
+    constructor(message: string) {
+        super(message);
+        Object.setPrototypeOf(this, AuthenticationError.prototype);
+    }
+}
+class InvalidInputError extends DiagonalError {
+    constructor(message: string) {
+        super(message);
+        Object.setPrototypeOf(this, InvalidInputError.prototype);
+    }
+}
+class InternalServiceError extends DiagonalError {
+    constructor(message: string) {
+        super(message);
+        Object.setPrototypeOf(this, InternalServiceError.prototype);
+    }
+}
 
-export { UnauthorizedError, InvalidInputError, InternalServiceError };
+export { AuthenticationError, InvalidInputError, InternalServiceError };

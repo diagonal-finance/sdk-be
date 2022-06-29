@@ -1,11 +1,12 @@
+
 import { graphQLClient } from "../graphql/__mocks__/client";
-import { ICheckoutSession } from "../interfaces";
-import CheckoutSession from "../modules/checkout/session";
+import { ICheckout } from "../interfaces";
+import Checkout from "../modules/checkout/checkout";
 
 jest.mock("../graphql/client");
 
 export default class Diagonal {
-    get checkoutSession(): ICheckoutSession {
-        return new CheckoutSession(graphQLClient);
+    get checkout(): ICheckout {
+        return new Checkout(graphQLClient);
     }
 }

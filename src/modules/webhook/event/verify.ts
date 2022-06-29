@@ -20,7 +20,7 @@ const EventTypeEnum = z.nativeEnum(EventType);
 
 const WebhookEvent: z.ZodType<IWebhookEvent> = z.object({
     type: EventTypeEnum,
-    customerId: z.string(),
+    customerId: z.string().min(1),
 
     customerAddress: EthereumAddressZod,
     serviceAddress: EthereumAddressZod,

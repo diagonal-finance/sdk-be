@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ChainZod, PackageIdZod, UrlZod } from "../../utils/zod";
+import { ChainZod, PackageIdZod, UrlZod } from "../../../utils/zod";
 
 import { InvalidCheckoutSessionInputError } from "./errors";
 import { ICheckoutSessionInput } from "./types";

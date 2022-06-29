@@ -43,7 +43,7 @@ describe("Webhook event", () => {
         it("Should fail if does not contain a valid customerAddress field", async () => {
             const payload = {
                 ...testConfig.subscriptionPayload,
-                customerAddress: "",
+                customerAddress: undefined,
             };
             expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
         });

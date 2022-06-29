@@ -1,7 +1,7 @@
-export class DiagonalError implements Error {
-    name = "DiagonalError";
-
-    constructor(public message: string) {
-        this.message = message;
+export class DiagonalError extends Error {
+    override name = "DiagonalError";
+    constructor(message: string) {
+        super(message);
+        Object.setPrototypeOf(this, DiagonalError.prototype);
     }
 }
