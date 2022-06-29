@@ -200,8 +200,8 @@ app.post("/create-checkout-session", async (req, res) => {
         customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
         packageId: 1,
         chainIds: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
-        cancelUrl: `${YOUR_DOMAIN}/cancel`,
-        successUrl: `${YOUR_DOMAIN}/success`,
+        cancelUrl: new URL(`${YOUR_DOMAIN}/cancel`),
+        successUrl: new URL(`${YOUR_DOMAIN}/success`),
     };
 
     const checkoutSession = await diagonal.checkout.sessions.create(
