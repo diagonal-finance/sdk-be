@@ -1,7 +1,7 @@
 import { ClientError, GraphQLClient } from "graphql-request";
 
 import { getGraphQLClient } from "../client";
-import { AuthenticationError } from "../errors";
+import { AuthenticationError, InvalidInputError } from "../errors";
 
 jest.mock("graphql-request", () => ({
     ...jest.requireActual("graphql-request"),
@@ -50,15 +50,29 @@ describe("When using the graphql client", () => {
         graphqlClient.mockReturnValue({
             request,
         } as unknown as GraphQLClient);
-        const client = getGraphQLClient("API_KEY");
         return {
-            client,
             request: request,
         };
     }
 
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+
+    async function executeQuery() {
+        const client = getGraphQLClient("API_KEY");
+        await client.CheckoutSessionCreate({
+            input: {
+                cancelUrl: "",
+                customerId: "",
+                packageId: "",
+                successUrl: "",
+            },
+        });
+    }
+
     test("Throws AuthenticationError if UNAUTHORIZED is received", async () => {
-        const { request, client } = setup();
+        const { request } = setup();
 
         request.mockImplementation(() => {
             throw new ClientError(
@@ -68,7 +82,7 @@ describe("When using the graphql client", () => {
                             extensions: {
                                 code: "UNAUTHORIZED",
                             },
-                            message: "Error message",
+                            message: "Unauthorized message",
                         },
                     ],
                     status: 200,
@@ -77,15 +91,29 @@ describe("When using the graphql client", () => {
             );
         });
 
-        const getGraphQLClientFn = async () =>
-            client.CheckoutSessionCreate({
-                input: {
-                    cancelUrl: "",
-                    customerId: "",
-                    packageId: "",
-                    successUrl: "",
+        await expect(executeQuery).rejects.toThrow(AuthenticationError);
+    });
+
+    test("Throws InvalidInputError if BAD_USER_INPUT is received", async () => {
+        const { request } = setup();
+
+        request.mockImplementation(() => {
+            throw new ClientError(
+                {
+                    errors: [
+                        {
+                            extensions: {
+                                code: "BAD_USER_INPUT",
+                            },
+                            message: "Bad user input message",
+                        },
+                    ],
+                    status: 200,
                 },
-            });
-        await expect(getGraphQLClientFn).rejects.toThrow(AuthenticationError);
+                { query: "" }
+            );
+        });
+
+        await expect(executeQuery).rejects.toThrow(InvalidInputError);
     });
 });

@@ -1,7 +1,12 @@
+import { CheckoutSessionCreateMutation } from "src/graphql/schema.generated";
+
 import { Diagonal, ICheckoutSessionInput } from "../../../..";
 import { ChainId } from "../../../../config/chains";
 import { graphQLClient } from "../../../../graphql/__mocks__/client";
-import { InvalidCheckoutSessionInputError } from "../errors";
+import {
+    CheckoutSessionCreateError,
+    InvalidCheckoutSessionInputError,
+} from "../errors";
 
 jest.mock("../../../../diagonal");
 
@@ -45,6 +50,45 @@ describe("CheckoutSessions", () => {
 
             expect(graphQLClient.CheckoutSessionCreate).toBeCalledTimes(1);
         });
+
+        it.each([
+            ["PackageNotFound", "Unable to find package"],
+            ["InvalidExpiresAt", "ExpiresAt value is invalid"],
+            [
+                "Error",
+                "Unknown error occurred during checkout session creation",
+            ],
+        ])(
+            "Should throw CheckoutSessionCreateError if response __typename is %s",
+            async (__typename, message) => {
+                const apiKey = "abc";
+                const diagonal = new Diagonal(apiKey);
+
+                const checkoutSessionInput: ICheckoutSessionInput = {
+                    packageId: 1,
+                    chainIds: [ChainId.Mumbai],
+                    customerId: "12345",
+                    cancelUrl: "https://service.com/cancel",
+                    successUrl: "https://service.com/success",
+                };
+
+                graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
+                    return Promise.resolve({
+                        checkoutSessionCreate: {
+                            __typename,
+                            message,
+                        } as CheckoutSessionCreateMutation["checkoutSessionCreate"],
+                    });
+                });
+
+                const createCheckoutSessionFn = async () =>
+                    diagonal.checkout.sessions.create(checkoutSessionInput);
+
+                await expect(createCheckoutSessionFn).rejects.toThrow(
+                    new CheckoutSessionCreateError(message)
+                );
+            }
+        );
 
         it("Should throw if invalid packageRegistryId is supplied", async () => {
             const apiKey = "abc";
