@@ -1,6 +1,6 @@
 import { GraphQLClient } from "../../../graphql/client";
 import { CreateCheckoutSessionMutation } from "../../../graphql/schema.generated";
-import { ICheckoutSessions } from "../../../interfaces/ICheckoutSession";
+import { ICheckoutSessions } from "../../../interfaces/ICheckoutSessions";
 
 import { CreateCheckoutSessionError } from "./errors";
 import { ICheckoutSession, ICreateCheckoutSessionInput } from "./types";
