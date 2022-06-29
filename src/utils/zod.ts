@@ -7,4 +7,3 @@ export const TokenZod = z.nativeEnum(Token);
 export const ChainZod = z.nativeEnum(ChainId);
 export const EthereumAddressZod = z.string().regex(/^(0x)?[0-9a-fA-F]{40}$/);
 export const PackageIdZod = z.number().gt(0);
-export const UrlZod = z.string().url();
