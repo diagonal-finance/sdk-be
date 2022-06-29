@@ -5,6 +5,8 @@ import { ChainZod, PackageIdZod, UrlZod } from "../../../utils/zod";
 import { InvalidCheckoutSessionInputError } from "./errors";
 import { ICheckoutSessionInput } from "./types";
 
+const ONE_HOUR_MS = 3600 * 1000;
+
 const CheckoutSessionInput: z.ZodType<ICheckoutSessionInput> = z.object({
     customerId: z.string(),
     packageId: PackageIdZod,
@@ -14,13 +16,17 @@ const CheckoutSessionInput: z.ZodType<ICheckoutSessionInput> = z.object({
     expiresAt: z.optional(
         z
             .date()
-            .refine((date) => {
-                return date > new Date(Date.now());
-            }, "The date must be before today")
+            .refine(
+                (date) => date.getTime() >= Date.now() + ONE_HOUR_MS,
+                "The date must be minimum 1 hour"
+            )
             .and(
-                z.date().refine((date) => {
-                    return date > new Date(Date.now() + 25 * 60 * 60 * 1000);
-                })
+                z
+                    .date()
+                    .refine(
+                        (date) =>
+                            date.getTime() <= Date.now() + 24 * ONE_HOUR_MS
+                    )
             )
     ),
 });

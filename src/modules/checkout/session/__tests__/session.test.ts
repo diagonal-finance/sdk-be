@@ -1,8 +1,4 @@
-import {
-    Diagonal,
-    ICheckoutSessionInput,
-    ICheckoutSessionResponse,
-} from "../../../..";
+import { Diagonal, ICheckoutSessionInput } from "../../../..";
 import { ChainId } from "../../../../config/chains";
 import { graphQLClient } from "../../../../graphql/__mocks__/client";
 import { InvalidCheckoutSessionInputError } from "../errors";
@@ -34,23 +30,23 @@ describe("CheckoutSessions", () => {
             graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
                 return Promise.resolve({
                     checkoutSessionCreate: {
+                        __typename: "CheckoutSession",
                         id,
                         url: checkoutUrl,
                     },
                 });
             });
 
-            const checkoutSessionResponse: ICheckoutSessionResponse =
+            const checkoutSessionResponse =
                 await diagonal.checkout.sessions.create(checkoutSessionInput);
 
             expect(checkoutSessionResponse.id).toEqual(id);
             expect(checkoutSessionResponse.url).toEqual(checkoutUrl);
 
             expect(graphQLClient.CheckoutSessionCreate).toBeCalledTimes(1);
-            // expect(fetchMock).toBeCalledWith()
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid packageRegistryId is supplied", async () => {
+        it("Should throw if invalid packageRegistryId is supplied", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -70,7 +66,7 @@ describe("CheckoutSessions", () => {
             );
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid chainId is supplied", async () => {
+        it("Should throw if invalid chainId is supplied", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -90,7 +86,7 @@ describe("CheckoutSessions", () => {
             );
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid cancelUrl is supplied", async () => {
+        it("Should throw if invalid cancelUrl is supplied", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -110,7 +106,7 @@ describe("CheckoutSessions", () => {
             );
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid successUrl is supplied", async () => {
+        it("Should throw if invalid successUrl is supplied", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
@@ -130,41 +126,108 @@ describe("CheckoutSessions", () => {
             );
         });
 
-        it("InvalidCheckoutSessionInputError should be thrown if invalid expiresAt date is supplied", async () => {
+        it("Should throw if expiresAt supplied is more than 24 hours from now", async () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
             const dateTimeNow = new Date().getTime();
-            let expiresAt = new Date(dateTimeNow - 1000);
-
+            const oneHourInMs = 3600 * 1000;
             const checkoutSessionInput: ICheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: "https://service.com/cancel",
                 successUrl: "https://service.com/success",
-                expiresAt: expiresAt,
+                expiresAt: new Date(dateTimeNow + 24 * oneHourInMs + 5),
             };
 
-            const createCheckoutSessionFn1 = async () =>
+            const createCheckoutSessionFn = async () =>
                 diagonal.checkout.sessions.create(checkoutSessionInput);
 
-            await expect(createCheckoutSessionFn1).rejects.toThrow(
+            await expect(createCheckoutSessionFn).rejects.toThrow(
                 InvalidCheckoutSessionInputError
             );
+        });
 
-            expiresAt = new Date(dateTimeNow + 25 * 60 * 60 * 1000);
-            const checkoutSessionInput2 = {
-                ...checkoutSessionInput,
-                expiresAt: expiresAt,
+        it("Should throw if expiresAt supplied is less than 1 hour from now", async () => {
+            const apiKey = "abc";
+            const diagonal = new Diagonal(apiKey);
+
+            const dateTimeNow = new Date().getTime();
+            const oneHourInMs = 3600 * 1000;
+            const checkoutSessionInput: ICheckoutSessionInput = {
+                packageId: 1,
+                chainIds: [ChainId.Mumbai],
+                customerId: "12345",
+                cancelUrl: "https://service.com/cancel",
+                successUrl: "https://service.com/success",
+                expiresAt: new Date(dateTimeNow + oneHourInMs - 1),
             };
 
-            const createCheckoutSessionFn2 = async () =>
-                diagonal.checkout.sessions.create(checkoutSessionInput2);
+            const createCheckoutSessionFn = async () =>
+                diagonal.checkout.sessions.create(checkoutSessionInput);
 
-            await expect(createCheckoutSessionFn2).rejects.toThrow(
+            await expect(createCheckoutSessionFn).rejects.toThrow(
                 InvalidCheckoutSessionInputError
             );
+        });
+
+        it("Should be created successfully if expiresAt supplied equal to 1 hour from now", async () => {
+            const apiKey = "abc";
+            const diagonal = new Diagonal(apiKey);
+
+            const dateTimeNow = Date.now();
+            const oneHourInMs = 3600 * 1000;
+            const checkoutSessionInput: ICheckoutSessionInput = {
+                packageId: 1,
+                chainIds: [ChainId.Mumbai],
+                customerId: "12345",
+                cancelUrl: "https://service.com/cancel",
+                successUrl: "https://service.com/success",
+                expiresAt: new Date(dateTimeNow + oneHourInMs),
+            };
+
+            graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
+                return Promise.resolve({
+                    checkoutSessionCreate: {
+                        __typename: "CheckoutSession",
+                        id: "123",
+                        url: "checkoutUrl",
+                    },
+                });
+            });
+
+            await diagonal.checkout.sessions.create(checkoutSessionInput);
+            expect(graphQLClient.CheckoutSessionCreate).toBeCalledTimes(1);
+        });
+
+        it("Should be created successfully if expiresAt supplied equal to 24 hour from now", async () => {
+            const apiKey = "abc";
+            const diagonal = new Diagonal(apiKey);
+
+            const dateTimeNow = Date.now();
+            const oneHourInMs = 3600 * 1000;
+            const checkoutSessionInput: ICheckoutSessionInput = {
+                packageId: 1,
+                chainIds: [ChainId.Mumbai],
+                customerId: "12345",
+                cancelUrl: "https://service.com/cancel",
+                successUrl: "https://service.com/success",
+                expiresAt: new Date(dateTimeNow + oneHourInMs * 24),
+            };
+
+            graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
+                return Promise.resolve({
+                    checkoutSessionCreate: {
+                        __typename: "CheckoutSession",
+                        id: "123",
+                        url: "checkoutUrl",
+                    },
+                });
+            });
+
+            await diagonal.checkout.sessions.create(checkoutSessionInput);
+            expect(graphQLClient.CheckoutSessionCreate).toBeCalledTimes(1);
         });
     });
 });

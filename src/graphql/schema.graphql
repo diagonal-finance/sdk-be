@@ -19,17 +19,22 @@ type CheckoutSession {
     url: URL!
 }
 
-type CheckoutSessionInvalidateSuccess {
-    id: String!
+interface Error {
+    message: String!
 }
 
-input CheckoutSessionInvalidateInput {
-    id: String!
+type PackageNotFound implements Error {
+    message: String!
 }
 
-union CheckoutSessionCreateResult = CheckoutSession
+type InvalidExpiresAt implements Error {
+    message: String!
+}
 
-union CheckoutSessionInvalidateResult = CheckoutSessionInvalidateSuccess
+union CheckoutSessionCreateResult =
+      CheckoutSession
+    | PackageNotFound
+    | InvalidExpiresAt
 
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
@@ -38,9 +43,6 @@ type Mutation {
     checkoutSessionCreate(
         input: CheckoutSessionCreateInput!
     ): CheckoutSessionCreateResult!
-    checkoutSessionInvalidate(
-        input: CheckoutSessionInvalidateInput!
-    ): CheckoutSessionInvalidateResult!
 }
 
 type Query {
