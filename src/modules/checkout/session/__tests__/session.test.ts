@@ -132,13 +132,16 @@ describe("CheckoutSessions", () => {
 
             const dateTimeNow = new Date().getTime();
             const oneHourInMs = 3600 * 1000;
+            const safeMarginInMs = 200;
             const checkoutSessionInput: ICheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: "https://service.com/cancel",
                 successUrl: "https://service.com/success",
-                expiresAt: new Date(dateTimeNow + 24 * oneHourInMs + 5),
+                expiresAt: new Date(
+                    dateTimeNow + 24 * oneHourInMs + safeMarginInMs
+                ),
             };
 
             const createCheckoutSessionFn = async () =>
@@ -178,13 +181,14 @@ describe("CheckoutSessions", () => {
 
             const dateTimeNow = Date.now();
             const oneHourInMs = 3600 * 1000;
+            const safeMarginInMs = 200;
             const checkoutSessionInput: ICheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: "https://service.com/cancel",
                 successUrl: "https://service.com/success",
-                expiresAt: new Date(dateTimeNow + oneHourInMs),
+                expiresAt: new Date(dateTimeNow + oneHourInMs + safeMarginInMs),
             };
 
             graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
