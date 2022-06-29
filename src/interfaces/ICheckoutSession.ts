@@ -1,9 +1,7 @@
 import {
-    ICheckoutSessionInput,
-    ICheckoutSessionResponse,
+    ICheckoutSession,
+    ICreateCheckoutSessionInput,
 } from "../modules/checkout/session/types";
 export interface ICheckoutSessions {
-    create(
-        checkoutSessionInput: ICheckoutSessionInput
-    ): Promise<ICheckoutSessionResponse>;
+    create(input: ICreateCheckoutSessionInput): Promise<ICheckoutSession>;
 }

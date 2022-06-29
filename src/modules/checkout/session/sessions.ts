@@ -3,7 +3,7 @@ import { CreateCheckoutSessionMutation } from "../../../graphql/schema.generated
 import { ICheckoutSessions } from "../../../interfaces/ICheckoutSession";
 
 import { CreateCheckoutSessionError } from "./errors";
-import { ICheckoutSessionInput, ICheckoutSessionResponse } from "./types";
+import { ICheckoutSession, ICreateCheckoutSessionInput } from "./types";
 import { verifyCheckoutSessionInput } from "./verify";
 
 /**
@@ -13,12 +13,12 @@ export default class Sessions implements ICheckoutSessions {
     constructor(private client: GraphQLClient) {}
 
     public async create(
-        checkoutSessionInput: ICheckoutSessionInput
-    ): Promise<ICheckoutSessionResponse> {
-        verifyCheckoutSessionInput(checkoutSessionInput);
+        input: ICreateCheckoutSessionInput
+    ): Promise<ICheckoutSession> {
+        verifyCheckoutSessionInput(input);
 
         const response = await this.client.CreateCheckoutSession({
-            input: checkoutSessionInput,
+            input,
         });
 
         if (response.createCheckoutSession.__typename !== "CheckoutSession") {

@@ -3,11 +3,11 @@ import { z } from "zod";
 import { ChainZod, PackageIdZod, UrlZod } from "../../../utils/zod";
 
 import { InvalidCheckoutSessionInputError } from "./errors";
-import { ICheckoutSessionInput } from "./types";
+import { ICreateCheckoutSessionInput } from "./types";
 
 const ONE_HOUR_MS = 3600 * 1000;
 
-const CheckoutSessionInput: z.ZodType<ICheckoutSessionInput> = z.object({
+const CheckoutSessionInput: z.ZodType<ICreateCheckoutSessionInput> = z.object({
     customerId: z.string(),
     packageId: PackageIdZod,
     chainIds: z.optional(ChainZod.array()),
@@ -32,9 +32,9 @@ const CheckoutSessionInput: z.ZodType<ICheckoutSessionInput> = z.object({
 });
 
 export function verifyCheckoutSessionInput(
-    checkoutSessionInput: ICheckoutSessionInput
+    input: ICreateCheckoutSessionInput
 ): void {
-    const result = CheckoutSessionInput.safeParse(checkoutSessionInput);
+    const result = CheckoutSessionInput.safeParse(input);
     if (result.success) return;
 
     const issues = result.error.issues;

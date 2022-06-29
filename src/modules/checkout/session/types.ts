@@ -1,6 +1,6 @@
 import { ChainId } from "src/config/chains";
 
-export interface ICheckoutSessionInput {
+export interface ICreateCheckoutSessionInput {
     customerId: string;
     packageId: number;
     chainIds?: ChainId[];
@@ -9,7 +9,7 @@ export interface ICheckoutSessionInput {
     expiresAt?: Date;
 }
 
-export interface ICheckoutSessionResponse {
+export interface ICheckoutSession {
     id: string;
     url: string;
 }

@@ -185,7 +185,7 @@ app.listen(3000, () => console.log('Running on port 3000'));
 import {
     Diagonal,
     Config,
-    ICheckoutSessionInput,
+    ICreateCheckoutSessionInput,
 } from "@diagonal-finance/sdk-be";
 
 const express = require("express");
@@ -196,7 +196,7 @@ const diagonal = new Diagonal(apiKey);
 const YOUR_DOMAIN = "http://example.com";
 
 app.post("/create-checkout-session", async (req, res) => {
-    const checkoutSessionInput: ICheckoutSessionInput = {
+    const checkoutSessionInput: ICreateCheckoutSessionInput = {
         customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
         packageId: 1,
         chainIds: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.

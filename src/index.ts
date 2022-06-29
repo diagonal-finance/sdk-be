@@ -2,8 +2,8 @@ import * as Config from "./config";
 import Diagonal from "./diagonal";
 import * as DiagonalError from "./errors";
 import {
-    ICheckoutSessionInput,
-    ICheckoutSessionResponse,
+    ICheckoutSession,
+    ICreateCheckoutSessionInput,
 } from "./modules/checkout/session/types";
 import * as WebhookEvent from "./modules/webhook/event";
 import { IWebhookEvent } from "./modules/webhook/event/types";
@@ -13,7 +13,7 @@ export {
     Config,
     WebhookEvent,
     DiagonalError,
-    ICheckoutSessionInput,
-    ICheckoutSessionResponse,
+    ICreateCheckoutSessionInput,
+    ICheckoutSession,
     IWebhookEvent,
 };

@@ -1,12 +1,13 @@
 import { CreateCheckoutSessionMutation } from "src/graphql/schema.generated";
 
-import { Diagonal, ICheckoutSessionInput } from "../../../..";
+import { Diagonal } from "../../../..";
 import { ChainId } from "../../../../config/chains";
 import { graphQLClient } from "../../../../graphql/__mocks__/client";
 import {
     CreateCheckoutSessionError,
     InvalidCheckoutSessionInputError,
 } from "../errors";
+import { ICreateCheckoutSessionInput } from "../types";
 
 jest.mock("../../../../diagonal");
 
@@ -21,7 +22,7 @@ describe("CheckoutSessions", () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
-            const checkoutSessionInput: ICheckoutSessionInput = {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
@@ -64,7 +65,7 @@ describe("CheckoutSessions", () => {
                 const apiKey = "abc";
                 const diagonal = new Diagonal(apiKey);
 
-                const checkoutSessionInput: ICheckoutSessionInput = {
+                const checkoutSessionInput: ICreateCheckoutSessionInput = {
                     packageId: 1,
                     chainIds: [ChainId.Mumbai],
                     customerId: "12345",
@@ -94,7 +95,7 @@ describe("CheckoutSessions", () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
-            const checkoutSessionInput: ICheckoutSessionInput = {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: 0,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
@@ -114,7 +115,7 @@ describe("CheckoutSessions", () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
-            const checkoutSessionInput: ICheckoutSessionInput = {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [123],
                 customerId: "12345",
@@ -134,7 +135,7 @@ describe("CheckoutSessions", () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
-            const checkoutSessionInput: ICheckoutSessionInput = {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
@@ -154,7 +155,7 @@ describe("CheckoutSessions", () => {
             const apiKey = "abc";
             const diagonal = new Diagonal(apiKey);
 
-            const checkoutSessionInput: ICheckoutSessionInput = {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
@@ -177,7 +178,7 @@ describe("CheckoutSessions", () => {
             const dateTimeNow = new Date().getTime();
             const oneHourInMs = 3600 * 1000;
             const safeMarginInMs = 200;
-            const checkoutSessionInput: ICheckoutSessionInput = {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
@@ -202,7 +203,7 @@ describe("CheckoutSessions", () => {
 
             const dateTimeNow = new Date().getTime();
             const oneHourInMs = 3600 * 1000;
-            const checkoutSessionInput: ICheckoutSessionInput = {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
@@ -226,7 +227,7 @@ describe("CheckoutSessions", () => {
             const dateTimeNow = Date.now();
             const oneHourInMs = 3600 * 1000;
             const safeMarginInMs = 200;
-            const checkoutSessionInput: ICheckoutSessionInput = {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
@@ -255,7 +256,7 @@ describe("CheckoutSessions", () => {
 
             const dateTimeNow = Date.now();
             const oneHourInMs = 3600 * 1000;
-            const checkoutSessionInput: ICheckoutSessionInput = {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
