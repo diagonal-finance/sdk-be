@@ -198,7 +198,7 @@ const YOUR_DOMAIN = "http://example.com";
 app.post("/create-checkout-session", async (req, res) => {
     const checkoutSessionInput: ICreateCheckoutSessionInput = {
         customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
-        packageId: 1,
+        packageId: "1",
         chainIds: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
         cancelUrl: `${YOUR_DOMAIN}/cancel`,
         successUrl: `${YOUR_DOMAIN}/success`,
