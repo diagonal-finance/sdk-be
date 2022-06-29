@@ -12,7 +12,7 @@ import { getSdk, SdkFunctionWrapper } from "./schema.generated";
 
 export type GraphQLClient = ReturnType<typeof getSdk>;
 
-const apiUrl = "https://api.diagonal.finance/graphql";
+const DEFAULT_API_URL = "https://api.diagonal.finance/graphql";
 
 function handleClientError(error: ClientError) {
     const response = error.response;
@@ -56,7 +56,7 @@ export const getGraphQLClient = (
         throw new AuthenticationError("API key not provided");
     }
     return getSdk(
-        new GraphQLClientRequest(url ?? apiUrl, {
+        new GraphQLClientRequest(url ?? DEFAULT_API_URL, {
             headers: {
                 "x-api-key": apiKey,
             },
