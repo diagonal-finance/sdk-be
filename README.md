@@ -102,69 +102,76 @@ yarn add @diagonal-finance/sdk-be
 #### Webhook:
 
 ```typescript
-import { IWebhookEvent, WebhookEventHelper, DiagonalError, WebhookEventType } from "@diagonal-finance/sdk-be";
+import {
+  IWebhookEvent,
+  WebhookEvent,
+  DiagonalError,
+} from '@diagonal-finance/sdk-be'
 
 import express from 'express'
 
-const app = express();
-const endpointSecret = '78...b1';
+const app = express()
+const endpointSecret = '78...b1'
 
 // Parse body into JSON
-app.post("/webhook", express.raw({type: 'application/json'}), (req, res) => {
+app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  let payload = req.body
+  let signatureHeader = req.headers['diagonal-signature'] as string
 
-  let payload = req.body;
-  let signatureHeader = req.headers['diagonal-signature'];
-
-  let event: IWebhookEvent;
+  let event: IWebhookEvent
 
   try {
-      event = WebhookEventHelper.construct(payload, signatureHeader, endpointSecret);
+    event = WebhookEvent.construct(payload, signatureHeader, endpointSecret)
   } catch (e) {
-    if(e instanceof DiagonalError.InvalidPayloadError) {
-        // handle invalid payload error
+    if (e instanceof DiagonalError.InvalidPayloadError) {
+      // handle invalid payload error
     } else if (e instanceof DiagonalError.InvalidEndpointSecretError) {
-        // handle invalid endpoint secret error
+      // handle invalid endpoint secret error
     } else if (e instanceof DiagonalError.InvalidSignatureHeaderError) {
-        // handle invalid signature header
+      // handle invalid signature header
     } else if (e instanceof DiagonalError.InvalidSignatureError) {
-        // handle invalid signature error
+      // handle invalid signature error
     } else {
-        // handle another type of error
+      // handle another type of error
     }
-    return res.sendStatus(400);
+    return res.sendStatus(400)
   }
 
   // Handle the event
   switch (event.type) {
-    case WebhookEventType.SUBSCRIPTION_ACKNOWLEDGED:
-      console.log(`Account ${event.customerAddress} subscription was acknowledged!`);
+    case WebhookEvent.Type.SUBSCRIPTION_ACKNOWLEDGED:
+      console.log(
+        `Account ${event.customerAddress} subscription was acknowledged!`,
+      )
       // Then define and call a method to handle the acknowledged event
       // handleAcknowledged(data);
-      break;
-    case WebhookEventType.SUBSCRIPTION_FINALIZED:
-      console.log(`Account ${event.customerAddress} subscription was finalized!`);
+      break
+    case WebhookEvent.Type.SUBSCRIPTION_FINALIZED:
+      console.log(
+        `Account ${event.customerAddress} subscription was finalized!`,
+      )
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handleFinalized(event);
-      break;
-    case WebhookEventType.SUBSCRIPTION_REORGED:
-      console.log(`Account ${event.customerAddress} subscription was re-orged!`);
+      break
+    case WebhookEvent.Type.SUBSCRIPTION_REORGED:
+      console.log(`Account ${event.customerAddress} subscription was re-orged!`)
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handleReorg(event);
-      break;
-    case WebhookEventType.UNSUBSCRIBED:
-     console.log(`Account ${event.customerAddress} unsubscribed`);
+      break
+    case WebhookEvent.Type.UNSUBSCRIBED:
+      console.log(`Account ${event.customerAddress} unsubscribed`)
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handleUnsubscribe(event);
-      break;
+      break
     default:
       // Unexpected event type
-      console.log(`Unhandled event type ${event.type}.`);
+      console.log(`Unhandled event type ${event.type}.`)
   }
 
   // Return a 200 response to acknowledge receipt of the event
-  res.sendStatus(200);
+  res.sendStatus(200)
+})
 
-});
 
 ...
 
