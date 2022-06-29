@@ -14,7 +14,7 @@ export const testConfig: {
         token: Token.DAI,
         packageId: 1,
         chainId: ChainId.Mumbai,
-        type: EventType.SUBSCRIPTION_ACKNOWLEDGED,
+        type: EventType.SubscriptionAcknowledged,
     },
     signatureHeader:
         "t=1647115932683,v0=4711a875cbe48c6dc8c7f10e4012264840f51060efac693b0fead9e18d807d19",

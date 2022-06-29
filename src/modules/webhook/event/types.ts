@@ -2,10 +2,10 @@ import { ChainId } from "../../../config/chains";
 import { Token } from "../../../config/tokens";
 
 export enum EventType {
-    SUBSCRIPTION_ACKNOWLEDGED = "SUBSCRIPTION_ACKNOWLEDGED",
-    SUBSCRIPTION_FINALIZED = "SUBSCRIPTION_FINALIZED",
-    SUBSCRIPTION_REORGED = "SUBSCRIPTION_REORGED",
-    UNSUBSCRIBED = "UNSUBSCRIBED",
+    SubscriptionAcknowledged = "SUBSCRIPTION_ACKNOWLEDGED",
+    SubscriptionFinalised = "SUBSCRIPTION_FINALIZED",
+    SubscriptionReorged = "SUBSCRIPTION_REORGED",
+    SubscriptionCanceled = "SUBSCRIPTION_CANCELED",
 }
 
 export interface IWebhookEvent {

@@ -139,27 +139,27 @@ app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
 
   // Handle the event
   switch (event.type) {
-    case WebhookEvent.Type.SUBSCRIPTION_ACKNOWLEDGED:
+    case WebhookEvent.Type.SubscriptionAcknowledged:
       console.log(
         `Account ${event.customerAddress} subscription was acknowledged!`,
       )
       // Then define and call a method to handle the acknowledged event
       // handleAcknowledged(data);
       break
-    case WebhookEvent.Type.SUBSCRIPTION_FINALIZED:
+    case WebhookEvent.Type.SubscriptionFinalised:
       console.log(
         `Account ${event.customerAddress} subscription was finalized!`,
       )
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handleFinalized(event);
       break
-    case WebhookEvent.Type.SUBSCRIPTION_REORGED:
+    case WebhookEvent.Type.SubscriptionReorged:
       console.log(`Account ${event.customerAddress} subscription was re-orged!`)
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handleReorg(event);
       break
-    case WebhookEvent.Type.UNSUBSCRIBED:
-      console.log(`Account ${event.customerAddress} unsubscribed`)
+    case WebhookEvent.Type.SubscriptionCanceled:
+      console.log(`Account ${event.customerAddress} has canceled the subscription!`)
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handleUnsubscribe(event);
       break
