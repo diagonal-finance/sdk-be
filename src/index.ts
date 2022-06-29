@@ -5,6 +5,10 @@ import {
     ICheckoutSession,
     ICreateCheckoutSessionInput,
 } from "./modules/checkout/session/types";
+import {
+    ICreatePortalSessionInput,
+    IPortalSession,
+} from "./modules/portal/session/types";
 import * as WebhookEvent from "./modules/webhook/event";
 import { IWebhookEvent } from "./modules/webhook/event/types";
 
@@ -15,5 +19,7 @@ export {
     DiagonalError,
     ICreateCheckoutSessionInput,
     ICheckoutSession,
+    IPortalSession,
+    ICreatePortalSessionInput,
     IWebhookEvent,
 };
