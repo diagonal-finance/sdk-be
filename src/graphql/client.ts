@@ -21,7 +21,9 @@ function handleClientError(error: ClientError) {
             (responseError) => responseError.extensions.code === "UNAUTHORIZED"
         );
         if (isAuthError) {
-            throw new AuthenticationError("Unable to authenticate with API key provided");
+            throw new AuthenticationError(
+                "Unable to authenticate with API key provided"
+            );
         }
         const isBadInputError = response.errors.find(
             (responseError) =>
