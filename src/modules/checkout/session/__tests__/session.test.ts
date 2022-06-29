@@ -26,8 +26,8 @@ describe("CheckoutSessions", () => {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
-                cancelUrl: "https://service.com/cancel",
-                successUrl: "https://service.com/success",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: new URL("https://service.com/success"),
             };
 
             const id = "123";
@@ -69,8 +69,8 @@ describe("CheckoutSessions", () => {
                     packageId: 1,
                     chainIds: [ChainId.Mumbai],
                     customerId: "12345",
-                    cancelUrl: "https://service.com/cancel",
-                    successUrl: "https://service.com/success",
+                    cancelUrl: new URL("https://service.com/cancel"),
+                    successUrl: new URL("https://service.com/success"),
                 };
 
                 graphQLClient.CreateCheckoutSession.mockImplementation(() => {
@@ -99,8 +99,8 @@ describe("CheckoutSessions", () => {
                 packageId: 0,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
-                cancelUrl: "https://service.com/cancel",
-                successUrl: "https://service.com/success",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: new URL("https://service.com/success"),
             };
 
             const createCheckoutSessionFn = async () =>
@@ -119,8 +119,8 @@ describe("CheckoutSessions", () => {
                 packageId: 1,
                 chainIds: [123],
                 customerId: "12345",
-                cancelUrl: "https://service.com/cancel",
-                successUrl: "https://service.com/success",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: new URL("https://service.com/success"),
             };
 
             const createCheckoutSessionFn = async () =>
@@ -139,8 +139,8 @@ describe("CheckoutSessions", () => {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
-                cancelUrl: "service.com/cancel",
-                successUrl: "https://service.com/success",
+                cancelUrl: "" as unknown as URL,
+                successUrl: new URL("https://service.com/success"),
             };
 
             const createCheckoutSessionFn = async () =>
@@ -159,8 +159,8 @@ describe("CheckoutSessions", () => {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
-                cancelUrl: "https://service.com/cancel",
-                successUrl: "service.com/success",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: "" as unknown as URL,
             };
 
             const createCheckoutSessionFn = async () =>
@@ -182,8 +182,8 @@ describe("CheckoutSessions", () => {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
-                cancelUrl: "https://service.com/cancel",
-                successUrl: "https://service.com/success",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: new URL("https://service.com/success"),
                 expiresAt: new Date(
                     dateTimeNow + 24 * oneHourInMs + safeMarginInMs
                 ),
@@ -207,8 +207,8 @@ describe("CheckoutSessions", () => {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
-                cancelUrl: "https://service.com/cancel",
-                successUrl: "https://service.com/success",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: new URL("https://service.com/success"),
                 expiresAt: new Date(dateTimeNow + oneHourInMs - 1),
             };
 
@@ -231,8 +231,8 @@ describe("CheckoutSessions", () => {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
-                cancelUrl: "https://service.com/cancel",
-                successUrl: "https://service.com/success",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: new URL("https://service.com/success"),
                 expiresAt: new Date(dateTimeNow + oneHourInMs + safeMarginInMs),
             };
 
@@ -260,8 +260,8 @@ describe("CheckoutSessions", () => {
                 packageId: 1,
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
-                cancelUrl: "https://service.com/cancel",
-                successUrl: "https://service.com/success",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: new URL("https://service.com/success"),
                 expiresAt: new Date(dateTimeNow + oneHourInMs * 24),
             };
 

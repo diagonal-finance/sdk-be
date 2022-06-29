@@ -4,8 +4,8 @@ export interface ICreateCheckoutSessionInput {
     customerId: string;
     packageId: number;
     chainIds?: ChainId[];
-    cancelUrl: string;
-    successUrl: string;
+    cancelUrl: URL;
+    successUrl: URL;
     expiresAt?: Date;
 }
 

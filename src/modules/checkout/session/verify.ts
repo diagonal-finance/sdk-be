@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ChainZod, PackageIdZod, UrlZod } from "../../../utils/zod";
+import { ChainZod, PackageIdZod } from "../../../utils/zod";
 
 import { InvalidCheckoutSessionInputError } from "./errors";
 import { ICreateCheckoutSessionInput } from "./types";
@@ -11,8 +11,8 @@ const CheckoutSessionInput: z.ZodType<ICreateCheckoutSessionInput> = z.object({
     customerId: z.string(),
     packageId: PackageIdZod,
     chainIds: z.optional(ChainZod.array()),
-    cancelUrl: UrlZod,
-    successUrl: UrlZod,
+    cancelUrl: z.instanceof(URL),
+    successUrl: z.instanceof(URL),
     expiresAt: z.optional(
         z
             .date()

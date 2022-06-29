@@ -3,8 +3,8 @@ scalar PositiveInt
 scalar URL
 
 input CreateCheckoutSessionInput {
-    cancelUrl: String!
-    successUrl: String!
+    cancelUrl: URL!
+    successUrl: URL!
 
     chainIds: [ChainId!]
 
