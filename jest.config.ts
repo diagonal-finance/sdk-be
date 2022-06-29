@@ -10,5 +10,10 @@ const config: Config.InitialOptions = {
     coveragePathIgnorePatterns: ["/dist/", "/__mocks__/"],
     verbose: true,
     testRegex: "/.*.test.ts$",
+    moduleDirectories: ["node_modules", "src"],
+    roots: ["src"],
+    moduleNameMapper: {
+        "src/(.*)": "<rootDir>/src/$1",
+    },
 };
 export default config;

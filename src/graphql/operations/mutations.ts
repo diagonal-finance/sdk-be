@@ -20,3 +20,21 @@ export const CREATE_CHECKOUT_SESSION_MUTATION = gql`
         }
     }
 `;
+
+export const CREATE_PORTAL_SESSION_MUTATION = gql`
+    mutation CreatePortalSession($input: CreatePortalSessionInput!) {
+        createPortalSession(input: $input) {
+            __typename
+            ... on PortalSession {
+                id
+                url
+            }
+            ... on NoCustomerFoundError {
+                message
+            }
+            ... on Error {
+                message
+            }
+        }
+    }
+`;

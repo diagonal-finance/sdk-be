@@ -9,7 +9,7 @@ input CreateCheckoutSessionInput {
     chainIds: [ChainId!]
 
     customerId: String!
-    packageId: PositiveInt!
+    packageId: String!
 
     expiresAt: DateTime
 }
@@ -39,10 +39,40 @@ union CheckoutSessionCreateResult =
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
 
+input CreatePortalSessionPackageConfig {
+    packageId: String
+    chainId: ChainId
+}
+
+input CreatePortalSessionConfiguration {
+    availablePackages: [CreatePortalSessionPackageConfig!]
+    allowedChains: [ChainId!]
+}
+
+input CreatePortalSessionInput {
+    returnUrl: URL!
+    configuration: CreatePortalSessionConfiguration
+    customerId: String!
+}
+
+type PortalSession {
+    id: ID!
+    url: String!
+}
+
+type NoCustomerFoundError implements Error {
+    message: String!
+}
+
+union CreatePortalSessionResult = PortalSession | NoCustomerFoundError
+
 type Mutation {
     createCheckoutSession(
         input: CreateCheckoutSessionInput!
     ): CheckoutSessionCreateResult!
+    createPortalSession(
+        input: CreatePortalSessionInput!
+    ): CreatePortalSessionResult!
 }
 
 type Query {

@@ -1,13 +1,12 @@
 import { createHmac } from "crypto";
 
-import { z } from "zod";
-
 import {
     ChainZod,
     EthereumAddressZod,
     PackageIdZod,
     TokenZod,
-} from "../../../utils/zod";
+} from "src/utils/zod";
+import { z } from "zod";
 
 import {
     InvalidEndpointSecretError,

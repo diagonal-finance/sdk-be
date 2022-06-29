@@ -1,8 +1,8 @@
-import { GraphQLClient } from "../../../graphql/client";
-import { CreateCheckoutSessionMutation } from "../../../graphql/schema.generated";
-import { ICheckoutSessions } from "../../../interfaces/ICheckoutSessions";
+import { GraphQLClient } from "src/graphql/client";
+import { CreateCheckoutSessionMutation } from "src/graphql/schema.generated";
+import { ICheckoutSessions } from "src/interfaces/ICheckoutSessions";
 
-import { CreateCheckoutSessionError } from "./errors";
+import { CreateCheckoutSessionExecutionError } from "./errors";
 import { ICheckoutSession, ICreateCheckoutSessionInput } from "./types";
 import { verifyCheckoutSessionInput } from "./verify";
 
@@ -34,11 +34,11 @@ export default class Sessions implements ICheckoutSessions {
         switch (operation.createCheckoutSession.__typename) {
             case "PackageNotFound":
             case "InvalidExpiresAt":
-                throw new CreateCheckoutSessionError(
+                throw new CreateCheckoutSessionExecutionError(
                     operation.createCheckoutSession.message
                 );
             default:
-                throw new CreateCheckoutSessionError(
+                throw new CreateCheckoutSessionExecutionError(
                     "Unknown error occurred during checkout session creation"
                 );
         }

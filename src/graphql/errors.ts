@@ -1,4 +1,4 @@
-import { DiagonalError } from "../error";
+import { DiagonalError } from "src/error";
 
 class AuthenticationError extends DiagonalError {
     constructor(message: string) {

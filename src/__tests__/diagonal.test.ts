@@ -1,5 +1,5 @@
-import { Diagonal } from "..";
-import CheckoutSession from "../modules/checkout/session/sessions";
+import Diagonal from "src/diagonal";
+import CheckoutSession from "src/modules/checkout/session/sessions";
 
 // Checkout session class tests
 describe("Diagonal tests", () => {
