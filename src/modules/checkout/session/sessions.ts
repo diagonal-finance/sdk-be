@@ -1,8 +1,8 @@
 import { GraphQLClient } from "../../../graphql/client";
-import { CheckoutSessionCreateMutation } from "../../../graphql/schema.generated";
+import { CreateCheckoutSessionMutation } from "../../../graphql/schema.generated";
 import { ICheckoutSessions } from "../../../interfaces/ICheckoutSession";
 
-import { CheckoutSessionCreateError } from "./errors";
+import { CreateCheckoutSessionError } from "./errors";
 import { ICheckoutSessionInput, ICheckoutSessionResponse } from "./types";
 import { verifyCheckoutSessionInput } from "./verify";
 
@@ -17,28 +17,28 @@ export default class Sessions implements ICheckoutSessions {
     ): Promise<ICheckoutSessionResponse> {
         verifyCheckoutSessionInput(checkoutSessionInput);
 
-        const response = await this.client.CheckoutSessionCreate({
+        const response = await this.client.CreateCheckoutSession({
             input: checkoutSessionInput,
         });
 
-        if (response.checkoutSessionCreate.__typename !== "CheckoutSession") {
-            return this.handleCheckoutSessionCreateError(response);
+        if (response.createCheckoutSession.__typename !== "CheckoutSession") {
+            return this.handleCreateCheckoutSessionError(response);
         }
 
-        return response.checkoutSessionCreate;
+        return response.createCheckoutSession;
     }
 
-    private handleCheckoutSessionCreateError(
-        operation: CheckoutSessionCreateMutation
+    private handleCreateCheckoutSessionError(
+        operation: CreateCheckoutSessionMutation
     ): never {
-        switch (operation.checkoutSessionCreate.__typename) {
+        switch (operation.createCheckoutSession.__typename) {
             case "PackageNotFound":
             case "InvalidExpiresAt":
-                throw new CheckoutSessionCreateError(
-                    operation.checkoutSessionCreate.message
+                throw new CreateCheckoutSessionError(
+                    operation.createCheckoutSession.message
                 );
             default:
-                throw new CheckoutSessionCreateError(
+                throw new CreateCheckoutSessionError(
                     "Unknown error occurred during checkout session creation"
                 );
         }

@@ -61,7 +61,7 @@ describe("When using the graphql client", () => {
 
     async function executeQuery() {
         const client = getGraphQLClient("API_KEY");
-        await client.CheckoutSessionCreate({
+        await client.CreateCheckoutSession({
             input: {
                 cancelUrl: "",
                 customerId: "",

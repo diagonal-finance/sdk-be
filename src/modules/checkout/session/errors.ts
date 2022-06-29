@@ -7,11 +7,11 @@ class InvalidCheckoutSessionInputError extends DiagonalError {
     }
 }
 
-class CheckoutSessionCreateError extends DiagonalError {
+class CreateCheckoutSessionError extends DiagonalError {
     constructor(message: string) {
         super(message);
-        Object.setPrototypeOf(this, CheckoutSessionCreateError.prototype);
+        Object.setPrototypeOf(this, CreateCheckoutSessionError.prototype);
     }
 }
 
-export { InvalidCheckoutSessionInputError, CheckoutSessionCreateError };
+export { InvalidCheckoutSessionInputError, CreateCheckoutSessionError };

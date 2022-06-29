@@ -2,7 +2,7 @@ scalar ChainId
 scalar PositiveInt
 scalar URL
 
-input CheckoutSessionCreateInput {
+input CreateCheckoutSessionInput {
     cancelUrl: String!
     successUrl: String!
 
@@ -15,7 +15,7 @@ input CheckoutSessionCreateInput {
 }
 
 type CheckoutSession {
-    id: String!
+    id: ID!
     url: URL!
 }
 
@@ -40,8 +40,8 @@ union CheckoutSessionCreateResult =
 scalar DateTime
 
 type Mutation {
-    checkoutSessionCreate(
-        input: CheckoutSessionCreateInput!
+    createCheckoutSession(
+        input: CreateCheckoutSessionInput!
     ): CheckoutSessionCreateResult!
 }
 

@@ -1,10 +1,10 @@
-import { CheckoutSessionCreateMutation } from "src/graphql/schema.generated";
+import { CreateCheckoutSessionMutation } from "src/graphql/schema.generated";
 
 import { Diagonal, ICheckoutSessionInput } from "../../../..";
 import { ChainId } from "../../../../config/chains";
 import { graphQLClient } from "../../../../graphql/__mocks__/client";
 import {
-    CheckoutSessionCreateError,
+    CreateCheckoutSessionError,
     InvalidCheckoutSessionInputError,
 } from "../errors";
 
@@ -32,9 +32,9 @@ describe("CheckoutSessions", () => {
             const id = "123";
             const checkoutUrl = "checkout.diagonal.finance/" + id;
 
-            graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
+            graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                 return Promise.resolve({
-                    checkoutSessionCreate: {
+                    createCheckoutSession: {
                         __typename: "CheckoutSession",
                         id,
                         url: checkoutUrl,
@@ -48,7 +48,7 @@ describe("CheckoutSessions", () => {
             expect(checkoutSessionResponse.id).toEqual(id);
             expect(checkoutSessionResponse.url).toEqual(checkoutUrl);
 
-            expect(graphQLClient.CheckoutSessionCreate).toBeCalledTimes(1);
+            expect(graphQLClient.CreateCheckoutSession).toBeCalledTimes(1);
         });
 
         it.each([
@@ -59,7 +59,7 @@ describe("CheckoutSessions", () => {
                 "Unknown error occurred during checkout session creation",
             ],
         ])(
-            "Should throw CheckoutSessionCreateError if response __typename is %s",
+            "Should throw CreateCheckoutSessionError if response __typename is %s",
             async (__typename, message) => {
                 const apiKey = "abc";
                 const diagonal = new Diagonal(apiKey);
@@ -72,12 +72,12 @@ describe("CheckoutSessions", () => {
                     successUrl: "https://service.com/success",
                 };
 
-                graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
+                graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                     return Promise.resolve({
-                        checkoutSessionCreate: {
+                        createCheckoutSession: {
                             __typename,
                             message,
-                        } as CheckoutSessionCreateMutation["checkoutSessionCreate"],
+                        } as CreateCheckoutSessionMutation["createCheckoutSession"],
                     });
                 });
 
@@ -85,7 +85,7 @@ describe("CheckoutSessions", () => {
                     diagonal.checkout.sessions.create(checkoutSessionInput);
 
                 await expect(createCheckoutSessionFn).rejects.toThrow(
-                    new CheckoutSessionCreateError(message)
+                    new CreateCheckoutSessionError(message)
                 );
             }
         );
@@ -235,9 +235,9 @@ describe("CheckoutSessions", () => {
                 expiresAt: new Date(dateTimeNow + oneHourInMs + safeMarginInMs),
             };
 
-            graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
+            graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                 return Promise.resolve({
-                    checkoutSessionCreate: {
+                    createCheckoutSession: {
                         __typename: "CheckoutSession",
                         id: "123",
                         url: "checkoutUrl",
@@ -246,7 +246,7 @@ describe("CheckoutSessions", () => {
             });
 
             await diagonal.checkout.sessions.create(checkoutSessionInput);
-            expect(graphQLClient.CheckoutSessionCreate).toBeCalledTimes(1);
+            expect(graphQLClient.CreateCheckoutSession).toBeCalledTimes(1);
         });
 
         it("Should be created successfully if expiresAt supplied equal to 24 hour from now", async () => {
@@ -264,9 +264,9 @@ describe("CheckoutSessions", () => {
                 expiresAt: new Date(dateTimeNow + oneHourInMs * 24),
             };
 
-            graphQLClient.CheckoutSessionCreate.mockImplementation(() => {
+            graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                 return Promise.resolve({
-                    checkoutSessionCreate: {
+                    createCheckoutSession: {
                         __typename: "CheckoutSession",
                         id: "123",
                         url: "checkoutUrl",
@@ -275,7 +275,7 @@ describe("CheckoutSessions", () => {
             });
 
             await diagonal.checkout.sessions.create(checkoutSessionInput);
-            expect(graphQLClient.CheckoutSessionCreate).toBeCalledTimes(1);
+            expect(graphQLClient.CreateCheckoutSession).toBeCalledTimes(1);
         });
     });
 });
