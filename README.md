@@ -113,7 +113,7 @@ const endpointSecret = '78...b1';
 app.post("/webhook", express.raw({type: 'application/json'}), (req, res) => {
 
   let payload = req.body;
-  let signatureHeader = req.headers['diagonal-signature'] as string;
+  let signatureHeader = req.headers['diagonal-signature'];
 
   let event: IWebhookEvent;
 
