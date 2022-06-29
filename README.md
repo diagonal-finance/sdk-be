@@ -39,11 +39,11 @@
     </h4>
 </div>
 
-| Diagonal SDK backend is a collection of classes which enables developers easier interaction with the Diagonal backend (webhooks). |
-| --------------------------------------------------------------------------------------------------------------------------------- |
+| Diagonal SDK backend is a collection of classes which enables developers easier interaction with the Diagonal backend. |
+| ---------------------------------------------------------------------------------------------------------------------- |
 
-♜ [Jest](https://jestjs.io/) tests & common test coverage for all packages (`yarn test`)\
-♞ [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/) to keep the code neat and well organized (`yarn prettier` & `yarn lint`)\
+♜ [Jest](https://jestjs.io/) tests & common test coverage for all packages (`npm test`)\
+♞ [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/) to keep the code neat and well organized (`npm run format` & `npm run lint`)\
 ♝ Automatic deployment of documentation generated with [typedocs](https://typedoc.org/)
 
 ---
@@ -228,7 +228,7 @@ cd sdk-be && npm i
 ```bash
 npm run lint # Syntax check with ESLint (yarn lint:fix to fix errors).
 npm run prettier # Syntax check with Prettier (yarn prettier:fix to fix errors).
-npm run test # Run tests (with common coverage).
+npm test # Run tests (with common coverage).
 npm run build # Create a JS build.
 npm run publish # Publish a package on npm.
 ```
