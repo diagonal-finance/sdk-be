@@ -1,6 +1,6 @@
 import { GraphQLClient as GraphQLClientRequest } from "graphql-request";
 
-import { getSdk, Sdk } from "../generated";
+import { getSdk, Sdk } from "../schema.generated";
 
 export type GraphQLClient = Sdk;
 

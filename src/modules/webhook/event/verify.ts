@@ -7,7 +7,7 @@ import {
     EthereumAddressZod,
     PackageIdZod,
     TokenZod,
-} from "../../../utils/validators";
+} from "../../../utils/zod";
 
 import {
     InvalidEndpointSecretError,
