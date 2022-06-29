@@ -184,7 +184,7 @@ app.listen(3000, () => console.log('Running on port 3000'));
 ```typescript
 import {
     Diagonal,
-    ICheckoutSessionResponse,
+    Config,
     ICheckoutSessionInput,
 } from "@diagonal-finance/sdk-be";
 
@@ -199,18 +199,18 @@ app.post("/create-checkout-session", async (req, res) => {
     const checkoutSessionInput: ICheckoutSessionInput = {
         customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
         packageId: 1,
-        chainIds: [ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
+        chainIds: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
         cancelUrl: `${YOUR_DOMAIN}/cancel`,
         successUrl: `${YOUR_DOMAIN}/success`,
     };
 
-    const checkoutSession = await diagonal.checkoutSession.create(
+    const checkoutSession = await diagonal.checkout.sessions.create(
         checkoutSessionInput
     );
 
-    console.info(`Checkout session created, UUID: ${checkoutSession.uuid}`);
+    console.info(`Checkout session created, UUID: ${checkoutSession.id}`);
 
-    res.redirect(303, checkoutSession.checkoutUrl);
+    res.redirect(303, checkoutSession.url);
 });
 ```
 
