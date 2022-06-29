@@ -1,3 +1,4 @@
+import * as Config from "./config";
 import Diagonal from "./diagonal";
 import * as DiagonalError from "./errors";
 import {
@@ -9,6 +10,7 @@ import { IWebhookEvent } from "./modules/webhook/event/types";
 
 export {
     Diagonal,
+    Config,
     WebhookEvent,
     DiagonalError,
     ICheckoutSessionInput,
