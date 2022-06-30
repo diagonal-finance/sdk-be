@@ -36,9 +36,11 @@ describe("PortalSession", () => {
             graphQLClient.CreatePortalSession.mockImplementation(() => {
                 return Promise.resolve({
                     createPortalSession: {
-                        __typename: "PortalSession",
-                        id,
-                        url: portalUrl,
+                        __typename: "CreatePortalSessionPayload",
+                        portalSession: {
+                            id,
+                            url: portalUrl,
+                        },
                     },
                 });
             });
@@ -62,9 +64,11 @@ describe("PortalSession", () => {
             graphQLClient.CreatePortalSession.mockImplementation(() => {
                 return Promise.resolve({
                     createPortalSession: {
-                        __typename: "PortalSession",
-                        id,
-                        url: portalUrl,
+                        __typename: "CreatePortalSessionPayload",
+                        portalSession: {
+                            id,
+                            url: portalUrl,
+                        },
                     },
                 });
             });
@@ -82,7 +86,18 @@ describe("PortalSession", () => {
         });
 
         it.each([
-            ["NoCustomerFoundError", "Unable to find package"],
+            [
+                "CreatePortalSessionNoCustomerFoundError",
+                "Unable to find customer",
+            ],
+            [
+                "CreatePortalSessionNoPackageFoundError",
+                "Unable to find package",
+            ],
+            [
+                "CreatePortalSessionServiceNotInChainError",
+                "Service is not deployed in specified chain",
+            ],
             [
                 "Error",
                 "Unknown error occurred during checkout session creation",

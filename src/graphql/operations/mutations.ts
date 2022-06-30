@@ -27,11 +27,19 @@ export const CREATE_PORTAL_SESSION_MUTATION = gql`
     mutation CreatePortalSession($input: CreatePortalSessionInput!) {
         createPortalSession(input: $input) {
             __typename
-            ... on PortalSession {
-                id
-                url
+            ... on CreatePortalSessionPayload {
+                portalSession {
+                    id
+                    url
+                }
             }
-            ... on NoCustomerFoundError {
+            ... on CreatePortalSessionNoCustomerFoundError {
+                message
+            }
+            ... on CreatePortalSessionNoPackageFoundError {
+                message
+            }
+            ... on CreatePortalSessionServiceNotInChainError {
                 message
             }
             ... on Error {

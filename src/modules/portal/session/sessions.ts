@@ -25,25 +25,31 @@ export default class Sessions implements IPortalSessions {
             },
         });
 
-        if (response.createPortalSession.__typename !== "PortalSession") {
+        if (
+            response.createPortalSession.__typename !==
+            "CreatePortalSessionPayload"
+        ) {
             return this.handleCreatePortalSessionError(response);
         }
 
-        return response.createPortalSession;
+        return response.createPortalSession.portalSession;
     }
 
     private handleCreatePortalSessionError(
         operation: CreatePortalSessionMutation
     ): never {
         const typename = operation.createPortalSession.__typename;
-        if (typename === "NoCustomerFoundError") {
-            throw new CreatePortalSessionExecutionError(
-                operation.createPortalSession.message
-            );
+        switch (typename) {
+            case "CreatePortalSessionNoCustomerFoundError":
+            case "CreatePortalSessionNoPackageFoundError":
+            case "CreatePortalSessionServiceNotInChainError":
+                throw new CreatePortalSessionExecutionError(
+                    operation.createPortalSession.message
+                );
+            default:
+                throw new CreatePortalSessionExecutionError(
+                    "Unknown error occurred during checkout session creation"
+                );
         }
-
-        throw new CreatePortalSessionExecutionError(
-            "Unknown error occurred during checkout session creation"
-        );
     }
 }

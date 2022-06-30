@@ -64,11 +64,27 @@ type PortalSession {
     url: String!
 }
 
-type NoCustomerFoundError implements Error {
+type CreatePortalSessionPayload {
+    portalSession: PortalSession!
+}
+
+type CreatePortalSessionNoCustomerFoundError implements Error {
     message: String!
 }
 
-union CreatePortalSessionResult = PortalSession | NoCustomerFoundError
+type CreatePortalSessionNoPackageFoundError implements Error {
+    message: String!
+}
+
+type CreatePortalSessionServiceNotInChainError implements Error {
+    message: String!
+}
+
+union CreatePortalSessionResult =
+      CreatePortalSessionPayload
+    | CreatePortalSessionNoCustomerFoundError
+    | CreatePortalSessionNoPackageFoundError
+    | CreatePortalSessionServiceNotInChainError
 
 type Mutation {
     createCheckoutSession(
