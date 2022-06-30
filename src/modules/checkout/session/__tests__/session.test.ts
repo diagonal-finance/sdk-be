@@ -1,15 +1,15 @@
+import { Diagonal } from "src";
+import { ChainId } from "src/config/chains";
+import { graphQLClient } from "src/graphql/__mocks__/client";
 import { CreateCheckoutSessionMutation } from "src/graphql/schema.generated";
 
-import { Diagonal } from "../../../..";
-import { ChainId } from "../../../../config/chains";
-import { graphQLClient } from "../../../../graphql/__mocks__/client";
 import {
     CreateCheckoutSessionError,
     InvalidCheckoutSessionInputError,
 } from "../errors";
 import { ICreateCheckoutSessionInput } from "../types";
 
-jest.mock("../../../../diagonal");
+jest.mock("src/diagonal");
 
 // Checkout session class tests
 describe("CheckoutSessions", () => {
@@ -36,9 +36,11 @@ describe("CheckoutSessions", () => {
             graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                 return Promise.resolve({
                     createCheckoutSession: {
-                        __typename: "CheckoutSession",
-                        id,
-                        url: checkoutUrl,
+                        __typename: "CreateCheckoutSessionPayload",
+                        checkoutSession: {
+                            id,
+                            url: checkoutUrl,
+                        },
                     },
                 });
             });
@@ -53,8 +55,11 @@ describe("CheckoutSessions", () => {
         });
 
         it.each([
-            ["PackageNotFound", "Unable to find package"],
-            ["InvalidExpiresAt", "ExpiresAt value is invalid"],
+            ["CreateCheckoutSessionPackageNotFound", "Unable to find package"],
+            [
+                "CreateCheckoutSessionInvalidExpiresAt",
+                "ExpiresAt value is invalid",
+            ],
             [
                 "Error",
                 "Unknown error occurred during checkout session creation",
@@ -239,9 +244,11 @@ describe("CheckoutSessions", () => {
             graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                 return Promise.resolve({
                     createCheckoutSession: {
-                        __typename: "CheckoutSession",
-                        id: "123",
-                        url: "checkoutUrl",
+                        __typename: "CreateCheckoutSessionPayload",
+                        checkoutSession: {
+                            id: "123",
+                            url: "checkoutUrl",
+                        },
                     },
                 });
             });
@@ -268,9 +275,11 @@ describe("CheckoutSessions", () => {
             graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                 return Promise.resolve({
                     createCheckoutSession: {
-                        __typename: "CheckoutSession",
-                        id: "123",
-                        url: "checkoutUrl",
+                        __typename: "CreateCheckoutSessionPayload",
+                        checkoutSession: {
+                            id: "123",
+                            url: "checkoutUrl",
+                        },
                     },
                 });
             });

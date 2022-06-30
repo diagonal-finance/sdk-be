@@ -21,19 +21,22 @@ export default class Sessions implements ICheckoutSessions {
             input,
         });
 
-        if (response.createCheckoutSession.__typename !== "CheckoutSession") {
+        if (
+            response.createCheckoutSession.__typename !==
+            "CreateCheckoutSessionPayload"
+        ) {
             return this.handleCreateCheckoutSessionError(response);
         }
 
-        return response.createCheckoutSession;
+        return response.createCheckoutSession.checkoutSession;
     }
 
     private handleCreateCheckoutSessionError(
         operation: CreateCheckoutSessionMutation
     ): never {
         switch (operation.createCheckoutSession.__typename) {
-            case "PackageNotFound":
-            case "InvalidExpiresAt":
+            case "CreateCheckoutSessionPackageNotFound":
+            case "CreateCheckoutSessionInvalidExpiresAt":
                 throw new CreateCheckoutSessionError(
                     operation.createCheckoutSession.message
                 );

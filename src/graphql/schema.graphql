@@ -23,18 +23,22 @@ interface Error {
     message: String!
 }
 
-type PackageNotFound implements Error {
+type CreateCheckoutSessionPackageNotFound implements Error {
     message: String!
 }
 
-type InvalidExpiresAt implements Error {
+type CreateCheckoutSessionInvalidExpiresAt implements Error {
     message: String!
 }
 
-union CheckoutSessionCreateResult =
-      CheckoutSession
-    | PackageNotFound
-    | InvalidExpiresAt
+type CreateCheckoutSessionPayload {
+    checkoutSession: CheckoutSession!
+}
+
+union CreateCheckoutSessionResult =
+      CreateCheckoutSessionPayload
+    | CreateCheckoutSessionPackageNotFound
+    | CreateCheckoutSessionInvalidExpiresAt
 
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
@@ -42,7 +46,7 @@ scalar DateTime
 type Mutation {
     createCheckoutSession(
         input: CreateCheckoutSessionInput!
-    ): CheckoutSessionCreateResult!
+    ): CreateCheckoutSessionResult!
 }
 
 type Query {
