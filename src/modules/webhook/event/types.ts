@@ -3,7 +3,7 @@ import { Token } from "../../../config/tokens";
 
 export enum EventType {
     SubscriptionAcknowledged = "SUBSCRIPTION_ACKNOWLEDGED",
-    SubscriptionFinalised = "SUBSCRIPTION_FINALIZED",
+    SubscriptionFinalized = "SUBSCRIPTION_FINALIZED",
     SubscriptionReorged = "SUBSCRIPTION_REORGED",
     SubscriptionCanceled = "SUBSCRIPTION_CANCELED",
 }

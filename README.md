@@ -146,7 +146,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
       // Then define and call a method to handle the acknowledged event
       // handleAcknowledged(data);
       break
-    case WebhookEvent.Type.SubscriptionFinalised:
+    case WebhookEvent.Type.SubscriptionFinalized:
       console.log(
         `Account ${event.customerAddress} subscription was finalized!`,
       )
