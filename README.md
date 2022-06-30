@@ -139,27 +139,27 @@ app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
 
   // Handle the event
   switch (event.type) {
-    case WebhookEvent.Type.SUBSCRIPTION_ACKNOWLEDGED:
+    case WebhookEvent.Type.SubscriptionAcknowledged:
       console.log(
         `Account ${event.customerAddress} subscription was acknowledged!`,
       )
       // Then define and call a method to handle the acknowledged event
       // handleAcknowledged(data);
       break
-    case WebhookEvent.Type.SUBSCRIPTION_FINALIZED:
+    case WebhookEvent.Type.SubscriptionFinalised:
       console.log(
         `Account ${event.customerAddress} subscription was finalized!`,
       )
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handleFinalized(event);
       break
-    case WebhookEvent.Type.SUBSCRIPTION_REORGED:
+    case WebhookEvent.Type.SubscriptionReorged:
       console.log(`Account ${event.customerAddress} subscription was re-orged!`)
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handleReorg(event);
       break
-    case WebhookEvent.Type.UNSUBSCRIBED:
-      console.log(`Account ${event.customerAddress} unsubscribed`)
+    case WebhookEvent.Type.SubscriptionCanceled:
+      console.log(`Account ${event.customerAddress} has canceled the subscription!`)
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handleUnsubscribe(event);
       break
@@ -200,8 +200,8 @@ app.post("/create-checkout-session", async (req, res) => {
         customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
         packageId: "1",
         chainIds: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
-        cancelUrl: `${YOUR_DOMAIN}/cancel`,
-        successUrl: `${YOUR_DOMAIN}/success`,
+        cancelUrl: new URL(`${YOUR_DOMAIN}/cancel`),
+        successUrl: new URL(`${YOUR_DOMAIN}/success`),
     };
 
     const checkoutSession = await diagonal.checkout.sessions.create(

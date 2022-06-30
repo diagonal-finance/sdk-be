@@ -4,14 +4,16 @@ export const CREATE_CHECKOUT_SESSION_MUTATION = gql`
     mutation CreateCheckoutSession($input: CreateCheckoutSessionInput!) {
         createCheckoutSession(input: $input) {
             __typename
-            ... on CheckoutSession {
-                id
-                url
+            ... on CreateCheckoutSessionPayload {
+                checkoutSession {
+                    id
+                    url
+                }
             }
-            ... on PackageNotFound {
+            ... on CreateCheckoutSessionPackageNotFound {
                 message
             }
-            ... on InvalidExpiresAt {
+            ... on CreateCheckoutSessionInvalidExpiresAt {
                 message
             }
             ... on Error {

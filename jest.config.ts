@@ -11,9 +11,7 @@ const config: Config.InitialOptions = {
     verbose: true,
     testRegex: "/.*.test.ts$",
     moduleDirectories: ["node_modules", "src"],
-    roots: ["src"],
-    moduleNameMapper: {
-        "src/(.*)": "<rootDir>/src/$1",
-    },
+    roots: ["<rootDir>"],
+    modulePaths: ["<rootDir>"],
 };
 export default config;

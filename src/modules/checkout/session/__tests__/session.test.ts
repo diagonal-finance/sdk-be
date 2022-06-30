@@ -33,9 +33,11 @@ describe("CheckoutSessions", () => {
             graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                 return Promise.resolve({
                     createCheckoutSession: {
-                        __typename: "CheckoutSession",
-                        id,
-                        url: checkoutUrl,
+                        __typename: "CreateCheckoutSessionPayload",
+                        checkoutSession: {
+                            id,
+                            url: checkoutUrl,
+                        },
                     },
                 });
             });
@@ -50,8 +52,11 @@ describe("CheckoutSessions", () => {
         });
 
         it.each([
-            ["PackageNotFound", "Unable to find package"],
-            ["InvalidExpiresAt", "ExpiresAt value is invalid"],
+            ["CreateCheckoutSessionPackageNotFound", "Unable to find package"],
+            [
+                "CreateCheckoutSessionInvalidExpiresAt",
+                "ExpiresAt value is invalid",
+            ],
             [
                 "Error",
                 "Unknown error occurred during checkout session creation",
@@ -236,9 +241,11 @@ describe("CheckoutSessions", () => {
             graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                 return Promise.resolve({
                     createCheckoutSession: {
-                        __typename: "CheckoutSession",
-                        id: "123",
-                        url: "checkoutUrl",
+                        __typename: "CreateCheckoutSessionPayload",
+                        checkoutSession: {
+                            id: "123",
+                            url: "checkoutUrl",
+                        },
                     },
                 });
             });
@@ -265,9 +272,11 @@ describe("CheckoutSessions", () => {
             graphQLClient.CreateCheckoutSession.mockImplementation(() => {
                 return Promise.resolve({
                     createCheckoutSession: {
-                        __typename: "CheckoutSession",
-                        id: "123",
-                        url: "checkoutUrl",
+                        __typename: "CreateCheckoutSessionPayload",
+                        checkoutSession: {
+                            id: "123",
+                            url: "checkoutUrl",
+                        },
                     },
                 });
             });
