@@ -235,9 +235,7 @@ app.post("/create-portal-session", async (req, res) => {
         customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
         configuration: {
             allowedChains: [Config.ChainId.Polygon],
-            availablePackages: [
-                { packageId: "1", chainId: Config.ChainId.Polygon },
-            ],
+            availablePackagesById: ["de49e7f2-bc33-4f4f-a3ae-c1207b02819c"],
         },
         returnUrl: new URL(`${YOUR_DOMAIN}/return`),
     };

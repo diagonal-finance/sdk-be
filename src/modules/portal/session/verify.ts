@@ -16,16 +16,7 @@ const PortalSessionInput: z.ZodType<ICreatePortalSessionInput> = z.object({
     configuration: z.optional(
         z.object({
             allowedChains: z.optional(z.array(ChainZod)),
-            availablePackages: z.optional(
-                z
-                    .array(
-                        z.object({
-                            packageId: PackageIdZod,
-                            chainId: ChainZod,
-                        })
-                    )
-                    .nonempty()
-            ),
+            availablePackagesById: z.optional(z.array(PackageIdZod)),
         })
     ),
 });

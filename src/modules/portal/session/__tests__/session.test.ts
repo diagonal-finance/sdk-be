@@ -16,9 +16,7 @@ describe("PortalSession", () => {
             returnUrl: new URL("https://return.url"),
             configuration: {
                 allowedChains: [ChainId.ArbitrumRinkeby],
-                availablePackages: [
-                    { packageId: "1", chainId: ChainId.ArbitrumRinkeby },
-                ],
+                availablePackagesById: ["1"],
             },
         };
 
@@ -156,32 +154,22 @@ describe("PortalSession", () => {
                 }),
             ],
             [
-                "invalid value in availablePackages",
+                "invalid value in availablePackagesById",
                 constructInvalidInput({
-                    configuration: { availablePackages: [undefined] },
+                    configuration: { availablePackagesById: [undefined] },
                 }),
             ],
             [
-                "empty availablePackages",
+                "empty availablePackagesById",
                 constructInvalidInput({
-                    configuration: { availablePackages: [] },
+                    configuration: { availablePackagesById: [] },
                 }),
             ],
             [
-                "invalid packageId in availablePackages",
+                "invalid packageId in availablePackagesById",
                 constructInvalidInput({
                     configuration: {
-                        availablePackages: [
-                            { packageId: "", chainId: ChainId.Polygon },
-                        ],
-                    },
-                }),
-            ],
-            [
-                "invalid packageId in availablePackages",
-                constructInvalidInput({
-                    configuration: {
-                        availablePackages: [{ packageId: "123", chainId: 0 }],
+                        availablePackagesById: [""],
                     },
                 }),
             ],
