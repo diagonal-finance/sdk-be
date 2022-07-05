@@ -23,7 +23,7 @@ describe("CheckoutSessions", () => {
             const diagonal = new Diagonal(apiKey);
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: 1,
+                packageId: "1",
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
@@ -71,7 +71,7 @@ describe("CheckoutSessions", () => {
                 const diagonal = new Diagonal(apiKey);
 
                 const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                    packageId: 1,
+                    packageId: "1",
                     chainIds: [ChainId.Mumbai],
                     customerId: "12345",
                     cancelUrl: new URL("https://service.com/cancel"),
@@ -101,7 +101,7 @@ describe("CheckoutSessions", () => {
             const diagonal = new Diagonal(apiKey);
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: 0,
+                packageId: "",
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
@@ -121,7 +121,7 @@ describe("CheckoutSessions", () => {
             const diagonal = new Diagonal(apiKey);
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: 1,
+                packageId: "1",
                 chainIds: [123],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
@@ -141,7 +141,7 @@ describe("CheckoutSessions", () => {
             const diagonal = new Diagonal(apiKey);
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: 1,
+                packageId: "1",
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: "" as unknown as URL,
@@ -161,7 +161,7 @@ describe("CheckoutSessions", () => {
             const diagonal = new Diagonal(apiKey);
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: 1,
+                packageId: "1",
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
@@ -184,7 +184,7 @@ describe("CheckoutSessions", () => {
             const oneHourInMs = 3600 * 1000;
             const safeMarginInMs = 200;
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: 1,
+                packageId: "1",
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
@@ -209,7 +209,7 @@ describe("CheckoutSessions", () => {
             const dateTimeNow = new Date().getTime();
             const oneHourInMs = 3600 * 1000;
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: 1,
+                packageId: "1",
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
@@ -233,7 +233,7 @@ describe("CheckoutSessions", () => {
             const oneHourInMs = 3600 * 1000;
             const safeMarginInMs = 200;
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: 1,
+                packageId: "1",
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
@@ -264,7 +264,7 @@ describe("CheckoutSessions", () => {
             const dateTimeNow = Date.now();
             const oneHourInMs = 3600 * 1000;
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: 1,
+                packageId: "1",
                 chainIds: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),

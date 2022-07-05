@@ -16,7 +16,7 @@ export const CREATE_CHECKOUT_SESSION_MUTATION = gql`
             ... on CreateCheckoutSessionInvalidExpiresAt {
                 message
             }
-            ... on Error {
+            ... on GenericError {
                 message
             }
         }

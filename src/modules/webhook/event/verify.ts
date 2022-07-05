@@ -64,6 +64,7 @@ export function verifySignature(
         const signedPayload = createHmac("sha256", endpointSecret)
             .update(payloadWithTimestamp)
             .digest("hex");
+        console.log(signedPayload);
         if (signedPayload !== signatureHeader.signature) {
             throw new InvalidSignatureError("Invalid signature.");
         }

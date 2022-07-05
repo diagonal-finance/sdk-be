@@ -17,7 +17,7 @@ export interface IWebhookEvent {
     serviceAddress: string;
 
     token: Token;
-    packageId: number;
+    packageId: string;
     chainId: ChainId;
 }
 
