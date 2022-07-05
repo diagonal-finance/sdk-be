@@ -39,11 +39,11 @@
     </h4>
 </div>
 
-| Diagonal SDK backend is a collection of classes which enables developers easier interaction with the Diagonal backend (webhooks). |
-| --------------------------------------------------------------------------------------------------------------------------------- |
+| Diagonal SDK backend is a collection of classes which enables developers easier interaction with the Diagonal backend. |
+| ---------------------------------------------------------------------------------------------------------------------- |
 
-♜ [Jest](https://jestjs.io/) tests & common test coverage for all packages (`yarn test`)\
-♞ [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/) to keep the code neat and well organized (`yarn prettier` & `yarn lint`)\
+♜ [Jest](https://jestjs.io/) tests & common test coverage for all packages (`npm test`)\
+♞ [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/) to keep the code neat and well organized (`npm run format` & `npm run lint`)\
 ♝ Automatic deployment of documentation generated with [typedocs](https://typedoc.org/)
 
 ---
@@ -99,82 +99,119 @@ yarn add @diagonal-finance/sdk-be
 
 ### ESModule:
 
+#### Webhook:
+
 ```typescript
 import {
-    Diagonal, InvalidSignatureHeaderError,
-    InvalidPayloadError, InvalidEndpointSecretError,
-    InvalidSignatureError, IEvent
-} from "@diagonal-finance/sdk-be";
+  IWebhookEvent,
+  WebhookEvent,
+  DiagonalError,
+} from '@diagonal-finance/sdk-be'
 
 import express from 'express'
 
-const diagonal = new Diagonal();
-
-const app = express();
-const endpointSecret = '78...b1';
-...
+const app = express()
+const endpointSecret = '78...b1'
 
 // Parse body into JSON
-app.post("/webhook", express.raw({type: 'application/json'}), (req, res) => {
+app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  let payload = req.body
+  let signatureHeader = req.headers['diagonal-signature'] as string
 
-    let payload = req.body;
-    let signatureHeader = req.headers['diagonal-signature'];
+  let event: IWebhookEvent
 
-    let event: IEvent;
-
-    try {
-        event = diagonal.constructEvent(payload, signatureHeader as string, endpointSecret);
-    } catch (e) {
-     if(e instanceof InvalidPayloadError) {
-        // handle invalid payload error
-     } else if (e instanceof InvalidEndpointSecretError) {
-         // handle invalid endpoint secret error
-    } else if (e instanceof InvalidSignatureHeaderError) {
-        // handle invalid signature header
-     } else if (e instanceof InvalidSignatureError) {
-        // handle invalid signature error
-     } else {
-        // handle another type of error
-     }
-        return res.sendStatus(400);
+  try {
+    event = WebhookEvent.construct(payload, signatureHeader, endpointSecret)
+  } catch (e) {
+    if (e instanceof DiagonalError.InvalidPayloadError) {
+      // handle invalid payload error
+    } else if (e instanceof DiagonalError.InvalidEndpointSecretError) {
+      // handle invalid endpoint secret error
+    } else if (e instanceof DiagonalError.InvalidSignatureHeaderError) {
+      // handle invalid signature header
+    } else if (e instanceof DiagonalError.InvalidSignatureError) {
+      // handle invalid signature error
+    } else {
+      // handle another type of error
     }
+    return res.sendStatus(400)
+  }
 
-    // Handle the event
-    switch (event.type) {
-      case 'SUBSCRIPTION_ACKNOWLEDGED':
-        console.log(`Account ${event.customerAddress} subscription was acknowledged!`);
-        // Then define and call a method to handle the acknowledged event
-        // handleAcknowledged(data);
-        break;
-      case 'SUBSCRIPTION_FINALIZED':
-        console.log(`Account ${event.customerAddress} subscription was finalized!`);
-        // Then define and call a method to handle the successful attachment of a PaymentMethod.
-        // handleFinalized(event);
-        break;
-      case 'SUBSCRIPTION_REORGED':
-        console.log(`Account ${event.customerAddress} subscription was re-orged!`);
-        // Then define and call a method to handle the successful attachment of a PaymentMethod.
-        // handleReorg(event);
-        break;
-      case 'UNSUBSCRIBED':
-       console.log(`Account ${event.customerAddress} unsubscribed`);
-        // Then define and call a method to handle the successful attachment of a PaymentMethod.
-        // handleUnsubscribe(event);
-        break;
-      default:
-        // Unexpected event type
-        console.log(`Unhandled event type ${event.type}.`);
-    }
+  // Handle the event
+  switch (event.type) {
+    case WebhookEvent.Type.SubscriptionAcknowledged:
+      console.log(
+        `Account ${event.customerAddress} subscription was acknowledged!`,
+      )
+      // Then define and call a method to handle the acknowledged event
+      // handleAcknowledged(data);
+      break
+    case WebhookEvent.Type.SubscriptionFinalized:
+      console.log(
+        `Account ${event.customerAddress} subscription was finalized!`,
+      )
+      // Then define and call a method to handle the successful attachment of a PaymentMethod.
+      // handleFinalized(event);
+      break
+    case WebhookEvent.Type.SubscriptionReorged:
+      console.log(`Account ${event.customerAddress} subscription was re-orged!`)
+      // Then define and call a method to handle the successful attachment of a PaymentMethod.
+      // handleReorg(event);
+      break
+    case WebhookEvent.Type.SubscriptionCanceled:
+      console.log(`Account ${event.customerAddress} has canceled the subscription!`)
+      // Then define and call a method to handle the successful attachment of a PaymentMethod.
+      // handleUnsubscribe(event);
+      break
+    default:
+      // Unexpected event type
+      console.log(`Unhandled event type ${event.type}.`)
+  }
 
-    // Return a 200 response to acknowledge receipt of the event
-    res.sendStatus(200);
+  // Return a 200 response to acknowledge receipt of the event
+  res.sendStatus(200)
+})
 
-});
 
 ...
 
 app.listen(3000, () => console.log('Running on port 3000'));
 
+```
+
+#### Checkout session
+
+```typescript
+import {
+    Diagonal,
+    Config,
+    ICreateCheckoutSessionInput,
+} from "@diagonal-finance/sdk-be";
+
+const express = require("express");
+const app = express();
+
+const apiKey = "abc...";
+const diagonal = new Diagonal(apiKey);
+const YOUR_DOMAIN = "http://example.com";
+
+app.post("/create-checkout-session", async (req, res) => {
+    const checkoutSessionInput: ICreateCheckoutSessionInput = {
+        customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
+        packageId: 1,
+        chainIds: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
+        cancelUrl: new URL(`${YOUR_DOMAIN}/cancel`),
+        successUrl: new URL(`${YOUR_DOMAIN}/success`),
+    };
+
+    const checkoutSession = await diagonal.checkout.sessions.create(
+        checkoutSessionInput
+    );
+
+    console.info(`Checkout session created, UUID: ${checkoutSession.id}`);
+
+    res.redirect(303, checkoutSession.url);
+});
 ```
 
 ## 🛠 Development
@@ -183,15 +220,15 @@ Clone this repository and install the dependencies:
 
 ```bash
 git clone https://github.com/diagonal-finance/sdk-be.git
-cd sdk-be && yarn
+cd sdk-be && npm i
 ```
 
 ### 📜 Usage
 
 ```bash
-yarn lint # Syntax check with ESLint (yarn lint:fix to fix errors).
-yarn prettier # Syntax check with Prettier (yarn prettier:fix to fix errors).
-yarn test # Run tests (with common coverage).
-yarn build # Create a JS build.
-yarn publish # Publish a package on npm.
+npm run lint # Syntax check with ESLint (yarn lint:fix to fix errors).
+npm run prettier # Syntax check with Prettier (yarn prettier:fix to fix errors).
+npm test # Run tests (with common coverage).
+npm run build # Create a JS build.
+npm run publish # Publish a package on npm.
 ```

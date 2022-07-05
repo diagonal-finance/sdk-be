@@ -1,20 +1,7 @@
-class DiagonalError extends Error {
+export class DiagonalError extends Error {
+    override name = "DiagonalError";
     constructor(message: string) {
         super(message);
+        Object.setPrototypeOf(this, DiagonalError.prototype);
     }
 }
-
-class InvalidSignatureHeaderError extends DiagonalError {}
-
-class InvalidPayloadError extends DiagonalError {}
-
-class InvalidEndpointSecretError extends DiagonalError {}
-
-class InvalidSignatureError extends DiagonalError {}
-
-export {
-    InvalidSignatureHeaderError,
-    InvalidPayloadError,
-    InvalidEndpointSecretError,
-    InvalidSignatureError,
-};

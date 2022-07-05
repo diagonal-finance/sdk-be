@@ -1,9 +1,5 @@
-import { IEvent, IWebhookData } from "../types";
+import { ICheckout } from "./ICheckout";
 
 export interface IDiagonal {
-    constructEvent(
-        payload: IWebhookData | any,
-        signatureHeader: string,
-        endpointSecret: string
-    ): IEvent;
+    get checkout(): ICheckout;
 }
