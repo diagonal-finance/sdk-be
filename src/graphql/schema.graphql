@@ -1,95 +1,94 @@
+# EVM network chain id scalar type
 scalar ChainId
-scalar PositiveInt
-scalar URL
-
-input CreateCheckoutSessionInput {
-    cancelUrl: URL!
-    successUrl: URL!
-
-    chainIds: [ChainId!]
-
-    customerId: String!
-    packageId: String!
-
-    expiresAt: DateTime
-}
 
 type CheckoutSession {
-    id: ID!
-    url: URL!
+  expiresAt: DateTime!
+  id: ID!
+  url: URL!
 }
 
-interface Error {
-    message: String!
+input CreateCheckoutSessionInput {
+  cancelUrl: URL!
+  chainIds: [ChainId!]
+  customerId: String!
+  expiresAt: DateTime
+  packageId: String!
+  successUrl: URL!
 }
 
-type CreateCheckoutSessionPackageNotFound implements Error {
-    message: String!
+type CreateCheckoutSessionInvalidExpiresAt implements GenericError {
+  message: String!
 }
 
-type CreateCheckoutSessionInvalidExpiresAt implements Error {
-    message: String!
+type CreateCheckoutSessionNoServiceInChain implements GenericError {
+  message: String!
+}
+
+type CreateCheckoutSessionPackageNotFound implements GenericError {
+  message: String!
 }
 
 type CreateCheckoutSessionPayload {
-    checkoutSession: CheckoutSession!
+  checkoutSession: CheckoutSession!
 }
 
-union CreateCheckoutSessionResult =
-      CreateCheckoutSessionPayload
-    | CreateCheckoutSessionPackageNotFound
-    | CreateCheckoutSessionInvalidExpiresAt
+union CreateCheckoutSessionResult = CreateCheckoutSessionInvalidExpiresAt | CreateCheckoutSessionNoServiceInChain | CreateCheckoutSessionPackageNotFound | CreateCheckoutSessionPayload
+
+input CreatePortalSessionConfiguration {
+  allowedChains: [ChainId!]!
+  availablePackages: [CreatePortalSessionPackageConfig!]!
+}
+
+input CreatePortalSessionInput {
+  configuration: CreatePortalSessionConfiguration!
+  customerId: String!
+  returnUrl: URL!
+}
+
+type CreatePortalSessionNoCustomerFoundError implements GenericError {
+  message: String!
+}
+
+type CreatePortalSessionNoPackageFoundError implements GenericError {
+  message: String!
+}
+
+input CreatePortalSessionPackageConfig {
+  chainId: ChainId!
+  packageId: String!
+}
+
+type CreatePortalSessionPayload {
+  portalSession: PortalSession!
+}
+
+union CreatePortalSessionResult = CreatePortalSessionNoCustomerFoundError | CreatePortalSessionNoPackageFoundError | CreatePortalSessionPayload | CreatePortalSessionServiceNotInChainError
+
+type CreatePortalSessionServiceNotInChainError implements GenericError {
+  message: String!
+}
 
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
 
-input CreatePortalSessionConfiguration {
-    availablePackagesById: [String!]
-    allowedChains: [ChainId!]
+interface GenericError {
+  message: String!
 }
 
-input CreatePortalSessionInput {
-    returnUrl: URL!
-    configuration: CreatePortalSessionConfiguration
-    customerId: String!
+type Mutation {
+  createCheckoutSession(input: CreateCheckoutSessionInput!): CreateCheckoutSessionResult!
+  createPortalSession(input: CreatePortalSessionInput!): CreatePortalSessionResult!
 }
 
 type PortalSession {
-    id: ID!
-    url: String!
-}
-
-type CreatePortalSessionPayload {
-    portalSession: PortalSession!
-}
-
-type CreatePortalSessionNoCustomerFoundError implements Error {
-    message: String!
-}
-
-type CreatePortalSessionNoPackageFoundError implements Error {
-    message: String!
-}
-
-type CreatePortalSessionServiceNotInChainError implements Error {
-    message: String!
-}
-
-union CreatePortalSessionResult =
-      CreatePortalSessionPayload
-    | CreatePortalSessionNoCustomerFoundError
-    | CreatePortalSessionNoPackageFoundError
-    | CreatePortalSessionServiceNotInChainError
-
-type Mutation {
-    createCheckoutSession(
-        input: CreateCheckoutSessionInput!
-    ): CreateCheckoutSessionResult!
-    createPortalSession(
-        input: CreatePortalSessionInput!
-    ): CreatePortalSessionResult!
+  expiresAt: DateTime!
+  id: ID!
+  url: URL!
 }
 
 type Query {
-    checkoutSession(id: String!): CheckoutSession!
+  checkoutSession(id: ID!): CheckoutSession
 }
+
+# A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
+scalar URL

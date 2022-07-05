@@ -57,7 +57,10 @@ describe("Webhook event", () => {
         });
 
         it("Should fail if does not contain a valid packageId field", async () => {
-            const payload = { ...testConfig.subscriptionPayload, packageId: 0 };
+            const payload = {
+                ...testConfig.subscriptionPayload,
+                packageId: "",
+            };
             expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
         });
 
