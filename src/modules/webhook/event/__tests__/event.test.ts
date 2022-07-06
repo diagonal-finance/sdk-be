@@ -227,8 +227,12 @@ describe("Webhook event", () => {
 
     describe("When constructing a valid webhook event", () => {
         it("Should be done successfully", async () => {
+            const packageId = "3021437c-1ecc-4bd8-9df6-1d37b077ba08";
             const event = construct(
-                testConfig.subscriptionPayload,
+                {
+                    ...testConfig.subscriptionPayload,
+                    packageId,
+                },
                 testConfig.signatureHeader,
                 testConfig.endpointSecret
             );
@@ -240,9 +244,7 @@ describe("Webhook event", () => {
                 testConfig.subscriptionPayload.serviceAddress
             );
             expect(event.token).toEqual(testConfig.subscriptionPayload.token);
-            expect(event.packageId).toEqual(
-                testConfig.subscriptionPayload.packageId
-            );
+            expect(event.packageId).toEqual(packageId);
             expect(event.chainId).toEqual(
                 testConfig.subscriptionPayload.chainId
             );

@@ -14,7 +14,7 @@ const ONE_HOUR_MS = 3600 * 1000;
 const CheckoutSessionInput: z.ZodType<ICreateCheckoutSessionInput> = z.object({
     customerId: z.string(),
     packageId: PackageIdZod,
-    chainIds: z.optional(ChainZod.array()),
+    allowedChains: z.optional(ChainZod.array()),
     cancelUrl: UrlZod,
     successUrl: UrlZod,
     expiresAt: z.optional(

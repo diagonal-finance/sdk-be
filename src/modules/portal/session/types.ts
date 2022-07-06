@@ -4,8 +4,8 @@ export interface ICreatePortalSessionInput {
     customerId: string;
     returnUrl: URL;
     configuration?: {
-        availablePackagesById?: string[];
-        allowedChains?: ChainId[];
+        availablePackages?: string[];
+        availableChains?: ChainId[];
     };
 }
 

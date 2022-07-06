@@ -10,10 +10,10 @@ export const CREATE_CHECKOUT_SESSION_MUTATION = gql`
                     url
                 }
             }
-            ... on CreateCheckoutSessionPackageNotFound {
+            ... on CreateCheckoutSessionPackageNotFoundError {
                 message
             }
-            ... on CreateCheckoutSessionInvalidExpiresAt {
+            ... on CreateCheckoutSessionExpiresAtInvalidError {
                 message
             }
             ... on GenericError {
@@ -33,10 +33,10 @@ export const CREATE_PORTAL_SESSION_MUTATION = gql`
                     url
                 }
             }
-            ... on CreatePortalSessionNoCustomerFoundError {
+            ... on CreatePortalSessionCustomerNotFoundError {
                 message
             }
-            ... on CreatePortalSessionNoPackageFoundError {
+            ... on CreatePortalSessionPackagesNotFoundError {
                 message
             }
             ... on CreatePortalSessionServiceNotInChainError {

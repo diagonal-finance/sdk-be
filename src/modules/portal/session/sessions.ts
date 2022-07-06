@@ -40,8 +40,8 @@ export default class Sessions implements IPortalSessions {
     ): never {
         const typename = operation.createPortalSession.__typename;
         switch (typename) {
-            case "CreatePortalSessionNoCustomerFoundError":
-            case "CreatePortalSessionNoPackageFoundError":
+            case "CreatePortalSessionCustomerNotFoundError":
+            case "CreatePortalSessionPackagesNotFoundError":
             case "CreatePortalSessionServiceNotInChainError":
                 throw new CreatePortalSessionExecutionError(
                     operation.createPortalSession.message

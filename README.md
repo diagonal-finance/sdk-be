@@ -199,7 +199,7 @@ app.post("/create-checkout-session", async (req, res) => {
     const checkoutSessionInput: ICreateCheckoutSessionInput = {
         customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
         packageId: "1",
-        chainIds: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
+        allowedChains: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
         cancelUrl: new URL(`${YOUR_DOMAIN}/cancel`),
         successUrl: new URL(`${YOUR_DOMAIN}/success`),
     };
@@ -234,8 +234,8 @@ app.post("/create-portal-session", async (req, res) => {
     const portalSessionInput: ICreatePortalSessionInput = {
         customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
         configuration: {
-            allowedChains: [Config.ChainId.Polygon],
-            availablePackagesById: ["de49e7f2-bc33-4f4f-a3ae-c1207b02819c"],
+            availableChains: [Config.ChainId.Polygon],
+            availablePackages: ["de49e7f2-bc33-4f4f-a3ae-c1207b02819c"],
         },
         returnUrl: new URL(`${YOUR_DOMAIN}/return`),
     };

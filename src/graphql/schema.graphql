@@ -3,28 +3,24 @@ scalar ChainId
 
 type CheckoutSession {
   expiresAt: DateTime!
-  id: ID!
+  id: UUID!
   url: URL!
 }
 
+type CreateCheckoutSessionExpiresAtInvalidError implements GenericError {
+  message: String!
+}
+
 input CreateCheckoutSessionInput {
+  allowedChains: [ChainId!]
   cancelUrl: URL!
-  chainIds: [ChainId!]
   customerId: String!
   expiresAt: DateTime
-  packageId: String!
+  packageId: UUID!
   successUrl: URL!
 }
 
-type CreateCheckoutSessionInvalidExpiresAt implements GenericError {
-  message: String!
-}
-
-type CreateCheckoutSessionNoServiceInChain implements GenericError {
-  message: String!
-}
-
-type CreateCheckoutSessionPackageNotFound implements GenericError {
+type CreateCheckoutSessionPackageNotFoundError implements GenericError {
   message: String!
 }
 
@@ -32,37 +28,37 @@ type CreateCheckoutSessionPayload {
   checkoutSession: CheckoutSession!
 }
 
-union CreateCheckoutSessionResult = CreateCheckoutSessionInvalidExpiresAt | CreateCheckoutSessionNoServiceInChain | CreateCheckoutSessionPackageNotFound | CreateCheckoutSessionPayload
+union CreateCheckoutSessionResult = CreateCheckoutSessionExpiresAtInvalidError | CreateCheckoutSessionPackageNotFoundError | CreateCheckoutSessionPayload | CreateCheckoutSessionServiceNotInChainError
+
+type CreateCheckoutSessionServiceNotInChainError implements GenericError {
+  message: String!
+}
 
 input CreatePortalSessionConfiguration {
-  allowedChains: [ChainId!]!
-  availablePackages: [CreatePortalSessionPackageConfig!]!
+  availableChains: [ChainId!]
+  availablePackages: [UUID!]
+}
+
+type CreatePortalSessionCustomerNotFoundError implements GenericError {
+  message: String!
 }
 
 input CreatePortalSessionInput {
-  configuration: CreatePortalSessionConfiguration!
+  configuration: CreatePortalSessionConfiguration
   customerId: String!
   returnUrl: URL!
 }
 
-type CreatePortalSessionNoCustomerFoundError implements GenericError {
+type CreatePortalSessionPackagesNotFoundError implements GenericError {
   message: String!
-}
-
-type CreatePortalSessionNoPackageFoundError implements GenericError {
-  message: String!
-}
-
-input CreatePortalSessionPackageConfig {
-  chainId: ChainId!
-  packageId: String!
+  packagesNotFound: [UUID!]!
 }
 
 type CreatePortalSessionPayload {
   portalSession: PortalSession!
 }
 
-union CreatePortalSessionResult = CreatePortalSessionNoCustomerFoundError | CreatePortalSessionNoPackageFoundError | CreatePortalSessionPayload | CreatePortalSessionServiceNotInChainError
+union CreatePortalSessionResult = CreatePortalSessionCustomerNotFoundError | CreatePortalSessionPackagesNotFoundError | CreatePortalSessionPayload | CreatePortalSessionServiceNotInChainError
 
 type CreatePortalSessionServiceNotInChainError implements GenericError {
   message: String!
@@ -82,7 +78,7 @@ type Mutation {
 
 type PortalSession {
   expiresAt: DateTime!
-  id: ID!
+  id: UUID!
   url: URL!
 }
 
@@ -92,3 +88,6 @@ type Query {
 
 # A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
 scalar URL
+
+# A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
+scalar UUID

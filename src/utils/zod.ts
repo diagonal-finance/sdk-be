@@ -6,7 +6,7 @@ import { z } from "zod";
 export const TokenZod = z.nativeEnum(Token);
 export const ChainZod = z.nativeEnum(ChainId);
 export const EthereumAddressZod = z.string().regex(/^(0x)?[0-9a-fA-F]{40}$/);
-export const PackageIdZod = z.string().min(1);
+export const PackageIdZod = z.string().uuid();
 export const UrlZod = z.instanceof(URL);
 
 export function reportErrorFromIssues(

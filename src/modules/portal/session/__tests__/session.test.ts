@@ -1,3 +1,5 @@
+import { randomUUID } from "crypto";
+
 import { ChainId } from "src/config";
 import Diagonal from "src/diagonal";
 import { graphQLClient } from "src/graphql/__mocks__/client";
@@ -15,8 +17,8 @@ describe("PortalSession", () => {
             customerId: "123",
             returnUrl: new URL("https://return.url"),
             configuration: {
-                allowedChains: [ChainId.ArbitrumRinkeby],
-                availablePackagesById: ["1"],
+                availableChains: [ChainId.ArbitrumRinkeby],
+                availablePackages: [randomUUID()],
             },
         };
 
@@ -85,11 +87,11 @@ describe("PortalSession", () => {
 
         it.each([
             [
-                "CreatePortalSessionNoCustomerFoundError",
+                "CreatePortalSessionCustomerNotFoundError",
                 "Unable to find customer",
             ],
             [
-                "CreatePortalSessionNoPackageFoundError",
+                "CreatePortalSessionPackagesNotFoundError",
                 "Unable to find package",
             ],
             [
