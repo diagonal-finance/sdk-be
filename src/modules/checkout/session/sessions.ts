@@ -36,7 +36,7 @@ export default class Sessions implements ICheckoutSessions {
     ): never {
         switch (operation.createCheckoutSession.__typename) {
             case "CreateCheckoutSessionPackageNotFoundError":
-            case "CreateCheckoutSessionExpiresAtInvalidError":
+            case "CreateCheckoutSessionInvalidExpiresAtError":
                 throw new CreateCheckoutSessionExecutionError(
                     operation.createCheckoutSession.message
                 );

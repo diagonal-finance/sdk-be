@@ -13,7 +13,7 @@ export const CREATE_CHECKOUT_SESSION_MUTATION = gql`
             ... on CreateCheckoutSessionPackageNotFoundError {
                 message
             }
-            ... on CreateCheckoutSessionExpiresAtInvalidError {
+            ... on CreateCheckoutSessionInvalidExpiresAtError {
                 message
             }
             ... on GenericError {

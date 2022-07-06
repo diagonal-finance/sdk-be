@@ -59,7 +59,7 @@ describe("CheckoutSessions", () => {
                 "Unable to find package",
             ],
             [
-                "CreateCheckoutSessionExpiresAtInvalidError",
+                "CreateCheckoutSessionInvalidExpiresAtError",
                 "ExpiresAt value is invalid",
             ],
             [
