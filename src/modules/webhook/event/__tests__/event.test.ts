@@ -34,7 +34,7 @@ describe("Webhook event", () => {
         it("Should fail if does not contain a valid serviceAddress field", async () => {
             const payload = {
                 ...testConfig.subscriptionPayload,
-                serviceAddress: "",
+                serviceId: "",
             };
 
             expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
@@ -240,8 +240,8 @@ describe("Webhook event", () => {
             expect(event.customerAddress).toEqual(
                 testConfig.subscriptionPayload.customerAddress
             );
-            expect(event.serviceAddress).toEqual(
-                testConfig.subscriptionPayload.serviceAddress
+            expect(event.serviceId).toEqual(
+                testConfig.subscriptionPayload.serviceId
             );
             expect(event.token).toEqual(testConfig.subscriptionPayload.token);
             expect(event.packageId).toEqual(packageId);

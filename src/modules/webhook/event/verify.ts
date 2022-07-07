@@ -4,6 +4,7 @@ import {
     ChainZod,
     EthereumAddressZod,
     PackageIdZod,
+    ServiceIdZod,
     TokenZod,
 } from "src/utils/zod";
 import { z } from "zod";
@@ -19,11 +20,13 @@ const EventTypeEnum = z.nativeEnum(EventType);
 
 const WebhookEvent: z.ZodType<IWebhookEvent> = z.object({
     type: EventTypeEnum,
-    customerId: z.string().min(1),
 
+    customerId: z.string().min(1),
     customerAddress: EthereumAddressZod,
-    serviceAddress: EthereumAddressZod,
+
     token: TokenZod,
+
+    serviceId: ServiceIdZod,
     packageId: PackageIdZod,
     chainId: ChainZod,
 });

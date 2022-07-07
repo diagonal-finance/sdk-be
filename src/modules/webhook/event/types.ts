@@ -12,11 +12,11 @@ export interface IWebhookEvent {
     type: EventType;
 
     customerId: string;
-
     customerAddress: string;
-    serviceAddress: string;
 
     token: Token;
+
+    serviceId: string;
     packageId: string;
     chainId: ChainId;
 }
