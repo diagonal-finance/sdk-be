@@ -1,17 +1,20 @@
-import { DiagonalError } from "../../../error";
+import { DiagonalError } from "src/error";
 
-class InvalidCheckoutSessionInputError extends DiagonalError {
+class CreateCheckoutSessionInputError extends DiagonalError {
     constructor(message: string) {
         super(message);
-        Object.setPrototypeOf(this, InvalidCheckoutSessionInputError.prototype);
+        Object.setPrototypeOf(this, CreateCheckoutSessionInputError.prototype);
     }
 }
 
-class CreateCheckoutSessionError extends DiagonalError {
+class CreateCheckoutSessionExecutionError extends DiagonalError {
     constructor(message: string) {
         super(message);
-        Object.setPrototypeOf(this, CreateCheckoutSessionError.prototype);
+        Object.setPrototypeOf(
+            this,
+            CreateCheckoutSessionExecutionError.prototype
+        );
     }
 }
 
-export { InvalidCheckoutSessionInputError, CreateCheckoutSessionError };
+export { CreateCheckoutSessionExecutionError, CreateCheckoutSessionInputError };

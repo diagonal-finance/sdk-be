@@ -1,4 +1,4 @@
-import { DiagonalError } from "../../../error";
+import { DiagonalError } from "src/error";
 
 class InvalidSignatureHeaderError extends DiagonalError {
     constructor(message: string) {

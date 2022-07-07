@@ -10,10 +10,36 @@ export const CREATE_CHECKOUT_SESSION_MUTATION = gql`
                     url
                 }
             }
-            ... on CreateCheckoutSessionPackageNotFound {
+            ... on CreateCheckoutSessionPackageNotFoundError {
                 message
             }
-            ... on CreateCheckoutSessionInvalidExpiresAt {
+            ... on CreateCheckoutSessionInvalidExpiresAtError {
+                message
+            }
+            ... on GenericError {
+                message
+            }
+        }
+    }
+`;
+
+export const CREATE_PORTAL_SESSION_MUTATION = gql`
+    mutation CreatePortalSession($input: CreatePortalSessionInput!) {
+        createPortalSession(input: $input) {
+            __typename
+            ... on CreatePortalSessionPayload {
+                portalSession {
+                    id
+                    url
+                }
+            }
+            ... on CreatePortalSessionCustomerNotFoundError {
+                message
+            }
+            ... on CreatePortalSessionPackagesNotFoundError {
+                message
+            }
+            ... on CreatePortalSessionServiceNotInChainError {
                 message
             }
             ... on GenericError {

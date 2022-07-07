@@ -198,8 +198,8 @@ const YOUR_DOMAIN = "http://example.com";
 app.post("/create-checkout-session", async (req, res) => {
     const checkoutSessionInput: ICreateCheckoutSessionInput = {
         customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
-        packageId: 1,
-        chainIds: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
+        packageId: "1",
+        allowedChains: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
         cancelUrl: new URL(`${YOUR_DOMAIN}/cancel`),
         successUrl: new URL(`${YOUR_DOMAIN}/success`),
     };
@@ -211,6 +211,42 @@ app.post("/create-checkout-session", async (req, res) => {
     console.info(`Checkout session created, UUID: ${checkoutSession.id}`);
 
     res.redirect(303, checkoutSession.url);
+});
+```
+
+#### Portal Session
+
+```typescript
+import {
+    Diagonal,
+    Config,
+    ICreatePortalSessionInput,
+} from "@diagonal-finance/sdk-be";
+
+const express = require("express");
+const app = express();
+
+const apiKey = "abc...";
+const diagonal = new Diagonal(apiKey);
+const YOUR_DOMAIN = "http://example.com";
+
+app.post("/create-portal-session", async (req, res) => {
+    const portalSessionInput: ICreatePortalSessionInput = {
+        customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
+        configuration: {
+            availableChains: [Config.ChainId.Polygon],
+            availablePackages: ["de49e7f2-bc33-4f4f-a3ae-c1207b02819c"],
+        },
+        returnUrl: new URL(`${YOUR_DOMAIN}/return`),
+    };
+
+    const portalSession = await diagonal.portal.sessions.create(
+        portalSessionInput
+    );
+
+    console.info(`Portal session created, UUID: ${portalSession.id}`);
+
+    res.redirect(303, portalSession.url);
 });
 ```
 

@@ -39,6 +39,7 @@ const wrapper: SdkFunctionWrapper = async (action) => {
     try {
         return await action();
     } catch (error) {
+        console.error(error);
         if (error instanceof ClientError) {
             handleClientError(error);
         }

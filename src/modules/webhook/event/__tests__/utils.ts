@@ -1,5 +1,6 @@
-import { ChainId } from "../../../../config/chains";
-import { Token } from "../../../../config/tokens";
+import { ChainId } from "src/config/chains";
+import { Token } from "src/config/tokens";
+
 import { EventType, IWebhookEvent } from "../types";
 
 export const testConfig: {
@@ -10,14 +11,14 @@ export const testConfig: {
     subscriptionPayload: {
         customerId: "47adab7fd1f0121d91446563f",
         customerAddress: "0x4Ea66bE6947D711Ed963fc4aa8c04c5a4da6959B",
-        serviceAddress: "0x245312DBb10B1eada0d4E597bDe17134845Bd787",
+        serviceId: "957cebc5-d66d-45fd-bbef-0a5ee90287cf",
         token: Token.DAI,
-        packageId: "1",
+        packageId: "4cca4f06-ba41-4e99-b3ba-a7382ca82d6f",
         chainId: ChainId.Mumbai,
         type: EventType.SubscriptionAcknowledged,
     },
     signatureHeader:
-        "t=1647115932683,v0=dbd22857b1c4123494f875595185ba8d9b053464b4e1dcf62ec987b962d27a9b",
+        "t=1647115932683,v0=8b0bb0b96db63f3f95dc4c40ac7f503680e00f33a52a184bec11a79788df3419",
     endpointSecret:
         "788284448d0ffabed8b47e6ed1848de4b7522257f6b516a7cc75e6da15905cb1",
 };

@@ -1,5 +1,5 @@
-import { ChainId } from "../../../config/chains";
-import { Token } from "../../../config/tokens";
+import { ChainId } from "src/config/chains";
+import { Token } from "src/config/tokens";
 
 export enum EventType {
     SubscriptionAcknowledged = "SUBSCRIPTION_ACKNOWLEDGED",
@@ -12,11 +12,11 @@ export interface IWebhookEvent {
     type: EventType;
 
     customerId: string;
-
     customerAddress: string;
-    serviceAddress: string;
 
     token: Token;
+
+    serviceId: string;
     packageId: string;
     chainId: ChainId;
 }

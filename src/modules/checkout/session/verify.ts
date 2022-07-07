@@ -1,8 +1,12 @@
+import {
+    ChainZod,
+    PackageIdZod,
+    reportErrorFromIssues,
+    UrlZod,
+} from "src/utils/zod";
 import { z } from "zod";
 
-import { ChainZod, PackageIdZod } from "../../../utils/zod";
-
-import { InvalidCheckoutSessionInputError } from "./errors";
+import { CreateCheckoutSessionInputError } from "./errors";
 import { ICreateCheckoutSessionInput } from "./types";
 
 const ONE_HOUR_MS = 3600 * 1000;
@@ -10,9 +14,9 @@ const ONE_HOUR_MS = 3600 * 1000;
 const CheckoutSessionInput: z.ZodType<ICreateCheckoutSessionInput> = z.object({
     customerId: z.string(),
     packageId: PackageIdZod,
-    chainIds: z.optional(ChainZod.array()),
-    cancelUrl: z.instanceof(URL),
-    successUrl: z.instanceof(URL),
+    allowedChains: z.optional(ChainZod.array()),
+    cancelUrl: UrlZod,
+    successUrl: UrlZod,
     expiresAt: z.optional(
         z
             .date()
@@ -37,12 +41,5 @@ export function verifyCheckoutSessionInput(
     const result = CheckoutSessionInput.safeParse(input);
     if (result.success) return;
 
-    const issues = result.error.issues;
-
-    for (const issue of issues) {
-        const path = issue.path.reduce((prev, value) => prev + "," + value);
-        throw new InvalidCheckoutSessionInputError(
-            `Invalid payload. ${issue.message} \`${path}\` field.`
-        );
-    }
+    reportErrorFromIssues(CreateCheckoutSessionInputError, result.error.issues);
 }

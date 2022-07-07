@@ -1,12 +1,11 @@
-import { Diagonal } from "src";
+import { randomUUID } from "crypto";
+
 import { ChainId } from "src/config/chains";
+import Diagonal from "src/diagonal";
 import { graphQLClient } from "src/graphql/__mocks__/client";
 import { CreateCheckoutSessionMutation } from "src/graphql/schema.generated";
 
-import {
-    CreateCheckoutSessionError,
-    InvalidCheckoutSessionInputError,
-} from "../errors";
+import { CreateCheckoutSessionInputError } from "../errors";
 import { ICreateCheckoutSessionInput } from "../types";
 
 jest.mock("src/diagonal");
@@ -23,8 +22,8 @@ describe("CheckoutSessions", () => {
             const diagonal = new Diagonal(apiKey);
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: "1",
-                chainIds: [ChainId.Mumbai],
+                packageId: randomUUID(),
+                allowedChains: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
@@ -55,9 +54,12 @@ describe("CheckoutSessions", () => {
         });
 
         it.each([
-            ["CreateCheckoutSessionPackageNotFound", "Unable to find package"],
             [
-                "CreateCheckoutSessionInvalidExpiresAt",
+                "CreateCheckoutSessionPackageNotFoundError",
+                "Unable to find package",
+            ],
+            [
+                "CreateCheckoutSessionInvalidExpiresAtError",
                 "ExpiresAt value is invalid",
             ],
             [
@@ -71,8 +73,8 @@ describe("CheckoutSessions", () => {
                 const diagonal = new Diagonal(apiKey);
 
                 const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                    packageId: "1",
-                    chainIds: [ChainId.Mumbai],
+                    packageId: randomUUID(),
+                    allowedChains: [ChainId.Mumbai],
                     customerId: "12345",
                     cancelUrl: new URL("https://service.com/cancel"),
                     successUrl: new URL("https://service.com/success"),
@@ -91,7 +93,7 @@ describe("CheckoutSessions", () => {
                     diagonal.checkout.sessions.create(checkoutSessionInput);
 
                 await expect(createCheckoutSessionFn).rejects.toThrow(
-                    new CreateCheckoutSessionError(message)
+                    new CreateCheckoutSessionInputError(message)
                 );
             }
         );
@@ -102,7 +104,7 @@ describe("CheckoutSessions", () => {
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: "",
-                chainIds: [ChainId.Mumbai],
+                allowedChains: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
@@ -112,7 +114,7 @@ describe("CheckoutSessions", () => {
                 diagonal.checkout.sessions.create(checkoutSessionInput);
 
             expect(createCheckoutSessionFn).rejects.toThrow(
-                InvalidCheckoutSessionInputError
+                CreateCheckoutSessionInputError
             );
         });
 
@@ -121,8 +123,8 @@ describe("CheckoutSessions", () => {
             const diagonal = new Diagonal(apiKey);
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: "1",
-                chainIds: [123],
+                packageId: randomUUID(),
+                allowedChains: [123],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
@@ -132,7 +134,7 @@ describe("CheckoutSessions", () => {
                 diagonal.checkout.sessions.create(checkoutSessionInput);
 
             await expect(createCheckoutSessionFn).rejects.toThrow(
-                InvalidCheckoutSessionInputError
+                CreateCheckoutSessionInputError
             );
         });
 
@@ -141,8 +143,8 @@ describe("CheckoutSessions", () => {
             const diagonal = new Diagonal(apiKey);
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: "1",
-                chainIds: [ChainId.Mumbai],
+                packageId: randomUUID(),
+                allowedChains: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: "" as unknown as URL,
                 successUrl: new URL("https://service.com/success"),
@@ -152,7 +154,7 @@ describe("CheckoutSessions", () => {
                 diagonal.checkout.sessions.create(checkoutSessionInput);
 
             await expect(createCheckoutSessionFn).rejects.toThrow(
-                InvalidCheckoutSessionInputError
+                CreateCheckoutSessionInputError
             );
         });
 
@@ -161,8 +163,8 @@ describe("CheckoutSessions", () => {
             const diagonal = new Diagonal(apiKey);
 
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: "1",
-                chainIds: [ChainId.Mumbai],
+                packageId: randomUUID(),
+                allowedChains: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: "" as unknown as URL,
@@ -172,7 +174,7 @@ describe("CheckoutSessions", () => {
                 diagonal.checkout.sessions.create(checkoutSessionInput);
 
             await expect(createCheckoutSessionFn).rejects.toThrow(
-                InvalidCheckoutSessionInputError
+                CreateCheckoutSessionInputError
             );
         });
 
@@ -184,8 +186,8 @@ describe("CheckoutSessions", () => {
             const oneHourInMs = 3600 * 1000;
             const safeMarginInMs = 200;
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: "1",
-                chainIds: [ChainId.Mumbai],
+                packageId: randomUUID(),
+                allowedChains: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
@@ -198,7 +200,7 @@ describe("CheckoutSessions", () => {
                 diagonal.checkout.sessions.create(checkoutSessionInput);
 
             await expect(createCheckoutSessionFn).rejects.toThrow(
-                InvalidCheckoutSessionInputError
+                CreateCheckoutSessionInputError
             );
         });
 
@@ -209,8 +211,8 @@ describe("CheckoutSessions", () => {
             const dateTimeNow = new Date().getTime();
             const oneHourInMs = 3600 * 1000;
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: "1",
-                chainIds: [ChainId.Mumbai],
+                packageId: randomUUID(),
+                allowedChains: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
@@ -221,7 +223,7 @@ describe("CheckoutSessions", () => {
                 diagonal.checkout.sessions.create(checkoutSessionInput);
 
             await expect(createCheckoutSessionFn).rejects.toThrow(
-                InvalidCheckoutSessionInputError
+                CreateCheckoutSessionInputError
             );
         });
 
@@ -233,8 +235,8 @@ describe("CheckoutSessions", () => {
             const oneHourInMs = 3600 * 1000;
             const safeMarginInMs = 200;
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: "1",
-                chainIds: [ChainId.Mumbai],
+                packageId: randomUUID(),
+                allowedChains: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
@@ -264,8 +266,8 @@ describe("CheckoutSessions", () => {
             const dateTimeNow = Date.now();
             const oneHourInMs = 3600 * 1000;
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
-                packageId: "1",
-                chainIds: [ChainId.Mumbai],
+                packageId: randomUUID(),
+                allowedChains: [ChainId.Mumbai],
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
