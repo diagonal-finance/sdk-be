@@ -27,6 +27,7 @@ describe("CheckoutSessions", () => {
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
+                optimisticRedirect: true,
             };
 
             const id = "123";
@@ -128,6 +129,27 @@ describe("CheckoutSessions", () => {
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
+            };
+
+            const createCheckoutSessionFn = async () =>
+                diagonal.checkout.sessions.create(checkoutSessionInput);
+
+            await expect(createCheckoutSessionFn).rejects.toThrow(
+                CreateCheckoutSessionInputError
+            );
+        });
+
+        it("Should throw if invalid value in optimistic redirect is supplied", async () => {
+            const apiKey = "abc";
+            const diagonal = new Diagonal(apiKey);
+
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
+                packageId: randomUUID(),
+                allowedChains: [123],
+                customerId: "12345",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: new URL("https://service.com/success"),
+                optimisticRedirect: "" as unknown as boolean,
             };
 
             const createCheckoutSessionFn = async () =>

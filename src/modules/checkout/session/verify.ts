@@ -15,6 +15,7 @@ const CheckoutSessionInput: z.ZodType<ICreateCheckoutSessionInput> = z.object({
     customerId: z.string(),
     packageId: PackageIdZod,
     allowedChains: z.optional(ChainZod.array()),
+    optimisticRedirect: z.optional(z.boolean()),
     cancelUrl: UrlZod,
     successUrl: UrlZod,
     expiresAt: z.optional(

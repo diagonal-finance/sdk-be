@@ -5,8 +5,10 @@ export interface ICreateCheckoutSessionInput {
     packageId: string;
     cancelUrl: URL;
     successUrl: URL;
+
     expiresAt?: Date;
     allowedChains?: ChainId[];
+    optimisticRedirect?: boolean;
 }
 
 export interface ICheckoutSession {
