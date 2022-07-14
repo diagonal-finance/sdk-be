@@ -1,20 +1,11 @@
-import { DiagonalError } from "src/error";
+import { DiagonalError, ErrorType } from "src/error";
 
-class CreatePortalSessionInputError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, CreatePortalSessionInputError.prototype);
-    }
+class InputError extends DiagonalError {
+    override type = ErrorType.InvalidRequest;
 }
 
-class CreatePortalSessionExecutionError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(
-            this,
-            CreatePortalSessionExecutionError.prototype
-        );
-    }
+class ExecutionError extends DiagonalError {
+    override type = ErrorType.InternalService;
 }
 
-export { CreatePortalSessionInputError, CreatePortalSessionExecutionError };
+export { InputError, ExecutionError };

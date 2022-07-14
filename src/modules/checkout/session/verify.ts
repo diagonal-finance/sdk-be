@@ -6,7 +6,7 @@ import {
 } from "src/utils/zod";
 import { z } from "zod";
 
-import { CreateCheckoutSessionInputError } from "./errors";
+import { InputError } from "./errors";
 import { ICreateCheckoutSessionInput } from "./types";
 
 const ONE_HOUR_MS = 3600 * 1000;
@@ -42,5 +42,5 @@ export function verifyCheckoutSessionInput(
     const result = CheckoutSessionInput.safeParse(input);
     if (result.success) return;
 
-    reportErrorFromIssues(CreateCheckoutSessionInputError, result.error.issues);
+    reportErrorFromIssues(InputError, result.error.issues);
 }

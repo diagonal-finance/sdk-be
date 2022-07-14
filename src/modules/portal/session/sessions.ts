@@ -2,7 +2,7 @@ import { GraphQLClient } from "src/graphql/client";
 import { CreatePortalSessionMutation } from "src/graphql/schema.generated";
 import { IPortalSessions } from "src/interfaces";
 
-import { CreatePortalSessionExecutionError } from "./errors";
+import { ExecutionError, InputError } from "./errors";
 import { ICreatePortalSessionInput, IPortalSession } from "./types";
 import { verifyPortalSessionInput } from "./verify";
 
@@ -43,11 +43,9 @@ export default class Sessions implements IPortalSessions {
             case "CreatePortalSessionCustomerNotFoundError":
             case "CreatePortalSessionPackagesNotFoundError":
             case "CreatePortalSessionServiceNotInChainError":
-                throw new CreatePortalSessionExecutionError(
-                    operation.createPortalSession.message
-                );
+                throw new InputError(operation.createPortalSession.message);
             default:
-                throw new CreatePortalSessionExecutionError(
+                throw new ExecutionError(
                     "Unknown error occurred during checkout session creation"
                 );
         }

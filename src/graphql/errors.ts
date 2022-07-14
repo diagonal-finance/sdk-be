@@ -1,22 +1,15 @@
-import { DiagonalError } from "src/error";
+import { DiagonalError, ErrorType } from "src/error";
 
 class AuthenticationError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, AuthenticationError.prototype);
-    }
-}
-class InvalidInputError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, InvalidInputError.prototype);
-    }
-}
-class InternalServiceError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, InternalServiceError.prototype);
-    }
+    override type = ErrorType.Authentication;
 }
 
-export { AuthenticationError, InvalidInputError, InternalServiceError };
+class PermissionError extends DiagonalError {
+    override type = ErrorType.Permission;
+}
+
+class InvalidInputError extends DiagonalError {
+    override type = ErrorType.InvalidRequest;
+}
+
+export { AuthenticationError, InvalidInputError, PermissionError };

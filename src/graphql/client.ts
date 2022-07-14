@@ -2,12 +2,9 @@ import {
     ClientError,
     GraphQLClient as GraphQLClientRequest,
 } from "graphql-request";
+import { DiagonalError } from "src/error";
 
-import {
-    AuthenticationError,
-    InternalServiceError,
-    InvalidInputError,
-} from "./errors";
+import { AuthenticationError, InvalidInputError } from "./errors";
 import { getSdk, SdkFunctionWrapper } from "./schema.generated";
 
 export type GraphQLClient = ReturnType<typeof getSdk>;
@@ -30,7 +27,10 @@ function handleClientError(error: ClientError) {
                 responseError.extensions.code === "BAD_USER_INPUT"
         );
         if (isBadInputError) {
-            throw new InvalidInputError("Invalid input value provided");
+            const path = isBadInputError.path?.map((string) => string + ".");
+            throw new InvalidInputError(
+                `Invalid input value provided at ${path}`
+            );
         }
     }
 }
@@ -39,14 +39,11 @@ const wrapper: SdkFunctionWrapper = async (action) => {
     try {
         return await action();
     } catch (error) {
-        console.error(error);
         if (error instanceof ClientError) {
             handleClientError(error);
         }
     }
-    throw new InternalServiceError(
-        `Internal service error while executing operation`
-    );
+    throw new DiagonalError(`Error while executing operation`);
 };
 
 export const getGraphQLClient = (

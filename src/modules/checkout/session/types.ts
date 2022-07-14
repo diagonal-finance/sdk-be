@@ -13,5 +13,5 @@ export interface ICreateCheckoutSessionInput {
 
 export interface ICheckoutSession {
     id: string;
-    url: string;
+    url: URL;
 }

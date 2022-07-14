@@ -1,7 +1,8 @@
 import { ClientError, GraphQLClient } from "graphql-request";
+import { getOperationError } from "src/__tests__/utils";
+import { DiagonalError, ErrorType } from "src/error";
 
 import { getGraphQLClient } from "../client";
-import { AuthenticationError, InvalidInputError } from "../errors";
 
 jest.mock("graphql-request", () => ({
     ...jest.requireActual("graphql-request"),
@@ -21,10 +22,12 @@ describe("When getting the graphql client", () => {
             },
         });
     });
-    test("Fails if API key not provided", () => {
-        const getGraphQLClientFn = () =>
-            getGraphQLClient(undefined as unknown as string);
-        expect(getGraphQLClientFn).toThrowError(AuthenticationError);
+    test("Fails if API key not provided", async () => {
+        const error = await getOperationError(() =>
+            getGraphQLClient(undefined as unknown as string)
+        );
+        expect(error.type).toBe(ErrorType.Authentication);
+        expect(error.message).toBe("API key not provided");
     });
     test("Fallsback to default URL if not provided", () => {
         getGraphQLClient("API-KEY");
@@ -59,15 +62,17 @@ describe("When using the graphql client", () => {
         jest.resetAllMocks();
     });
 
-    async function executeQuery() {
-        const client = getGraphQLClient("API_KEY");
-        await client.CreateCheckoutSession({
-            input: {
-                cancelUrl: "",
-                customerId: "",
-                packageId: "",
-                successUrl: "",
-            },
+    async function getExecuteQueryError(): Promise<DiagonalError> {
+        return getOperationError(async () => {
+            const client = getGraphQLClient("API_KEY");
+            await client.CreateCheckoutSession({
+                input: {
+                    cancelUrl: "",
+                    customerId: "",
+                    packageId: "",
+                    successUrl: "",
+                },
+            });
         });
     }
 
@@ -91,7 +96,11 @@ describe("When using the graphql client", () => {
             );
         });
 
-        await expect(executeQuery).rejects.toThrow(AuthenticationError);
+        const error = await getExecuteQueryError();
+        expect(error.type).toBe(ErrorType.Authentication);
+        expect(error.message).toBe(
+            "Unable to authenticate with API key provided"
+        );
     });
 
     test("Throws InvalidInputError if BAD_USER_INPUT is received", async () => {
@@ -114,6 +123,8 @@ describe("When using the graphql client", () => {
             );
         });
 
-        await expect(executeQuery).rejects.toThrow(InvalidInputError);
+        const error = await getExecuteQueryError();
+        expect(error.type).toBe(ErrorType.InvalidRequest);
+        expect(error.message).toContain("Invalid input value provided");
     });
 });
