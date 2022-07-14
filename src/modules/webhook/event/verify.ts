@@ -1,5 +1,6 @@
 import { createHmac } from "crypto";
 
+import { DiagonalError, ErrorType } from "src/error";
 import {
     ChainZod,
     EthereumAddressZod,
@@ -66,10 +67,30 @@ export function verifySignature(
         const signedPayload = createHmac("sha256", endpointSecret)
             .update(payloadWithTimestamp)
             .digest("hex");
+
         if (signedPayload !== signatureHeader.signature) {
             throw new InvalidSignatureError("Invalid signature.");
         }
     } catch (e) {
+        throw new InvalidSignatureError("Invalid signature.");
+    }
+}
+
+export function verifySignatureTimestamp(signatureTimestamp: string): void {
+    try {
+        const timeNowMs = Date.now();
+        const signatureTimeMs = parseInt(signatureTimestamp);
+
+        const interval = 5 * 60 * 1000; // 5 minutes
+        const diff = timeNowMs - signatureTimeMs;
+
+        if (diff > interval) {
+            throw new InvalidSignatureError("Signature too old.");
+        }
+    } catch (e) {
+        if (e instanceof DiagonalError && e.type === ErrorType.InvalidSignature)
+            throw e;
+
         throw new InvalidSignatureError("Invalid signature.");
     }
 }

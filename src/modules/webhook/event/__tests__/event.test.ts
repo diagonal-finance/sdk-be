@@ -126,14 +126,14 @@ describe("Webhook event", () => {
     describe("When validating the signature header", () => {
         it.each([
             "",
-            "t=1647115932683",
+            `t=${testConfig.timestamp}`,
             "v0=c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
-            "1647115932683",
+            `${testConfig.timestamp}`,
             "c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
-            "t1647115932683,v0=c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
-            "t=1647115932683,v0c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
-            "1647115932683,c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd",
-            "t=16471159326,v0=c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962cced",
+            `t${testConfig.timestamp},v0=c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd`,
+            `t=${testConfig.timestamp},v0c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd`,
+            `${testConfig.timestamp},c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962ccedd`,
+            `t=${testConfig.timestamp},v0=c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962cced`,
         ])(
             "Should fail when if signatureHeader provided is '%s'",
             (invalidSigHeader) => {
@@ -177,8 +177,8 @@ describe("Webhook event", () => {
 
     describe("When verifying the signature header", () => {
         it("Should fail if timestamp is invalid", async () => {
-            const newTimestamp = Date.now();
-            const oldTimestamp = "1647115932683";
+            const newTimestamp = testConfig.timestamp;
+            const oldTimestamp = Date.now() - 10;
 
             const payloadString = JSON.stringify(
                 testConfig.subscriptionPayload
@@ -201,8 +201,31 @@ describe("Webhook event", () => {
             expect(error.message).toContain("Invalid signature.");
         });
 
+        it("Should fail if timestamp is too old", async () => {
+            const oldTimestamp = Date.now() - 6 * 60 * 1000; // 6 min ago
+
+            const payloadString = JSON.stringify(
+                testConfig.subscriptionPayload
+            );
+            const payloadWithTimestamp = `${payloadString}${oldTimestamp}`;
+            const signedPayload = createHmac(
+                "sha256",
+                testConfig.endpointSecret
+            )
+                .update(payloadWithTimestamp)
+                .digest("hex");
+            const signatureHeader = `t=${oldTimestamp},v0=${signedPayload}`;
+
+            const error = getConstructEventError(
+                testConfig.subscriptionPayload,
+                signatureHeader
+            );
+            expect(error.type).toBe(ErrorType.InvalidSignature);
+            expect(error.message).toContain("Signature too old.");
+        });
+
         it("Should fail if header payload is invalid", async () => {
-            const timestamp = "1647115932683";
+            const timestamp = Date.now();
 
             // subscriber address with the last character changed
             const newPayload = {
@@ -258,14 +281,32 @@ describe("Webhook event", () => {
     });
 
     describe("When constructing a valid webhook event", () => {
-        it("Should be done successfully", async () => {
+        it("Should be completed successfully", async () => {
             const packageId = "3021437c-1ecc-4bd8-9df6-1d37b077ba08";
+
+            const payload = {
+                ...testConfig.subscriptionPayload,
+                packageId,
+            };
+
+            const payloadString = JSON.stringify(payload);
+            const payloadWithTimestamp = `${payloadString}${testConfig.timestamp}`;
+
+            const signedPayload = createHmac(
+                "sha256",
+                testConfig.endpointSecret
+            )
+                .update(payloadWithTimestamp)
+                .digest("hex");
+
+            const signatureHeader = `t=${testConfig.timestamp},v0=${signedPayload}`;
+
             const event = construct(
                 {
                     ...testConfig.subscriptionPayload,
                     packageId,
                 },
-                testConfig.signatureHeader,
+                signatureHeader,
                 testConfig.endpointSecret
             );
 
