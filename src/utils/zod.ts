@@ -19,7 +19,7 @@ export function reportErrorFromIssues(
     for (const issue of issues) {
         const path = issue.path.reduce((prev, value) => prev + "." + value);
         throw new ErrorClass(
-            `Invalid payload. ${issue.message} \`${path}\` field.`
+            `Invalid payload. ${issue.message} in \`${path}\` field.`
         );
     }
 }

@@ -7,7 +7,7 @@ import {
     UrlZod,
 } from "../../../utils/zod";
 
-import { CreatePortalSessionInputError } from "./errors";
+import { InputError } from "./errors";
 import { ICreatePortalSessionInput } from "./types";
 
 const PortalSessionInput: z.ZodType<ICreatePortalSessionInput> = z.object({
@@ -27,5 +27,5 @@ export function verifyPortalSessionInput(
     const result = PortalSessionInput.safeParse(input);
     if (result.success) return;
 
-    reportErrorFromIssues(CreatePortalSessionInputError, result.error.issues);
+    reportErrorFromIssues(InputError, result.error.issues);
 }

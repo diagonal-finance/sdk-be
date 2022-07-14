@@ -1,32 +1,36 @@
 import { createHmac } from "crypto";
 
-import {
-    InvalidEndpointSecretError,
-    InvalidPayloadError,
-    InvalidSignatureError,
-    InvalidSignatureHeaderError,
-} from "../errors";
+import { DiagonalError, ErrorType } from "src/error";
+
+import { InvalidPayloadError } from "../errors";
 import { construct } from "../event";
 
 import { testConfig } from "./utils";
 
+class NoErrorThrownError extends Error {}
+
 describe("Webhook event", () => {
-    function constructEventFn(
+    function getConstructEventError(
         payload?: unknown,
         signature?: string,
         secret?: string
-    ) {
-        return () =>
+    ): DiagonalError {
+        try {
             construct(
                 payload ?? testConfig.subscriptionPayload,
                 signature ?? testConfig.signatureHeader,
                 secret ?? testConfig.endpointSecret
             );
+            throw new NoErrorThrownError();
+        } catch (error: unknown) {
+            return error as DiagonalError;
+        }
     }
 
     describe("When validating the payload", () => {
         it("Should fail when is of invalid type", () => {
-            expect(constructEventFn("")).toThrow(
+            const error = getConstructEventError("");
+            expect(error).toStrictEqual(
                 new InvalidPayloadError("Invalid payload type")
             );
         });
@@ -36,8 +40,13 @@ describe("Webhook event", () => {
                 ...testConfig.subscriptionPayload,
                 serviceId: "",
             };
+            const error = getConstructEventError(payload);
 
-            expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
+            expect(error).toStrictEqual(
+                new InvalidPayloadError(
+                    "Invalid payload. Invalid uuid `serviceId` field."
+                )
+            );
         });
 
         it("Should fail if does not contain a valid customerAddress field", async () => {
@@ -45,7 +54,13 @@ describe("Webhook event", () => {
                 ...testConfig.subscriptionPayload,
                 customerAddress: undefined,
             };
-            expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
+            const error = getConstructEventError(payload);
+
+            expect(error).toStrictEqual(
+                new InvalidPayloadError(
+                    "Invalid payload. Required `customerAddress` field."
+                )
+            );
         });
 
         it("Should fail if does not contain a valid superTokenAddress field", async () => {
@@ -53,7 +68,10 @@ describe("Webhook event", () => {
                 ...testConfig.subscriptionPayload,
                 token: "",
             };
-            expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
+
+            const error = getConstructEventError(payload);
+            expect(error.type).toBe(ErrorType.InvalidSignature);
+            expect(error.message).toContain("received '' `token` field.");
         });
 
         it("Should fail if does not contain a valid packageId field", async () => {
@@ -61,7 +79,12 @@ describe("Webhook event", () => {
                 ...testConfig.subscriptionPayload,
                 packageId: "",
             };
-            expect(constructEventFn(payload)).toThrow(InvalidPayloadError);
+            const error = getConstructEventError(payload);
+            expect(error).toStrictEqual(
+                new InvalidPayloadError(
+                    "Invalid payload. Invalid uuid `packageId` field."
+                )
+            );
         });
 
         it("Should fail if does not contain a valid event field", async () => {
@@ -73,8 +96,13 @@ describe("Webhook event", () => {
                 ...testConfig.subscriptionPayload,
                 type: "",
             };
-            expect(constructEventFn(payload1)).toThrow(InvalidPayloadError);
-            expect(constructEventFn(payload2)).toThrow(InvalidPayloadError);
+            const error1 = getConstructEventError(payload1);
+            expect(error1.type).toBe(ErrorType.InvalidSignature);
+            expect(error1.message).toContain("received 'abc' `type` field.");
+
+            const error2 = getConstructEventError(payload2);
+            expect(error2.type).toBe(ErrorType.InvalidSignature);
+            expect(error2.message).toContain("received '' `type` field.");
         });
 
         it("Should fail if does not contain a valid chainId field", async () => {
@@ -83,8 +111,15 @@ describe("Webhook event", () => {
                 ...testConfig.subscriptionPayload,
                 chainId: 1234,
             };
-            expect(constructEventFn(payload1)).toThrow(InvalidPayloadError);
-            expect(constructEventFn(payload2)).toThrow(InvalidPayloadError);
+            const error1 = getConstructEventError(payload1);
+            expect(error1.type).toBe(ErrorType.InvalidSignature);
+            expect(error1.message).toContain("received '0' `chainId` field.");
+
+            const error2 = getConstructEventError(payload2);
+            expect(error2.type).toBe(ErrorType.InvalidSignature);
+            expect(error2.message).toContain(
+                "received '1234' `chainId` field."
+            );
         });
     });
 
@@ -101,45 +136,42 @@ describe("Webhook event", () => {
             "t=16471159326,v0=c8ac659381d2d5fdfd07b965b47adab7fd1f0121d91446563fdd551f962cced",
         ])(
             "Should fail when if signatureHeader provided is '%s'",
-            async (invalidSigHeader) => {
-                expect(
-                    constructEventFn(
-                        testConfig.subscriptionPayload,
-                        invalidSigHeader
-                    )
-                ).toThrow(
-                    new InvalidSignatureHeaderError("Invalid signature header.")
+            (invalidSigHeader) => {
+                const error = getConstructEventError(
+                    testConfig.subscriptionPayload,
+                    invalidSigHeader
                 );
+
+                expect(error.type).toBe(ErrorType.InvalidSignature);
+                expect(error.message).toContain("Invalid signature header.");
             }
         );
     });
 
     describe("When verifying the endpoint secret", () => {
         it("Should fail if empty", async () => {
-            expect(
-                constructEventFn(
-                    testConfig.subscriptionPayload,
-                    testConfig.signatureHeader,
-                    ""
-                )
-            ).toThrow(
-                new InvalidEndpointSecretError("Invalid endpointSecret.")
+            const error = getConstructEventError(
+                testConfig.subscriptionPayload,
+                testConfig.signatureHeader,
+                ""
             );
+
+            expect(error.type).toBe(ErrorType.InvalidSignature);
+            expect(error.message).toContain("Invalid endpointSecret.");
         });
 
         it("Should fail if invalid", async () => {
-            expect(
-                constructEventFn(
-                    testConfig.subscriptionPayload,
-                    testConfig.signatureHeader,
-                    testConfig.endpointSecret.slice(
-                        0,
-                        testConfig.endpointSecret.length - 1
-                    )
+            const error = getConstructEventError(
+                testConfig.subscriptionPayload,
+                testConfig.signatureHeader,
+                testConfig.endpointSecret.slice(
+                    0,
+                    testConfig.endpointSecret.length - 1
                 )
-            ).toThrow(
-                new InvalidEndpointSecretError("Invalid endpointSecret.")
             );
+
+            expect(error.type).toBe(ErrorType.InvalidSignature);
+            expect(error.message).toContain("Invalid endpointSecret.");
         });
     });
 
@@ -161,12 +193,12 @@ describe("Webhook event", () => {
             // modified signature header (timestamp)
             const signatureHeader = `t=${newTimestamp},v0=${signedPayload}`;
 
-            expect(
-                constructEventFn(
-                    testConfig.subscriptionPayload,
-                    signatureHeader
-                )
-            ).toThrow(new InvalidSignatureError("Invalid signature."));
+            const error = getConstructEventError(
+                testConfig.subscriptionPayload,
+                signatureHeader
+            );
+            expect(error.type).toBe(ErrorType.InvalidSignature);
+            expect(error.message).toContain("Invalid signature.");
         });
 
         it("Should fail if header payload is invalid", async () => {
@@ -190,12 +222,12 @@ describe("Webhook event", () => {
             // modified signature header (payload)
             const signatureHeader = `t=${timestamp},v0=${signedPayload}`;
 
-            expect(
-                constructEventFn(
-                    testConfig.subscriptionPayload,
-                    signatureHeader
-                )
-            ).toThrow(new InvalidSignatureError("Invalid signature."));
+            const error = getConstructEventError(
+                testConfig.subscriptionPayload,
+                signatureHeader
+            );
+            expect(error.type).toBe(ErrorType.InvalidSignature);
+            expect(error.message).toContain("Invalid signature.");
         });
 
         it("Should fail if body is invalid", async () => {
@@ -205,9 +237,9 @@ describe("Webhook event", () => {
                 subscriber: "0x4Ea66bE6947D711Ed963fc4aa8c04c5a4da6959C",
             };
 
-            expect(constructEventFn(subscriptionPayload)).toThrow(
-                new InvalidSignatureError("Invalid signature.")
-            );
+            const error = getConstructEventError(subscriptionPayload);
+            expect(error.type).toBe(ErrorType.InvalidSignature);
+            expect(error.message).toContain("Invalid signature.");
         });
 
         it("Should fail if endpointSecret is invalid", async () => {
@@ -215,13 +247,13 @@ describe("Webhook event", () => {
             const endpointSecret1 =
                 "788284448d0ffabed8b47e6ed1848de4b7522257f6b516a7cc75e6da15905cb2";
 
-            expect(
-                constructEventFn(
-                    testConfig.subscriptionPayload,
-                    testConfig.signatureHeader,
-                    endpointSecret1
-                )
-            ).toThrow(new InvalidSignatureError("Invalid signature."));
+            const error = getConstructEventError(
+                testConfig.subscriptionPayload,
+                testConfig.signatureHeader,
+                endpointSecret1
+            );
+            expect(error.type).toBe(ErrorType.InvalidSignature);
+            expect(error.message).toContain("Invalid signature.");
         });
     });
 
