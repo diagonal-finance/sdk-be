@@ -1,29 +1,17 @@
-import { DiagonalError } from "src/error";
+import { DiagonalError, ErrorType } from "src/error";
 
 class InvalidSignatureHeaderError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, InvalidSignatureHeaderError.prototype);
-    }
+    override type = ErrorType.InvalidSignature;
 }
 class InvalidPayloadError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, InvalidPayloadError.prototype);
-    }
+    override type = ErrorType.InvalidSignature;
 }
 
 class InvalidEndpointSecretError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, InvalidEndpointSecretError.prototype);
-    }
+    override type = ErrorType.InvalidSignature;
 }
 class InvalidSignatureError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, InvalidSignatureError.prototype);
-    }
+    override type = ErrorType.InvalidSignature;
 }
 
 export {

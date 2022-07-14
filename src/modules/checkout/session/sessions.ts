@@ -1,8 +1,9 @@
+import { DiagonalError } from "src/error";
 import { GraphQLClient } from "src/graphql/client";
 import { CreateCheckoutSessionMutation } from "src/graphql/schema.generated";
 import { ICheckoutSessions } from "src/interfaces/ICheckoutSessions";
 
-import { CreateCheckoutSessionExecutionError } from "./errors";
+import { InputError, PackageNotFoundError } from "./errors";
 import { ICheckoutSession, ICreateCheckoutSessionInput } from "./types";
 import { verifyCheckoutSessionInput } from "./verify";
 
@@ -35,14 +36,15 @@ export default class Sessions implements ICheckoutSessions {
         operation: CreateCheckoutSessionMutation
     ): never {
         switch (operation.createCheckoutSession.__typename) {
-            case "CreateCheckoutSessionPackageNotFoundError":
             case "CreateCheckoutSessionInvalidExpiresAtError":
-                throw new CreateCheckoutSessionExecutionError(
+                throw new InputError(operation.createCheckoutSession.message);
+            case "CreateCheckoutSessionPackageNotFoundError":
+                throw new PackageNotFoundError(
                     operation.createCheckoutSession.message
                 );
             default:
-                throw new CreateCheckoutSessionExecutionError(
-                    "Unknown error occurred during checkout session creation"
+                throw new DiagonalError(
+                    "Unknown error occurred during the creation of a checkout session"
                 );
         }
     }

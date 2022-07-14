@@ -1,11 +1,12 @@
 import { randomUUID } from "crypto";
 
+import { getOperationError } from "src/__tests__/utils";
 import { ChainId } from "src/config/chains";
 import Diagonal from "src/diagonal";
+import { DiagonalError, ErrorType } from "src/error";
 import { graphQLClient } from "src/graphql/__mocks__/client";
 import { CreateCheckoutSessionMutation } from "src/graphql/schema.generated";
 
-import { CreateCheckoutSessionInputError } from "../errors";
 import { ICreateCheckoutSessionInput } from "../types";
 
 jest.mock("src/diagonal");
@@ -27,6 +28,7 @@ describe("CheckoutSessions", () => {
                 customerId: "12345",
                 cancelUrl: new URL("https://service.com/cancel"),
                 successUrl: new URL("https://service.com/success"),
+                optimisticRedirect: true,
             };
 
             const id = "123";
@@ -53,25 +55,35 @@ describe("CheckoutSessions", () => {
             expect(graphQLClient.CreateCheckoutSession).toBeCalledTimes(1);
         });
 
+        async function getCreateCheckoutSessionError(
+            input: ICreateCheckoutSessionInput
+        ): Promise<DiagonalError> {
+            return getOperationError(async () => {
+                const apiKey = "abc";
+                const diagonal = new Diagonal(apiKey);
+                await diagonal.checkout.sessions.create(input);
+            });
+        }
+
         it.each([
             [
                 "CreateCheckoutSessionPackageNotFoundError",
                 "Unable to find package",
+                ErrorType.InvalidRequest,
             ],
             [
                 "CreateCheckoutSessionInvalidExpiresAtError",
                 "ExpiresAt value is invalid",
+                ErrorType.InvalidRequest,
             ],
             [
                 "Error",
-                "Unknown error occurred during checkout session creation",
+                "Unknown error occurred during the creation of a checkout session",
+                ErrorType.InternalService,
             ],
         ])(
             "Should throw CreateCheckoutSessionError if response __typename is %s",
-            async (__typename, message) => {
-                const apiKey = "abc";
-                const diagonal = new Diagonal(apiKey);
-
+            async (__typename, message, type) => {
                 const checkoutSessionInput: ICreateCheckoutSessionInput = {
                     packageId: randomUUID(),
                     allowedChains: [ChainId.Mumbai],
@@ -89,19 +101,16 @@ describe("CheckoutSessions", () => {
                     });
                 });
 
-                const createCheckoutSessionFn = async () =>
-                    diagonal.checkout.sessions.create(checkoutSessionInput);
-
-                await expect(createCheckoutSessionFn).rejects.toThrow(
-                    new CreateCheckoutSessionInputError(message)
+                const error = await getCreateCheckoutSessionError(
+                    checkoutSessionInput
                 );
+
+                expect(error.type).toBe(type);
+                expect(error.message).toBe(message);
             }
         );
 
         it("Should throw if invalid packageRegistryId is supplied", async () => {
-            const apiKey = "abc";
-            const diagonal = new Diagonal(apiKey);
-
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: "",
                 allowedChains: [ChainId.Mumbai],
@@ -110,18 +119,16 @@ describe("CheckoutSessions", () => {
                 successUrl: new URL("https://service.com/success"),
             };
 
-            const createCheckoutSessionFn = async () =>
-                diagonal.checkout.sessions.create(checkoutSessionInput);
-
-            expect(createCheckoutSessionFn).rejects.toThrow(
-                CreateCheckoutSessionInputError
+            const error = await getCreateCheckoutSessionError(
+                checkoutSessionInput
+            );
+            expect(error.type).toBe(ErrorType.InvalidRequest);
+            expect(error.message).toBe(
+                "Invalid payload. Invalid uuid in `packageId` field."
             );
         });
 
         it("Should throw if invalid chainId is supplied", async () => {
-            const apiKey = "abc";
-            const diagonal = new Diagonal(apiKey);
-
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: randomUUID(),
                 allowedChains: [123],
@@ -130,18 +137,35 @@ describe("CheckoutSessions", () => {
                 successUrl: new URL("https://service.com/success"),
             };
 
-            const createCheckoutSessionFn = async () =>
-                diagonal.checkout.sessions.create(checkoutSessionInput);
+            const error = await getCreateCheckoutSessionError(
+                checkoutSessionInput
+            );
+            expect(error.type).toBe(ErrorType.InvalidRequest);
+            expect(error.message).toContain(
+                "received '123' in `allowedChains.0` field."
+            );
+        });
 
-            await expect(createCheckoutSessionFn).rejects.toThrow(
-                CreateCheckoutSessionInputError
+        it("Should throw if invalid value in optimistic redirect is supplied", async () => {
+            const checkoutSessionInput: ICreateCheckoutSessionInput = {
+                packageId: randomUUID(),
+                allowedChains: [ChainId.Mumbai],
+                customerId: "12345",
+                cancelUrl: new URL("https://service.com/cancel"),
+                successUrl: new URL("https://service.com/success"),
+                optimisticRedirect: "" as unknown as boolean,
+            };
+
+            const error = await getCreateCheckoutSessionError(
+                checkoutSessionInput
+            );
+            expect(error.type).toBe(ErrorType.InvalidRequest);
+            expect(error.message).toContain(
+                "Expected boolean, received string in `optimisticRedirect` field."
             );
         });
 
         it("Should throw if invalid cancelUrl is supplied", async () => {
-            const apiKey = "abc";
-            const diagonal = new Diagonal(apiKey);
-
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: randomUUID(),
                 allowedChains: [ChainId.Mumbai],
@@ -150,18 +174,16 @@ describe("CheckoutSessions", () => {
                 successUrl: new URL("https://service.com/success"),
             };
 
-            const createCheckoutSessionFn = async () =>
-                diagonal.checkout.sessions.create(checkoutSessionInput);
-
-            await expect(createCheckoutSessionFn).rejects.toThrow(
-                CreateCheckoutSessionInputError
+            const error = await getCreateCheckoutSessionError(
+                checkoutSessionInput
+            );
+            expect(error.type).toBe(ErrorType.InvalidRequest);
+            expect(error.message).toContain(
+                "Input not instance of URL in `cancelUrl` field."
             );
         });
 
         it("Should throw if invalid successUrl is supplied", async () => {
-            const apiKey = "abc";
-            const diagonal = new Diagonal(apiKey);
-
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
                 packageId: randomUUID(),
                 allowedChains: [ChainId.Mumbai],
@@ -170,18 +192,16 @@ describe("CheckoutSessions", () => {
                 successUrl: "" as unknown as URL,
             };
 
-            const createCheckoutSessionFn = async () =>
-                diagonal.checkout.sessions.create(checkoutSessionInput);
-
-            await expect(createCheckoutSessionFn).rejects.toThrow(
-                CreateCheckoutSessionInputError
+            const error = await getCreateCheckoutSessionError(
+                checkoutSessionInput
+            );
+            expect(error.type).toBe(ErrorType.InvalidRequest);
+            expect(error.message).toContain(
+                "Input not instance of URL in `successUrl` field."
             );
         });
 
         it("Should throw if expiresAt supplied is more than 24 hours from now", async () => {
-            const apiKey = "abc";
-            const diagonal = new Diagonal(apiKey);
-
             const dateTimeNow = new Date().getTime();
             const oneHourInMs = 3600 * 1000;
             const safeMarginInMs = 200;
@@ -196,18 +216,16 @@ describe("CheckoutSessions", () => {
                 ),
             };
 
-            const createCheckoutSessionFn = async () =>
-                diagonal.checkout.sessions.create(checkoutSessionInput);
-
-            await expect(createCheckoutSessionFn).rejects.toThrow(
-                CreateCheckoutSessionInputError
+            const error = await getCreateCheckoutSessionError(
+                checkoutSessionInput
+            );
+            expect(error.type).toBe(ErrorType.InvalidRequest);
+            expect(error.message).toContain(
+                "Invalid input in `expiresAt` field."
             );
         });
 
         it("Should throw if expiresAt supplied is less than 1 hour from now", async () => {
-            const apiKey = "abc";
-            const diagonal = new Diagonal(apiKey);
-
             const dateTimeNow = new Date().getTime();
             const oneHourInMs = 3600 * 1000;
             const checkoutSessionInput: ICreateCheckoutSessionInput = {
@@ -219,11 +237,12 @@ describe("CheckoutSessions", () => {
                 expiresAt: new Date(dateTimeNow + oneHourInMs - 1),
             };
 
-            const createCheckoutSessionFn = async () =>
-                diagonal.checkout.sessions.create(checkoutSessionInput);
-
-            await expect(createCheckoutSessionFn).rejects.toThrow(
-                CreateCheckoutSessionInputError
+            const error = await getCreateCheckoutSessionError(
+                checkoutSessionInput
+            );
+            expect(error.type).toBe(ErrorType.InvalidRequest);
+            expect(error.message).toContain(
+                "The date must be minimum 1 hour in `expiresAt` field."
             );
         });
 

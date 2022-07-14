@@ -1,11 +1,12 @@
 import { randomUUID } from "crypto";
 
+import { getOperationError } from "src/__tests__/utils";
 import { ChainId } from "src/config";
 import Diagonal from "src/diagonal";
+import { DiagonalError, ErrorType } from "src/error";
 import { graphQLClient } from "src/graphql/__mocks__/client";
 import { CreatePortalSessionMutation } from "src/graphql/schema.generated";
 
-import { CreatePortalSessionInputError } from "../errors";
 import { ICreatePortalSessionInput } from "../types";
 
 jest.mock("src/diagonal");
@@ -85,29 +86,40 @@ describe("PortalSession", () => {
             expect(graphQLClient.CreatePortalSession).toBeCalledTimes(1);
         });
 
+        async function getCreatePortalSessionError(
+            input: ICreatePortalSessionInput
+        ): Promise<DiagonalError> {
+            return getOperationError(async () => {
+                const apiKey = "abc";
+                const diagonal = new Diagonal(apiKey);
+                await diagonal.portal.sessions.create(input);
+            });
+        }
+
         it.each([
             [
                 "CreatePortalSessionCustomerNotFoundError",
                 "Unable to find customer",
+                ErrorType.InvalidRequest,
             ],
             [
                 "CreatePortalSessionPackagesNotFoundError",
                 "Unable to find package",
+                ErrorType.InvalidRequest,
             ],
             [
                 "CreatePortalSessionServiceNotInChainError",
                 "Service is not deployed in specified chain",
+                ErrorType.InvalidRequest,
             ],
             [
                 "Error",
                 "Unknown error occurred during checkout session creation",
+                ErrorType.InternalService,
             ],
         ])(
             "Should throw CreatePortalSessionError if response __typename is %s",
-            async (__typename, message) => {
-                const apiKey = "abc";
-                const diagonal = new Diagonal(apiKey);
-
+            async (__typename, message, type) => {
                 graphQLClient.CreatePortalSession.mockImplementation(() => {
                     return Promise.resolve({
                         createPortalSession: {
@@ -116,22 +128,20 @@ describe("PortalSession", () => {
                         } as CreatePortalSessionMutation["createPortalSession"],
                     });
                 });
-
-                const createCheckoutSessionFn = async () =>
-                    diagonal.portal.sessions.create(input);
-
-                await expect(createCheckoutSessionFn).rejects.toThrow(
-                    new CreatePortalSessionInputError(message)
-                );
+                const error = await getCreatePortalSessionError(input);
+                expect(error.type).toBe(type);
+                expect(error.message).toBe(message);
             }
         );
 
         function constructInvalidInput(invalidInput: {
             customerId?: string;
-            configuration: Record<string, unknown>;
+            returnUrl?: URL;
+            configuration?: Record<string, unknown>;
         }) {
             return {
                 customerId: invalidInput.customerId ?? input.customerId,
+                returnUrl: invalidInput.returnUrl ?? input.returnUrl,
                 configuration: invalidInput.configuration
                     ? {
                           ...input.configuration,
@@ -142,51 +152,52 @@ describe("PortalSession", () => {
         }
 
         it.each([
-            ["customerId", { ...input, customerId: "" }],
+            [
+                "customerId",
+                constructInvalidInput({
+                    customerId: "",
+                }),
+                "String must contain at least 1 character(s) in `customerId` field.",
+            ],
             [
                 "non url value in returnUrl",
                 constructInvalidInput({
-                    configuration: { returnUrl: undefined },
+                    returnUrl: "" as unknown as URL,
                 }),
+                "Input not instance of URL in `returnUrl` field.",
             ],
             [
                 "non-existing chain in allowedChains",
                 constructInvalidInput({
-                    configuration: { allowedChains: [0] },
+                    configuration: { availableChains: [0] },
                 }),
+                "received '0' in `configuration.availableChains.0` field",
             ],
             [
-                "invalid value in availablePackagesById",
+                "invalid value in availablePackages",
                 constructInvalidInput({
-                    configuration: { availablePackagesById: [undefined] },
+                    configuration: { availablePackages: [undefined] },
                 }),
+                "Required in `configuration.availablePackages.0` field.",
             ],
             [
-                "empty availablePackagesById",
-                constructInvalidInput({
-                    configuration: { availablePackagesById: [] },
-                }),
-            ],
-            [
-                "invalid packageId in availablePackagesById",
+                "invalid packageId in availablePackages",
                 constructInvalidInput({
                     configuration: {
-                        availablePackagesById: [""],
+                        availablePackages: [""],
                     },
                 }),
+                "Invalid uuid in `configuration.availablePackages.0` field.",
             ],
-        ])("Should throw if %s is supplied", async (_, invalidInput) => {
-            const apiKey = "abc";
-            const diagonal = new Diagonal(apiKey);
-
-            const createCheckoutSessionFn = async () =>
-                diagonal.portal.sessions.create(
+        ])(
+            "Should throw with %s if supplied",
+            async (_, invalidInput, message) => {
+                const error = await getCreatePortalSessionError(
                     invalidInput as ICreatePortalSessionInput
                 );
-
-            expect(createCheckoutSessionFn).rejects.toThrow(
-                CreatePortalSessionInputError
-            );
-        });
+                expect(error.type).toBe(ErrorType.InvalidRequest);
+                expect(error.message).toContain(message);
+            }
+        );
     });
 });

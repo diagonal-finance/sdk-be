@@ -197,11 +197,12 @@ const YOUR_DOMAIN = "http://example.com";
 
 app.post("/create-checkout-session", async (req, res) => {
     const checkoutSessionInput: ICreateCheckoutSessionInput = {
-        customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer. Should not be email nor phone number.
-        packageId: "1",
+        customerId: "de49e7f2-bc33-4f4f-a3ae-c1207b02819c", // Immutable ID of your customer.
+        packageId: "ff4e1d23-54ab-4385-9ea9-02c58ec5e32a",
         allowedChains: [Config.ChainId.Mumbai], // Optional. Can be used to limit to specific chains on runtime.
         cancelUrl: new URL(`${YOUR_DOMAIN}/cancel`),
         successUrl: new URL(`${YOUR_DOMAIN}/success`),
+        optimisticRedirect: true, // Optional. Used to redirect to the success url if TX has been confirmed (no waiting for long confirmation).
     };
 
     const checkoutSession = await diagonal.checkout.sessions.create(

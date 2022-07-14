@@ -1,6 +1,6 @@
 import * as Config from "./config";
 import Diagonal from "./diagonal";
-import * as DiagonalError from "./errors";
+import { DiagonalError, ErrorType } from "./error";
 import {
     ICheckoutSession,
     ICreateCheckoutSessionInput,
@@ -17,6 +17,7 @@ export {
     Config,
     WebhookEvent,
     DiagonalError,
+    ErrorType,
     ICreateCheckoutSessionInput,
     ICheckoutSession,
     IPortalSession,

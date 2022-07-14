@@ -1,20 +1,11 @@
-import { DiagonalError } from "src/error";
+import { DiagonalError, ErrorType } from "src/error";
 
-class CreateCheckoutSessionInputError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, CreateCheckoutSessionInputError.prototype);
-    }
+class InputError extends DiagonalError {
+    override type = ErrorType.InvalidRequest;
 }
 
-class CreateCheckoutSessionExecutionError extends DiagonalError {
-    constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(
-            this,
-            CreateCheckoutSessionExecutionError.prototype
-        );
-    }
+class PackageNotFoundError extends DiagonalError {
+    override type = ErrorType.InvalidRequest;
 }
 
-export { CreateCheckoutSessionExecutionError, CreateCheckoutSessionInputError };
+export { PackageNotFoundError, InputError };
