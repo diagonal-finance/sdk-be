@@ -1,4 +1,4 @@
-import { getGraphQLClient, GraphQLClient } from "./graphql/client";
+import { getGraphQLClient } from "./graphql/client";
 import { IDiagonal, IPortal } from "./interfaces";
 import { ICheckout } from "./interfaces/ICheckout";
 import Checkout from "./modules/checkout/checkout";
@@ -11,11 +11,9 @@ export default class Diagonal implements IDiagonal {
     public checkout: ICheckout;
     public portal: IPortal;
 
-    private graphQLClient: GraphQLClient;
-
     constructor(apiKey: string, apiUrl?: string) {
-        this.graphQLClient = getGraphQLClient(apiKey, apiUrl);
-        this.checkout = new Checkout(this.graphQLClient);
-        this.portal = new Portal(this.graphQLClient);
+        const graphQLClient = getGraphQLClient(apiKey, apiUrl);
+        this.checkout = new Checkout(graphQLClient);
+        this.portal = new Portal(graphQLClient);
     }
 }

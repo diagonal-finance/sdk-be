@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "ES5",
+        "target": "ES2022",
         "module": "ES6",
         "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string"],
         "declaration": true,
