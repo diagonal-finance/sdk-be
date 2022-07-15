@@ -4,7 +4,11 @@ import {
 } from "graphql-request";
 import { DiagonalError } from "src/error";
 
-import { AuthenticationError, InvalidInputError } from "./errors";
+import {
+    AuthenticationError,
+    InvalidInputError,
+    PermissionError,
+} from "./errors";
 import { getSdk, SdkFunctionWrapper } from "./schema.generated";
 
 export type GraphQLClient = ReturnType<typeof getSdk>;
@@ -21,6 +25,12 @@ function handleClientError(error: ClientError) {
             throw new AuthenticationError(
                 "Unable to authenticate with API key provided"
             );
+        }
+        const isPermissionError = response.errors.find(
+            (responseError) => responseError.extensions.code === "PERMISSION"
+        );
+        if (isPermissionError) {
+            throw new PermissionError(isPermissionError.message);
         }
         const isBadInputError = response.errors.find(
             (responseError) =>
