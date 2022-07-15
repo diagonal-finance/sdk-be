@@ -10,14 +10,18 @@ import { verifyPortalSessionInput } from "./verify";
  * Class for interacting with Diagonal checkout sessions
  */
 export default class Sessions implements IPortalSessions {
-    constructor(private client: GraphQLClient) {}
+    #client: GraphQLClient;
+
+    constructor(client: GraphQLClient) {
+        this.#client = client;
+    }
 
     public async create(
         input: ICreatePortalSessionInput
     ): Promise<IPortalSession> {
         verifyPortalSessionInput(input);
 
-        const response = await this.client.CreatePortalSession({
+        const response = await this.#client.CreatePortalSession({
             input: {
                 customerId: input.customerId,
                 returnUrl: input.returnUrl,

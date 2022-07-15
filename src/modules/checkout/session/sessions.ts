@@ -11,14 +11,18 @@ import { verifyCheckoutSessionInput } from "./verify";
  * Class for interacting with Diagonal checkout sessions
  */
 export default class Sessions implements ICheckoutSessions {
-    constructor(private client: GraphQLClient) {}
+    #client: GraphQLClient;
+
+    constructor(client: GraphQLClient) {
+        this.#client = client;
+    }
 
     public async create(
         input: ICreateCheckoutSessionInput
     ): Promise<ICheckoutSession> {
         verifyCheckoutSessionInput(input);
 
-        const response = await this.client.CreateCheckoutSession({
+        const response = await this.#client.CreateCheckoutSession({
             input,
         });
 
