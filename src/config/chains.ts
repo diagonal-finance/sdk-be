@@ -6,8 +6,6 @@ export enum ChainId {
     Mumbai = 80001,
 
     Optimism = 10,
-    OptimismKovan = 69,
-
     Arbitrum = 42161,
     ArbitrumRinkeby = 421611,
 }
