@@ -103,6 +103,34 @@ describe("When using the graphql client", () => {
         );
     });
 
+    test("Throws PermissionError if PERMISSION is received", async () => {
+        const { request } = setup();
+
+        request.mockImplementation(() => {
+            throw new ClientError(
+                {
+                    errors: [
+                        {
+                            extensions: {
+                                code: "PERMISSION",
+                            },
+                            message:
+                                "The API key used for this request does not have the necessary permissions.",
+                        },
+                    ],
+                    status: 200,
+                },
+                { query: "" }
+            );
+        });
+
+        const error = await getExecuteQueryError();
+        expect(error.type).toBe(ErrorType.Permission);
+        expect(error.message).toBe(
+            "The API key used for this request does not have the necessary permissions."
+        );
+    });
+
     test("Throws InvalidInputError if BAD_USER_INPUT is received", async () => {
         const { request } = setup();
 
