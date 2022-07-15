@@ -3,10 +3,13 @@ import { Token } from "src/config/tokens";
 
 import { EventType, IWebhookEvent } from "../types";
 
+const timestamp = Date.now();
+
 export const testConfig: {
     subscriptionPayload: IWebhookEvent;
     signatureHeader: string;
     endpointSecret: string;
+    timestamp: number;
 } = {
     subscriptionPayload: {
         customerId: "47adab7fd1f0121d91446563f",
@@ -17,8 +20,8 @@ export const testConfig: {
         chainId: ChainId.Mumbai,
         type: EventType.SubscriptionAcknowledged,
     },
-    signatureHeader:
-        "t=1647115932683,v0=8b0bb0b96db63f3f95dc4c40ac7f503680e00f33a52a184bec11a79788df3419",
+    signatureHeader: `t=${timestamp},v0=8b0bb0b96db63f3f95dc4c40ac7f503680e00f33a52a184bec11a79788df3419`,
     endpointSecret:
         "788284448d0ffabed8b47e6ed1848de4b7522257f6b516a7cc75e6da15905cb1",
+    timestamp,
 };

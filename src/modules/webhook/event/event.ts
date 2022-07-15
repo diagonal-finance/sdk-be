@@ -5,6 +5,7 @@ import {
     verifyEndpointSecret,
     verifyPayload,
     verifySignature,
+    verifySignatureTimestamp,
 } from "./verify";
 
 /**
@@ -27,6 +28,9 @@ export function construct(
     verifyEndpointSecret(endpointSecret);
 
     const parsedSignatureHeader = parseSignatureHeader(signatureHeader);
+
+    // throws an error if the timestamp is too old
+    verifySignatureTimestamp(parsedSignatureHeader.timestamp);
 
     // throws an error if signature is invalid
     verifySignature(
