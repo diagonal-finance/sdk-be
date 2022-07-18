@@ -23,7 +23,7 @@ describe("When getting the graphql client", () => {
                 "x-sdk-version": `${pkg.name}@${pkg.version}`,
                 "x-sdk-platform": "node",
                 "x-sdk-platform-version": process.versions.node,
-                "user-agent": `${pkg.name}@${pkg.version} (Node ${process.versions.node})`,
+                "user-agent": `${pkg.name}@${pkg.version} (node ${process.versions.node})`,
             },
         });
     });
