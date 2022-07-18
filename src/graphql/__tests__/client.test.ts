@@ -20,7 +20,10 @@ describe("When getting the graphql client", () => {
         expect(graphqlClient).toHaveBeenCalledWith(defaultUrl, {
             headers: {
                 "x-api-key": apiKey,
-                "user-agent": `SDK v${pkg.version} (Node v${process.versions.node})`,
+                "x-sdk-version": `${pkg.name}@${pkg.version}`,
+                "x-sdk-platform": "node",
+                "x-sdk-platform-version": process.versions.node,
+                "user-agent": `${pkg.name}@${pkg.version} (Node ${process.versions.node})`,
             },
         });
     });
