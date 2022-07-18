@@ -1,6 +1,5 @@
 export enum ChainId {
-    Rinkeby = 4,
-    Kovan = 42,
+    Goerli = 5,
 
     Polygon = 137,
     Mumbai = 80001,
