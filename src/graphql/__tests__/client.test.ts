@@ -2,6 +2,7 @@ import { ClientError, GraphQLClient } from "graphql-request";
 import { getOperationError } from "src/__tests__/utils";
 import { DiagonalError, ErrorType } from "src/error";
 
+import pkg from "../../../package.json";
 import { getGraphQLClient } from "../client";
 
 jest.mock("graphql-request", () => ({
@@ -19,6 +20,7 @@ describe("When getting the graphql client", () => {
         expect(graphqlClient).toHaveBeenCalledWith(defaultUrl, {
             headers: {
                 "x-api-key": apiKey,
+                "user-agent": `SDK v${pkg.version} (Node v${process.versions.node})`,
             },
         });
     });

@@ -4,6 +4,8 @@ import {
 } from "graphql-request";
 import { DiagonalError } from "src/error";
 
+import pkg from "../../package.json";
+
 import {
     AuthenticationError,
     InvalidInputError,
@@ -67,6 +69,7 @@ export const getGraphQLClient = (
         new GraphQLClientRequest(url ?? DEFAULT_API_URL, {
             headers: {
                 "x-api-key": apiKey,
+                "user-agent": `SDK v${pkg.version} (Node v${process.versions.node})`,
             },
         }),
         wrapper
