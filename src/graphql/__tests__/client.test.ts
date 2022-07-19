@@ -51,7 +51,7 @@ describe("When using the graphql client", () => {
         const graphqlClient = jest.mocked(GraphQLClient, true);
         const request = jest.fn();
         graphqlClient.mockReturnValue({
-            request,
+            rawRequest: request,
         } as unknown as GraphQLClient);
         return {
             request: request,
@@ -97,6 +97,7 @@ describe("When using the graphql client", () => {
         });
 
         const error = await getExecuteQueryError();
+
         expect(error.type).toBe(ErrorType.Authentication);
         expect(error.message).toBe(
             "Unable to authenticate with API key provided"

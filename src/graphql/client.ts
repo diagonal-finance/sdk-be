@@ -17,20 +17,22 @@ const DEFAULT_API_URL = "https://api.diagonal.finance/graphql";
 
 function handleClientError(error: ClientError) {
     const response = error.response;
+    const requestId = response.extensions?.requestId;
     if (response.errors && response.errors.length > 0) {
         const isAuthError = response.errors.find(
             (responseError) => responseError.extensions.code === "UNAUTHORIZED"
         );
         if (isAuthError) {
             throw new AuthenticationError(
-                "Unable to authenticate with API key provided"
+                "Unable to authenticate with API key provided",
+                requestId
             );
         }
         const isPermissionError = response.errors.find(
             (responseError) => responseError.extensions.code === "PERMISSION"
         );
         if (isPermissionError) {
-            throw new PermissionError(isPermissionError.message);
+            throw new PermissionError(isPermissionError.message, requestId);
         }
         const isBadInputError = response.errors.find(
             (responseError) =>
@@ -39,7 +41,8 @@ function handleClientError(error: ClientError) {
         if (isBadInputError) {
             const path = isBadInputError.path?.map((string) => string + ".");
             throw new InvalidInputError(
-                `Invalid input value provided at ${path}`
+                `Invalid input value provided at ${path}`,
+                requestId
             );
         }
     }

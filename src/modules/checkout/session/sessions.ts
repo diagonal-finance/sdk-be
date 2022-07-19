@@ -27,28 +27,37 @@ export default class Sessions implements ICheckoutSessions {
         });
 
         if (
-            response.createCheckoutSession.__typename !==
+            response.data.createCheckoutSession.__typename !==
             "CreateCheckoutSessionPayload"
         ) {
-            return this.handleCreateCheckoutSessionError(response);
+            return this.handleCreateCheckoutSessionError(
+                response.data,
+                response.extensions?.requestId
+            );
         }
 
-        return response.createCheckoutSession.checkoutSession;
+        return response.data.createCheckoutSession.checkoutSession;
     }
 
     private handleCreateCheckoutSessionError(
-        operation: CreateCheckoutSessionMutation
+        operation: CreateCheckoutSessionMutation,
+        requestId: string | undefined
     ): never {
         switch (operation.createCheckoutSession.__typename) {
             case "CreateCheckoutSessionInvalidExpiresAtError":
-                throw new InputError(operation.createCheckoutSession.message);
+                throw new InputError(
+                    operation.createCheckoutSession.message,
+                    requestId
+                );
             case "CreateCheckoutSessionPackageNotFoundError":
                 throw new PackageNotFoundError(
-                    operation.createCheckoutSession.message
+                    operation.createCheckoutSession.message,
+                    requestId
                 );
             default:
                 throw new DiagonalError(
-                    "Unknown error occurred during the creation of a checkout session"
+                    "Unknown error occurred during the creation of a checkout session",
+                    requestId
                 );
         }
     }
