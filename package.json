@@ -1,6 +1,6 @@
 {
     "name": "@diagonal-finance/sdk-be",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "description": "Diagonal finance Backend SDK",
     "repository": "https://github.com/diagonal-finance/sdk-be",
     "homepage": "https://github.com/diagonal-finance/sdk-be",
