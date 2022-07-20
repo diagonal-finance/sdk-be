@@ -34,8 +34,8 @@ describe("CheckoutSessions", () => {
             const id = "123";
             const checkoutUrl = "checkout.diagonal.finance/" + id;
 
-            graphQLClient.CreateCheckoutSession.mockImplementation(() => {
-                return Promise.resolve({
+            graphQLClient.CreateCheckoutSession.mockResolvedValueOnce({
+                data: {
                     createCheckoutSession: {
                         __typename: "CreateCheckoutSessionPayload",
                         checkoutSession: {
@@ -43,7 +43,9 @@ describe("CheckoutSessions", () => {
                             url: checkoutUrl,
                         },
                     },
-                });
+                },
+                status: 200,
+                headers: {} as any,
             });
 
             const checkoutSessionResponse =
@@ -92,13 +94,15 @@ describe("CheckoutSessions", () => {
                     successUrl: new URL("https://service.com/success"),
                 };
 
-                graphQLClient.CreateCheckoutSession.mockImplementation(() => {
-                    return Promise.resolve({
+                graphQLClient.CreateCheckoutSession.mockResolvedValueOnce({
+                    data: {
                         createCheckoutSession: {
                             __typename,
                             message,
                         } as CreateCheckoutSessionMutation["createCheckoutSession"],
-                    });
+                    },
+                    status: 200,
+                    headers: {} as any,
                 });
 
                 const error = await getCreateCheckoutSessionError(
@@ -262,8 +266,8 @@ describe("CheckoutSessions", () => {
                 expiresAt: new Date(dateTimeNow + oneHourInMs + safeMarginInMs),
             };
 
-            graphQLClient.CreateCheckoutSession.mockImplementation(() => {
-                return Promise.resolve({
+            graphQLClient.CreateCheckoutSession.mockResolvedValueOnce({
+                data: {
                     createCheckoutSession: {
                         __typename: "CreateCheckoutSessionPayload",
                         checkoutSession: {
@@ -271,7 +275,9 @@ describe("CheckoutSessions", () => {
                             url: "checkoutUrl",
                         },
                     },
-                });
+                },
+                status: 200,
+                headers: {} as any,
             });
 
             await diagonal.checkout.sessions.create(checkoutSessionInput);
@@ -293,8 +299,8 @@ describe("CheckoutSessions", () => {
                 expiresAt: new Date(dateTimeNow + oneHourInMs * 24),
             };
 
-            graphQLClient.CreateCheckoutSession.mockImplementation(() => {
-                return Promise.resolve({
+            graphQLClient.CreateCheckoutSession.mockResolvedValueOnce({
+                data: {
                     createCheckoutSession: {
                         __typename: "CreateCheckoutSessionPayload",
                         checkoutSession: {
@@ -302,7 +308,9 @@ describe("CheckoutSessions", () => {
                             url: "checkoutUrl",
                         },
                     },
-                });
+                },
+                status: 200,
+                headers: {} as any,
             });
 
             await diagonal.checkout.sessions.create(checkoutSessionInput);

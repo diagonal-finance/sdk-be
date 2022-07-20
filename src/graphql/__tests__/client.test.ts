@@ -19,11 +19,11 @@ describe("When getting the graphql client", () => {
         getGraphQLClient("API-KEY");
         expect(graphqlClient).toHaveBeenCalledWith(defaultUrl, {
             headers: {
-                "x-api-key": apiKey,
-                "x-sdk-version": `${pkg.name}@${pkg.version}`,
-                "x-sdk-platform": "node",
-                "x-sdk-platform-version": process.versions.node,
-                "user-agent": `${pkg.name}@${pkg.version} (node ${process.versions.node})`,
+                "X-API-Key": apiKey,
+                "X-SDK-Version": `${pkg.name}@${pkg.version}`,
+                "X-SDK-Platform": "node",
+                "X-SDK-Platform-Version": process.versions.node,
+                "User-Agent": `${pkg.name}@${pkg.version} (node ${process.versions.node})`,
             },
         });
     });
@@ -56,7 +56,7 @@ describe("When using the graphql client", () => {
         const graphqlClient = jest.mocked(GraphQLClient, true);
         const request = jest.fn();
         graphqlClient.mockReturnValue({
-            request,
+            rawRequest: request,
         } as unknown as GraphQLClient);
         return {
             request: request,
@@ -102,6 +102,7 @@ describe("When using the graphql client", () => {
         });
 
         const error = await getExecuteQueryError();
+
         expect(error.type).toBe(ErrorType.Authentication);
         expect(error.message).toBe(
             "Unable to authenticate with API key provided"

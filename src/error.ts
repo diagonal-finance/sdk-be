@@ -9,9 +9,10 @@ export enum ErrorType {
 
 export class DiagonalError extends Error {
     override name = "DiagonalError";
+
     public type = ErrorType.InternalService;
 
-    constructor(message: string) {
+    constructor(message: string, public requestId?: string) {
         super(message);
         Object.setPrototypeOf(this, DiagonalError.prototype);
     }

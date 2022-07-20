@@ -9,3 +9,6 @@ generates:
             - typescript-operations
             - typescript-graphql-request
         documents: src/graphql/operations/*.ts
+        config:
+            rawRequest: true
+            extensionsType: "{ requestId: string }"

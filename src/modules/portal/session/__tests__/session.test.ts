@@ -34,8 +34,8 @@ describe("PortalSession", () => {
             const id = "123";
             const portalUrl = "subscription.diagonal.finance/" + id;
 
-            graphQLClient.CreatePortalSession.mockImplementation(() => {
-                return Promise.resolve({
+            graphQLClient.CreatePortalSession.mockResolvedValueOnce({
+                data: {
                     createPortalSession: {
                         __typename: "CreatePortalSessionPayload",
                         portalSession: {
@@ -43,7 +43,9 @@ describe("PortalSession", () => {
                             url: portalUrl,
                         },
                     },
-                });
+                },
+                status: 200,
+                headers: {} as any,
             });
 
             const checkoutSessionResponse =
@@ -62,8 +64,8 @@ describe("PortalSession", () => {
             const id = "123";
             const portalUrl = "subscription.diagonal.finance/" + id;
 
-            graphQLClient.CreatePortalSession.mockImplementation(() => {
-                return Promise.resolve({
+            graphQLClient.CreatePortalSession.mockResolvedValue({
+                data: {
                     createPortalSession: {
                         __typename: "CreatePortalSessionPayload",
                         portalSession: {
@@ -71,7 +73,9 @@ describe("PortalSession", () => {
                             url: portalUrl,
                         },
                     },
-                });
+                },
+                status: 200,
+                headers: {} as any,
             });
 
             const checkoutSessionResponse =
@@ -120,13 +124,15 @@ describe("PortalSession", () => {
         ])(
             "Should throw CreatePortalSessionError if response __typename is %s",
             async (__typename, message, type) => {
-                graphQLClient.CreatePortalSession.mockImplementation(() => {
-                    return Promise.resolve({
+                graphQLClient.CreatePortalSession.mockResolvedValueOnce({
+                    data: {
                         createPortalSession: {
                             __typename,
                             message,
                         } as CreatePortalSessionMutation["createPortalSession"],
-                    });
+                    },
+                    status: 200,
+                    headers: {} as any,
                 });
                 const error = await getCreatePortalSessionError(input);
                 expect(error.type).toBe(type);
